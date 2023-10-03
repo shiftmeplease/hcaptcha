@@ -1,66 +1,97 @@
 const fs = require('node:fs').promises;
 
-const { parseScript } = require('meriyah');
+const { parseScript, parse } = require('meriyah');
 const { generate } = require('astring');
+const estraverse = require('estraverse');
+
+
 
 (async () => {
     let fileData = (await fs.readFile('./hsw.decoded_beautified.js')).toString();
 
-    const tree = parseScript(fileData);
+    const tree = parseScript(fileData, { ranges: false, loc: false });
+
+
+    // estraverse.replace(tree, {
+    //     enter: function (node, parent) {
+    //         const { expression, type } = node;
+    //         if (type === "ExpressionStatement" && expression.right?.type === "UnaryExpression" && expression.right.operator === "!" && expression.right.argument.value === 1) {
+    //             node.right = {
+    //                 "type": "Literal",
+    //                 "value": false
+    //             }
+    //             return node
+    //         }
+    //     },
+    // })
+    estraverse.replace(tree, {
+        enter: function (node, parent) {
+            if (node.type === "UnaryExpression" && node.operator === "!" && node.argument.value === 1) {
+                return {
+                    "type": "Literal",
+                    "value": false
+                }
+            }
+        },
+    })
+
+    estraverse.replace(tree, {
+        enter: function (node, parent) {
+            if (node.type === "UnaryExpression" && node.operator === "!" && node.argument.value === 0) {
+                return {
+                    "type": "Literal",
+                    "value": true
+                }
+            }
+        },
+    })
+
+    estraverse.replace(tree, {
+        enter: function (node, parent) {
+            if (node.type === "UnaryExpression" && node.operator === "!" && node.argument.value === 0) {
+                return {
+                    "type": "Literal",
+                    "value": true
+                }
+            }
+        },
+    })
+    
+    estraverse.replace(tree, {
+        enter: function (node, parent) {
+            if (node.type === "EmptyStatement")
+            this.remove()
+        }
+
+    })
+
     const codeString = generate(tree)
 
     fs.writeFile('./hsw.ast_mod.js', codeString)
 })()
 
-{
-    // The flag to allow module code
-    module: false;
-
-    // The flag to enable stage 3 support (ESNext)
-    next: false;
-
-    // The flag to enable start, end offsets and range: [start, end] to each node
-    ranges: false;
-
-    // Enable web compatibility
-    webcompat: false;
-
-    // The flag to enable line/column location information to each node
-    loc: false;
-
-    // The flag to attach raw property to each literal and identifier node
-    raw: false;
-
-    // Enabled directives
-    directives: false;
-
-    // The flag to allow return in the global scope
-    globalReturn: false;
-
-    // The flag to enable implied strict mode
-    impliedStrict: false;
-
-    // Allows comment extraction. Accepts either a function or array
-    onComment: []
-
-    // Allows token extraction. Accepts either a function or array
-    onToken: []
-
-    // Enable non-standard parenthesized expression node
-    preserveParens: false;
-
-    // Enable lexical binding and scope tracking
-    lexical: false;
-
-    // Adds a source attribute in every node’s loc object when the locations option is `true`
-    source: false;
-
-    // Distinguish Identifier from IdentifierPattern
-    identifierPattern: false;
-
-    // Enable React JSX parsing
-    jsx: false
-
-    // Allow edge cases that deviate from the spec
-    specDeviation: false
-}
+// {
+//     "type": "ExpressionStatement",
+//     "expression": {
+//       "type": "MemberExpression",
+//       "object": {
+//         "type": "Identifier",
+//         "name": "Object"
+//       },
+//       "computed": true,
+//       "property": {
+//         "type": "TemplateLiteral",
+//         "expressions": [],
+//         "quasis": [
+//           {
+//             "type": "TemplateElement",
+//             "value": {
+//               "cooked": "defineProperty",
+//               "raw": "defineProperty"
+//             },
+//             "tail": true
+//           }
+//         ]
+//       }
+//     }
+//   },
