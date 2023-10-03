@@ -1,1530 +1,7 @@
 /* https://hcaptcha.com/license */ ! function() {
     "use strict";
 
-        (function(t) {
-            if ("object" == typeof exports && "undefined" != typeof module) module.exports = t();
-            else if ("function" == typeof define && define.amd) define("raven-js", t);
-            else {
-                ("undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof self ? self : this).Raven = t()
-            }
-        })((function() {
-            return function t(e, i, n) {
-                function s(r, a) {
-                    if (!i[r]) {
-                        if (!e[r]) {
-                            var l = "function" == typeof require && require;
-                            if (!a && l) return l(r, !0);
-                            if (o) return o(r, !0);
-                            var c = new Error("Cannot find module '" + r + "'");
-                            throw c.code = "MODULE_NOT_FOUND", c
-                        }
-                        var h = i[r] = {
-                            exports: {}
-                        };
-                        e[r][0].call(h.exports, (function(t) {
-                            var i = e[r][1][t];
-                            return s(i || t)
-                        }), h, h.exports, t, e, i, n)
-                    }
-                    return i[r].exports
-                }
-                for (var o = "function" == typeof require && require, r = 0; r < n.length; r++) s(n[r]);
-                return s
-            }({
-                1: [function(t, e, i) {
-                    function n(t) {
-                        this.name = "RavenConfigError", this.message = t
-                    }
-                    n.prototype = new Error, n.prototype.constructor = n, e.exports = n
-                }, {}],
-                2: [function(t, e, i) {
-                    var n = t(5);
-                    e.exports = {
-                        wrapMethod: function(t, e, i) {
-                            var s = t[e],
-                                o = t;
-                            if (e in t) {
-                                var r = "warn" === e ? "warning" : e;
-                                t[e] = function() {
-                                    var t = [].slice.call(arguments),
-                                        a = n.safeJoin(t, " "),
-                                        l = {
-                                            level: r,
-                                            logger: "console",
-                                            extra: {
-                                                arguments: t
-                                            }
-                                        };
-                                    "assert" === e ? !1 === t[0] && (a = "Assertion failed: " + (n.safeJoin(t.slice(1), " ") || "console.assert"), l.extra.arguments = t.slice(1), i && i(a, l)) : i && i(a, l), s && Function.prototype.apply.call(s, o, t)
-                                }
-                            }
-                        }
-                    }
-                }, {
-                    5: 5
-                }],
-                3: [function(t, e, i) {
-                    (function(i) {
-                        function n() {
-                            return +new Date
-                        }
-
-                        function s(t, e) {
-                            return v(e) ? function(i) {
-                                return e(i, t)
-                            } : e
-                        }
-
-                        function o() {
-                            for (var t in this.a = !("object" != typeof JSON || !JSON.stringify), this.b = !g(Z), this.c = !g(U), this.d = null, this.e = null, this.f = null, this.g = null, this.h = null, this.i = null, this.j = {}, this.k = {
-                                    release: z.SENTRY_RELEASE && z.SENTRY_RELEASE.id,
-                                    logger: "javascript",
-                                    ignoreErrors: [],
-                                    ignoreUrls: [],
-                                    whitelistUrls: [],
-                                    includePaths: [],
-                                    headers: null,
-                                    collectWindowErrors: !0,
-                                    captureUnhandledRejections: !0,
-                                    maxMessageLength: 0,
-                                    maxUrlLength: 250,
-                                    stackTraceLimit: 50,
-                                    autoBreadcrumbs: !0,
-                                    instrument: !0,
-                                    sampleRate: 1,
-                                    sanitizeKeys: []
-                                }, this.l = {
-                                    method: "POST",
-                                    referrerPolicy: P() ? "origin" : ""
-                                }, this.m = 0, this.n = !1, this.o = Error.stackTraceLimit, this.p = z.console || {}, this.q = {}, this.r = [], this.s = n(), this.t = [], this.u = [], this.v = null, this.w = z.location, this.x = this.w && this.w.href, this.y(), this.p) this.q[t] = this.p[t]
-                        }
-                        var r = t(6),
-                            a = t(7),
-                            l = t(8),
-                            c = t(1),
-                            h = t(5),
-                            u = h.isErrorEvent,
-                            d = h.isDOMError,
-                            p = h.isDOMException,
-                            f = h.isError,
-                            m = h.isObject,
-                            y = h.isPlainObject,
-                            g = h.isUndefined,
-                            v = h.isFunction,
-                            b = h.isString,
-                            w = h.isArray,
-                            x = h.isEmptyObject,
-                            k = h.each,
-                            C = h.objectMerge,
-                            _ = h.truncate,
-                            E = h.objectFrozen,
-                            A = h.hasKey,
-                            S = h.joinRegExp,
-                            L = h.urlencode,
-                            B = h.uuid4,
-                            H = h.htmlTreeAsString,
-                            M = h.isSameException,
-                            O = h.isSameStacktrace,
-                            T = h.parseUrl,
-                            V = h.fill,
-                            R = h.supportsFetch,
-                            P = h.supportsReferrerPolicy,
-                            D = h.serializeKeysForMessage,
-                            F = h.serializeException,
-                            I = h.sanitize,
-                            $ = t(2).wrapMethod,
-                            j = "source protocol user pass host port path".split(" "),
-                            N = /^(?:(\w+):)?\/\/(?:(\w+)(:\w+)?@)?([\w\.-]+)(?::(\d+))?(\/.*)/,
-                            z = "undefined" != typeof window ? window : void 0 !== i ? i : "undefined" != typeof self ? self : {},
-                            Z = z.document,
-                            U = z.navigator;
-                        o.prototype = {
-                            VERSION: "3.27.2",
-                            debug: !1,
-                            TraceKit: r,
-                            config: function(t, e) {
-                                var i = this;
-                                if (i.g) return this.z("error", "Error: Raven has already been configured"), i;
-                                if (!t) return i;
-                                var n = i.k;
-                                e && k(e, (function(t, e) {
-                                    "tags" === t || "extra" === t || "user" === t ? i.j[t] = e : n[t] = e
-                                })), i.setDSN(t), n.ignoreErrors.push(/^Script error\.?$/), n.ignoreErrors.push(/^Javascript error: Script error\.? on line 0$/), n.ignoreErrors = S(n.ignoreErrors), n.ignoreUrls = !!n.ignoreUrls.length && S(n.ignoreUrls), n.whitelistUrls = !!n.whitelistUrls.length && S(n.whitelistUrls), n.includePaths = S(n.includePaths), n.maxBreadcrumbs = Math.max(0, Math.min(n.maxBreadcrumbs || 100, 100));
-                                var s = {
-                                        xhr: !0,
-                                        console: !0,
-                                        dom: !0,
-                                        location: !0,
-                                        sentry: !0
-                                    },
-                                    o = n.autoBreadcrumbs;
-                                "[object Object]" === {}.toString.call(o) ? o = C(s, o) : !1 !== o && (o = s), n.autoBreadcrumbs = o;
-                                var a = {
-                                        tryCatch: !0
-                                    },
-                                    l = n.instrument;
-                                return "[object Object]" === {}.toString.call(l) ? l = C(a, l) : !1 !== l && (l = a), n.instrument = l, r.collectWindowErrors = !!n.collectWindowErrors, i
-                            },
-                            install: function() {
-                                var t = this;
-                                return t.isSetup() && !t.n && (r.report.subscribe((function() {
-                                    t.A.apply(t, arguments)
-                                })), t.k.captureUnhandledRejections && t.B(), t.C(), t.k.instrument && t.k.instrument.tryCatch && t.D(), t.k.autoBreadcrumbs && t.E(), t.F(), t.n = !0), Error.stackTraceLimit = t.k.stackTraceLimit, this
-                            },
-                            setDSN: function(t) {
-                                var e = this,
-                                    i = e.G(t),
-                                    n = i.path.lastIndexOf("/"),
-                                    s = i.path.substr(1, n);
-                                e.H = t, e.h = i.user, e.I = i.pass && i.pass.substr(1), e.i = i.path.substr(n + 1), e.g = e.J(i), e.K = e.g + "/" + s + "api/" + e.i + "/store/", this.y()
-                            },
-                            context: function(t, e, i) {
-                                return v(t) && (i = e || [], e = t, t = {}), this.wrap(t, e).apply(this, i)
-                            },
-                            wrap: function(t, e, i) {
-                                function n() {
-                                    var n = [],
-                                        o = arguments.length,
-                                        r = !t || t && !1 !== t.deep;
-                                    for (i && v(i) && i.apply(this, arguments); o--;) n[o] = r ? s.wrap(t, arguments[o]) : arguments[o];
-                                    try {
-                                        return e.apply(this, n)
-                                    } catch (a) {
-                                        throw s.L(), s.captureException(a, t), a
-                                    }
-                                }
-                                var s = this;
-                                if (g(e) && !v(t)) return t;
-                                if (v(t) && (e = t, t = void 0), !v(e)) return e;
-                                try {
-                                    if (e.M) return e;
-                                    if (e.N) return e.N
-                                } catch (o) {
-                                    return e
-                                }
-                                for (var r in e) A(e, r) && (n[r] = e[r]);
-                                return n.prototype = e.prototype, e.N = n, n.M = !0, n.O = e, n
-                            },
-                            uninstall: function() {
-                                return r.report.uninstall(), this.P(), this.Q(), this.R(), this.S(), Error.stackTraceLimit = this.o, this.n = !1, this
-                            },
-                            T: function(t) {
-                                this.z("debug", "Raven caught unhandled promise rejection:", t), this.captureException(t.reason, {
-                                    mechanism: {
-                                        type: "onunhandledrejection",
-                                        handled: !1
-                                    }
-                                })
-                            },
-                            B: function() {
-                                return this.T = this.T.bind(this), z.addEventListener && z.addEventListener("unhandledrejection", this.T), this
-                            },
-                            P: function() {
-                                return z.removeEventListener && z.removeEventListener("unhandledrejection", this.T), this
-                            },
-                            captureException: function(t, e) {
-                                if (e = C({
-                                        trimHeadFrames: 0
-                                    }, e || {}), u(t) && t.error) t = t.error;
-                                else {
-                                    if (d(t) || p(t)) {
-                                        var i = t.name || (d(t) ? "DOMError" : "DOMException"),
-                                            n = t.message ? i + ": " + t.message : i;
-                                        return this.captureMessage(n, C(e, {
-                                            stacktrace: !0,
-                                            trimHeadFrames: e.trimHeadFrames + 1
-                                        }))
-                                    }
-                                    if (f(t));
-                                    else {
-                                        if (!y(t)) return this.captureMessage(t, C(e, {
-                                            stacktrace: !0,
-                                            trimHeadFrames: e.trimHeadFrames + 1
-                                        }));
-                                        e = this.U(e, t), t = new Error(e.message)
-                                    }
-                                }
-                                this.d = t;
-                                try {
-                                    var s = r.computeStackTrace(t);
-                                    this.V(s, e)
-                                } catch (o) {
-                                    if (t !== o) throw o
-                                }
-                                return this
-                            },
-                            U: function(t, e) {
-                                var i = Object.keys(e).sort(),
-                                    n = C(t, {
-                                        message: "Non-Error exception captured with keys: " + D(i),
-                                        fingerprint: [l(i)],
-                                        extra: t.extra || {}
-                                    });
-                                return n.extra.W = F(e), n
-                            },
-                            captureMessage: function(t, e) {
-                                if (!this.k.ignoreErrors.test || !this.k.ignoreErrors.test(t)) {
-                                    var i, n = C({
-                                        message: t += ""
-                                    }, e = e || {});
-                                    try {
-                                        throw new Error(t)
-                                    } catch (s) {
-                                        i = s
-                                    }
-                                    i.name = null;
-                                    var o = r.computeStackTrace(i),
-                                        a = w(o.stack) && o.stack[1];
-                                    a && "Raven.captureException" === a.func && (a = o.stack[2]);
-                                    var l = a && a.url || "";
-                                    if ((!this.k.ignoreUrls.test || !this.k.ignoreUrls.test(l)) && (!this.k.whitelistUrls.test || this.k.whitelistUrls.test(l))) {
-                                        if (this.k.stacktrace || e.stacktrace || "" === n.message) {
-                                            n.fingerprint = null == n.fingerprint ? t : n.fingerprint, (e = C({
-                                                trimHeadFrames: 0
-                                            }, e)).trimHeadFrames += 1;
-                                            var c = this.X(o, e);
-                                            n.stacktrace = {
-                                                frames: c.reverse()
-                                            }
-                                        }
-                                        return n.fingerprint && (n.fingerprint = w(n.fingerprint) ? n.fingerprint : [n.fingerprint]), this.Y(n), this
-                                    }
-                                }
-                            },
-                            captureBreadcrumb: function(t) {
-                                var e = C({
-                                    timestamp: n() / 1e3
-                                }, t);
-                                if (v(this.k.breadcrumbCallback)) {
-                                    var i = this.k.breadcrumbCallback(e);
-                                    if (m(i) && !x(i)) e = i;
-                                    else if (!1 === i) return this
-                                }
-                                return this.u.push(e), this.u.length > this.k.maxBreadcrumbs && this.u.shift(), this
-                            },
-                            addPlugin: function(t) {
-                                var e = [].slice.call(arguments, 1);
-                                return this.r.push([t, e]), this.n && this.F(), this
-                            },
-                            setUserContext: function(t) {
-                                return this.j.user = t, this
-                            },
-                            setExtraContext: function(t) {
-                                return this.Z("extra", t), this
-                            },
-                            setTagsContext: function(t) {
-                                return this.Z("tags", t), this
-                            },
-                            clearContext: function() {
-                                return this.j = {}, this
-                            },
-                            getContext: function() {
-                                return JSON.parse(a(this.j))
-                            },
-                            setEnvironment: function(t) {
-                                return this.k.environment = t, this
-                            },
-                            setRelease: function(t) {
-                                return this.k.release = t, this
-                            },
-                            setDataCallback: function(t) {
-                                var e = this.k.dataCallback;
-                                return this.k.dataCallback = s(e, t), this
-                            },
-                            setBreadcrumbCallback: function(t) {
-                                var e = this.k.breadcrumbCallback;
-                                return this.k.breadcrumbCallback = s(e, t), this
-                            },
-                            setShouldSendCallback: function(t) {
-                                var e = this.k.shouldSendCallback;
-                                return this.k.shouldSendCallback = s(e, t), this
-                            },
-                            setTransport: function(t) {
-                                return this.k.transport = t, this
-                            },
-                            lastException: function() {
-                                return this.d
-                            },
-                            lastEventId: function() {
-                                return this.f
-                            },
-                            isSetup: function() {
-                                return !(!this.a || !this.g && (this.ravenNotConfiguredError || (this.ravenNotConfiguredError = !0, this.z("error", "Error: Raven has not been configured.")), 1))
-                            },
-                            afterLoad: function() {
-                                var t = z.RavenConfig;
-                                t && this.config(t.dsn, t.config).install()
-                            },
-                            showReportDialog: function(t) {
-                                if (Z) {
-                                    if (!(t = C({
-                                            eventId: this.lastEventId(),
-                                            dsn: this.H,
-                                            user: this.j.user || {}
-                                        }, t)).eventId) throw new c("Missing eventId");
-                                    if (!t.dsn) throw new c("Missing DSN");
-                                    var e = encodeURIComponent,
-                                        i = [];
-                                    for (var n in t)
-                                        if ("user" === n) {
-                                            var s = t.user;
-                                            s.name && i.push("name=" + e(s.name)), s.email && i.push("email=" + e(s.email))
-                                        } else i.push(e(n) + "=" + e(t[n]));
-                                    var o = this.J(this.G(t.dsn)),
-                                        r = Z.createElement("script");
-                                    r.async = !0, r.src = o + "/api/embed/error-page/?" + i.join("&"), (Z.head || Z.body).appendChild(r)
-                                }
-                            },
-                            L: function() {
-                                var t = this;
-                                this.m += 1, setTimeout((function() {
-                                    t.m -= 1
-                                }))
-                            },
-                            $: function(t, e) {
-                                var i, n;
-                                if (this.b) {
-                                    for (n in e = e || {}, t = "raven" + t.substr(0, 1).toUpperCase() + t.substr(1), Z.createEvent ? (i = Z.createEvent("HTMLEvents")).initEvent(t, !0, !0) : (i = Z.createEventObject()).eventType = t, e) A(e, n) && (i[n] = e[n]);
-                                    if (Z.createEvent) Z.dispatchEvent(i);
-                                    else try {
-                                        Z.fireEvent("on" + i.eventType.toLowerCase(), i)
-                                    } catch (s) {}
-                                }
-                            },
-                            _: function(t) {
-                                var e = this;
-                                return function(i) {
-                                    if (e.aa = null, e.v !== i) {
-                                        var n;
-                                        e.v = i;
-                                        try {
-                                            n = H(i.target)
-                                        } catch (s) {
-                                            n = "<unknown>"
-                                        }
-                                        e.captureBreadcrumb({
-                                            category: "ui." + t,
-                                            message: n
-                                        })
-                                    }
-                                }
-                            },
-                            ba: function() {
-                                var t = this;
-                                return function(e) {
-                                    var i;
-                                    try {
-                                        i = e.target
-                                    } catch (s) {
-                                        return
-                                    }
-                                    var n = i && i.tagName;
-                                    if (n && ("INPUT" === n || "TEXTAREA" === n || i.isContentEditable)) {
-                                        var o = t.aa;
-                                        o || t._("input")(e), clearTimeout(o), t.aa = setTimeout((function() {
-                                            t.aa = null
-                                        }), 1e3)
-                                    }
-                                }
-                            },
-                            ca: function(t, e) {
-                                var i = T(this.w.href),
-                                    n = T(e),
-                                    s = T(t);
-                                this.x = e, i.protocol === n.protocol && i.host === n.host && (e = n.relative), i.protocol === s.protocol && i.host === s.host && (t = s.relative), this.captureBreadcrumb({
-                                    category: "navigation",
-                                    data: {
-                                        to: e,
-                                        from: t
-                                    }
-                                })
-                            },
-                            C: function() {
-                                var t = this;
-                                t.da = Function.prototype.toString, Function.prototype.toString = function() {
-                                    return "function" == typeof this && this.M ? t.da.apply(this.O, arguments) : t.da.apply(this, arguments)
-                                }
-                            },
-                            Q: function() {
-                                this.da && (Function.prototype.toString = this.da)
-                            },
-                            D: function() {
-                                function t(t) {
-                                    return function(e, n) {
-                                        for (var s = new Array(arguments.length), o = 0; o < s.length; ++o) s[o] = arguments[o];
-                                        var r = s[0];
-                                        return v(r) && (s[0] = i.wrap({
-                                            mechanism: {
-                                                type: "instrument",
-                                                data: {
-                                                    "function": t.name || "<anonymous>"
-                                                }
-                                            }
-                                        }, r)), t.apply ? t.apply(this, s) : t(s[0], s[1])
-                                    }
-                                }
-
-                                function e(t) {
-                                    var e = z[t] && z[t].prototype;
-                                    e && e.hasOwnProperty && e.hasOwnProperty("addEventListener") && (V(e, "addEventListener", (function(e) {
-                                        return function(n, o, r, a) {
-                                            try {
-                                                o && o.handleEvent && (o.handleEvent = i.wrap({
-                                                    mechanism: {
-                                                        type: "instrument",
-                                                        data: {
-                                                            target: t,
-                                                            "function": "handleEvent",
-                                                            handler: o && o.name || "<anonymous>"
-                                                        }
-                                                    }
-                                                }, o.handleEvent))
-                                            } catch (l) {}
-                                            var c, h, u;
-                                            return s && s.dom && ("EventTarget" === t || "Node" === t) && (h = i._("click"), u = i.ba(), c = function(t) {
-                                                if (t) {
-                                                    var e;
-                                                    try {
-                                                        e = t.type
-                                                    } catch (i) {
-                                                        return
-                                                    }
-                                                    return "click" === e ? h(t) : "keypress" === e ? u(t) : void 0
-                                                }
-                                            }), e.call(this, n, i.wrap({
-                                                mechanism: {
-                                                    type: "instrument",
-                                                    data: {
-                                                        target: t,
-                                                        "function": "addEventListener",
-                                                        handler: o && o.name || "<anonymous>"
-                                                    }
-                                                }
-                                            }, o, c), r, a)
-                                        }
-                                    }), n), V(e, "removeEventListener", (function(t) {
-                                        return function(e, i, n, s) {
-                                            try {
-                                                i = i && (i.N ? i.N : i)
-                                            } catch (o) {}
-                                            return t.call(this, e, i, n, s)
-                                        }
-                                    }), n))
-                                }
-                                var i = this,
-                                    n = i.t,
-                                    s = this.k.autoBreadcrumbs;
-                                V(z, "setTimeout", t, n), V(z, "setInterval", t, n), z.requestAnimationFrame && V(z, "requestAnimationFrame", (function(t) {
-                                    return function(e) {
-                                        return t(i.wrap({
-                                            mechanism: {
-                                                type: "instrument",
-                                                data: {
-                                                    "function": "requestAnimationFrame",
-                                                    handler: t && t.name || "<anonymous>"
-                                                }
-                                            }
-                                        }, e))
-                                    }
-                                }), n);
-                                for (var o = ["EventTarget", "Window", "Node", "ApplicationCache", "AudioTrackList", "ChannelMergerNode", "CryptoOperation", "EventSource", "FileReader", "HTMLUnknownElement", "IDBDatabase", "IDBRequest", "IDBTransaction", "KeyOperation", "MediaController", "MessagePort", "ModalWindow", "Notification", "SVGElementInstance", "Screen", "TextTrack", "TextTrackCue", "TextTrackList", "WebSocket", "WebSocketWorker", "Worker", "XMLHttpRequest", "XMLHttpRequestEventTarget", "XMLHttpRequestUpload"], r = 0; r < o.length; r++) e(o[r])
-                            },
-                            E: function() {
-                                function t(t, i) {
-                                    t in i && v(i[t]) && V(i, t, (function(i) {
-                                        return e.wrap({
-                                            mechanism: {
-                                                type: "instrument",
-                                                data: {
-                                                    "function": t,
-                                                    handler: i && i.name || "<anonymous>"
-                                                }
-                                            }
-                                        }, i)
-                                    }))
-                                }
-                                var e = this,
-                                    i = this.k.autoBreadcrumbs,
-                                    n = e.t;
-                                if (i.xhr && "XMLHttpRequest" in z) {
-                                    var s = z.XMLHttpRequest && z.XMLHttpRequest.prototype;
-                                    V(s, "open", (function(t) {
-                                        return function(i, n) {
-                                            return b(n) && -1 === n.indexOf(e.h) && (this.ea = {
-                                                method: i,
-                                                url: n,
-                                                status_code: null
-                                            }), t.apply(this, arguments)
-                                        }
-                                    }), n), V(s, "send", (function(i) {
-                                        return function() {
-                                            function n() {
-                                                if (s.ea && 4 === s.readyState) {
-                                                    try {
-                                                        s.ea.status_code = s.status
-                                                    } catch (t) {}
-                                                    e.captureBreadcrumb({
-                                                        type: "http",
-                                                        category: "xhr",
-                                                        data: s.ea
-                                                    })
-                                                }
-                                            }
-                                            for (var s = this, o = ["onload", "onerror", "onprogress"], r = 0; r < o.length; r++) t(o[r], s);
-                                            return "onreadystatechange" in s && v(s.onreadystatechange) ? V(s, "onreadystatechange", (function(t) {
-                                                return e.wrap({
-                                                    mechanism: {
-                                                        type: "instrument",
-                                                        data: {
-                                                            "function": "onreadystatechange",
-                                                            handler: t && t.name || "<anonymous>"
-                                                        }
-                                                    }
-                                                }, t, n)
-                                            })) : s.onreadystatechange = n, i.apply(this, arguments)
-                                        }
-                                    }), n)
-                                }
-                                i.xhr && R() && V(z, "fetch", (function(t) {
-                                    return function() {
-                                        for (var i = new Array(arguments.length), n = 0; n < i.length; ++n) i[n] = arguments[n];
-                                        var s, o = i[0],
-                                            r = "GET";
-                                        if ("string" == typeof o ? s = o : "Request" in z && o instanceof z.Request ? (s = o.url, o.method && (r = o.method)) : s = "" + o, -1 !== s.indexOf(e.h)) return t.apply(this, i);
-                                        i[1] && i[1].method && (r = i[1].method);
-                                        var a = {
-                                            method: r,
-                                            url: s,
-                                            status_code: null
-                                        };
-                                        return t.apply(this, i).then((function(t) {
-                                            return a.status_code = t.status, e.captureBreadcrumb({
-                                                type: "http",
-                                                category: "fetch",
-                                                data: a
-                                            }), t
-                                        }))["catch"]((function(t) {
-                                            throw e.captureBreadcrumb({
-                                                type: "http",
-                                                category: "fetch",
-                                                data: a,
-                                                level: "error"
-                                            }), t
-                                        }))
-                                    }
-                                }), n), i.dom && this.b && (Z.addEventListener ? (Z.addEventListener("click", e._("click"), !1), Z.addEventListener("keypress", e.ba(), !1)) : Z.attachEvent && (Z.attachEvent("onclick", e._("click")), Z.attachEvent("onkeypress", e.ba())));
-                                var o = z.chrome,
-                                    r = !(o && o.app && o.app.runtime) && z.history && z.history.pushState && z.history.replaceState;
-                                if (i.location && r) {
-                                    var a = z.onpopstate;
-                                    z.onpopstate = function() {
-                                        var t = e.w.href;
-                                        if (e.ca(e.x, t), a) return a.apply(this, arguments)
-                                    };
-                                    var l = function(t) {
-                                        return function() {
-                                            var i = arguments.length > 2 ? arguments[2] : void 0;
-                                            return i && e.ca(e.x, i + ""), t.apply(this, arguments)
-                                        }
-                                    };
-                                    V(z.history, "pushState", l, n), V(z.history, "replaceState", l, n)
-                                }
-                                if (i.console && "console" in z && console.log) {
-                                    var c = function(t, i) {
-                                        e.captureBreadcrumb({
-                                            message: t,
-                                            level: i.level,
-                                            category: "console"
-                                        })
-                                    };
-                                    k(["debug", "info", "warn", "error", "log"], (function(t, e) {
-                                        $(console, e, c)
-                                    }))
-                                }
-                            },
-                            R: function() {
-                                for (var t; this.t.length;) {
-                                    var e = (t = this.t.shift())[0],
-                                        i = t[1],
-                                        n = t[2];
-                                    e[i] = n
-                                }
-                            },
-                            S: function() {
-                                for (var t in this.q) this.p[t] = this.q[t]
-                            },
-                            F: function() {
-                                var t = this;
-                                k(this.r, (function(e, i) {
-                                    var n = i[0],
-                                        s = i[1];
-                                    n.apply(t, [t].concat(s))
-                                }))
-                            },
-                            G: function(t) {
-                                var e = N.exec(t),
-                                    i = {},
-                                    n = 7;
-                                try {
-                                    for (; n--;) i[j[n]] = e[n] || ""
-                                } catch (s) {
-                                    throw new c("Invalid DSN: " + t)
-                                }
-                                if (i.pass && !this.k.allowSecretKey) throw new c("Do not specify your secret key in the DSN. See: http://bit.ly/raven-secret-key");
-                                return i
-                            },
-                            J: function(t) {
-                                var e = "//" + t.host + (t.port ? ":" + t.port : "");
-                                return t.protocol && (e = t.protocol + ":" + e), e
-                            },
-                            A: function(t, e) {
-                                (e = e || {}).mechanism = e.mechanism || {
-                                    type: "onerror",
-                                    handled: !1
-                                }, this.m || this.V(t, e)
-                            },
-                            V: function(t, e) {
-                                var i = this.X(t, e);
-                                this.$("handle", {
-                                    stackInfo: t,
-                                    options: e
-                                }), this.fa(t.name, t.message, t.url, t.lineno, i, e)
-                            },
-                            X: function(t, e) {
-                                var i = this,
-                                    n = [];
-                                if (t.stack && t.stack.length && (k(t.stack, (function(e, s) {
-                                        var o = i.ga(s, t.url);
-                                        o && n.push(o)
-                                    })), e && e.trimHeadFrames))
-                                    for (var s = 0; s < e.trimHeadFrames && s < n.length; s++) n[s].in_app = !1;
-                                return n = n.slice(0, this.k.stackTraceLimit)
-                            },
-                            ga: function(t, e) {
-                                var i = {
-                                    filename: t.url,
-                                    lineno: t.line,
-                                    colno: t.column,
-                                    "function": t.func || "?"
-                                };
-                                return t.url || (i.filename = e), i.in_app = !(this.k.includePaths.test && !this.k.includePaths.test(i.filename) || /(Raven|TraceKit)\./.test(i["function"]) || /raven\.(min\.)?js$/.test(i.filename)), i
-                            },
-                            fa: function(t, e, i, n, s, o) {
-                                var r, a = (t ? t + ": " : "") + (e || "");
-                                if ((!this.k.ignoreErrors.test || !this.k.ignoreErrors.test(e) && !this.k.ignoreErrors.test(a)) && (s && s.length ? (i = s[0].filename || i, s.reverse(), r = {
-                                        frames: s
-                                    }) : i && (r = {
-                                        frames: [{
-                                            filename: i,
-                                            lineno: n,
-                                            in_app: !0
-                                        }]
-                                    }), (!this.k.ignoreUrls.test || !this.k.ignoreUrls.test(i)) && (!this.k.whitelistUrls.test || this.k.whitelistUrls.test(i)))) {
-                                    var l = C({
-                                            exception: {
-                                                values: [{
-                                                    type: t,
-                                                    value: e,
-                                                    stacktrace: r
-                                                }]
-                                            },
-                                            transaction: i
-                                        }, o),
-                                        c = l.exception.values[0];
-                                    null == c.type && "" === c.value && (c.value = "Unrecoverable error caught"), !l.exception.mechanism && l.mechanism && (l.exception.mechanism = l.mechanism, delete l.mechanism), l.exception.mechanism = C({
-                                        type: "generic",
-                                        handled: !0
-                                    }, l.exception.mechanism || {}), this.Y(l)
-                                }
-                            },
-                            ha: function(t) {
-                                var e = this.k.maxMessageLength;
-                                if (t.message && (t.message = _(t.message, e)), t.exception) {
-                                    var i = t.exception.values[0];
-                                    i.value = _(i.value, e)
-                                }
-                                var n = t.request;
-                                return n && (n.url && (n.url = _(n.url, this.k.maxUrlLength)), n.Referer && (n.Referer = _(n.Referer, this.k.maxUrlLength))), t.breadcrumbs && t.breadcrumbs.values && this.ia(t.breadcrumbs), t
-                            },
-                            ia: function(t) {
-                                for (var e, i, n, s = ["to", "from", "url"], o = 0; o < t.values.length; ++o)
-                                    if ((i = t.values[o]).hasOwnProperty("data") && m(i.data) && !E(i.data)) {
-                                        n = C({}, i.data);
-                                        for (var r = 0; r < s.length; ++r) e = s[r], n.hasOwnProperty(e) && n[e] && (n[e] = _(n[e], this.k.maxUrlLength));
-                                        t.values[o].data = n
-                                    }
-                            },
-                            ja: function() {
-                                if (this.c || this.b) {
-                                    var t = {};
-                                    return this.c && U.userAgent && (t.headers = {
-                                        "User-Agent": U.userAgent
-                                    }), z.location && z.location.href && (t.url = z.location.href), this.b && Z.referrer && (t.headers || (t.headers = {}), t.headers.Referer = Z.referrer), t
-                                }
-                            },
-                            y: function() {
-                                this.ka = 0, this.la = null
-                            },
-                            ma: function() {
-                                return this.ka && n() - this.la < this.ka
-                            },
-                            na: function(t) {
-                                var e = this.e;
-                                return !(!e || t.message !== e.message || t.transaction !== e.transaction) && (t.stacktrace || e.stacktrace ? O(t.stacktrace, e.stacktrace) : t.exception || e.exception ? M(t.exception, e.exception) : !t.fingerprint && !e.fingerprint || Boolean(t.fingerprint && e.fingerprint) && JSON.stringify(t.fingerprint) === JSON.stringify(e.fingerprint))
-                            },
-                            oa: function(t) {
-                                if (!this.ma()) {
-                                    var e = t.status;
-                                    if (400 === e || 401 === e || 429 === e) {
-                                        var i;
-                                        try {
-                                            i = R() ? t.headers.get("Retry-After") : t.getResponseHeader("Retry-After"), i = 1e3 * parseInt(i, 10)
-                                        } catch (s) {}
-                                        this.ka = i || (2 * this.ka || 1e3), this.la = n()
-                                    }
-                                }
-                            },
-                            Y: function(t) {
-                                var e = this.k,
-                                    i = {
-                                        project: this.i,
-                                        logger: e.logger,
-                                        platform: "javascript"
-                                    },
-                                    s = this.ja();
-                                if (s && (i.request = s), t.trimHeadFrames && delete t.trimHeadFrames, (t = C(i, t)).tags = C(C({}, this.j.tags), t.tags), t.extra = C(C({}, this.j.extra), t.extra), t.extra["session:duration"] = n() - this.s, this.u && this.u.length > 0 && (t.breadcrumbs = {
-                                        values: [].slice.call(this.u, 0)
-                                    }), this.j.user && (t.user = this.j.user), e.environment && (t.environment = e.environment), e.release && (t.release = e.release), e.serverName && (t.server_name = e.serverName), t = this.pa(t), Object.keys(t).forEach((function(e) {
-                                        (null == t[e] || "" === t[e] || x(t[e])) && delete t[e]
-                                    })), v(e.dataCallback) && (t = e.dataCallback(t) || t), t && !x(t) && (!v(e.shouldSendCallback) || e.shouldSendCallback(t))) return this.ma() ? void this.z("warn", "Raven dropped error due to backoff: ", t) : void("number" == typeof e.sampleRate ? Math.random() < e.sampleRate && this.qa(t) : this.qa(t))
-                            },
-                            pa: function(t) {
-                                return I(t, this.k.sanitizeKeys)
-                            },
-                            ra: function() {
-                                return B()
-                            },
-                            qa: function(t, e) {
-                                var i = this,
-                                    n = this.k;
-                                if (this.isSetup()) {
-                                    if (t = this.ha(t), !this.k.allowDuplicates && this.na(t)) return void this.z("warn", "Raven dropped repeat event: ", t);
-                                    this.f = t.event_id || (t.event_id = this.ra()), this.e = t, this.z("debug", "Raven about to send:", t);
-                                    var s = {
-                                        sentry_version: "7",
-                                        sentry_client: "raven-js/" + this.VERSION,
-                                        sentry_key: this.h
-                                    };
-                                    this.I && (s.sentry_secret = this.I);
-                                    var o = t.exception && t.exception.values[0];
-                                    this.k.autoBreadcrumbs && this.k.autoBreadcrumbs.sentry && this.captureBreadcrumb({
-                                        category: "sentry",
-                                        message: o ? (o.type ? o.type + ": " : "") + o.value : t.message,
-                                        event_id: t.event_id,
-                                        level: t.level || "error"
-                                    });
-                                    var r = this.K;
-                                    (n.transport || this._makeRequest).call(this, {
-                                        url: r,
-                                        auth: s,
-                                        data: t,
-                                        options: n,
-                                        onSuccess: function() {
-                                            i.y(), i.$("success", {
-                                                data: t,
-                                                src: r
-                                            }), e && e()
-                                        },
-                                        onError: function(n) {
-                                            i.z("error", "Raven transport failed to send: ", n), n.request && i.oa(n.request), i.$("failure", {
-                                                data: t,
-                                                src: r
-                                            }), n = n || new Error("Raven send failed (no additional details provided)"), e && e(n)
-                                        }
-                                    })
-                                }
-                            },
-                            _makeRequest: function(t) {
-                                var e = t.url + "?" + L(t.auth),
-                                    i = null,
-                                    n = {};
-                                if (t.options.headers && (i = this.sa(t.options.headers)), t.options.fetchParameters && (n = this.sa(t.options.fetchParameters)), R()) {
-                                    n.body = a(t.data);
-                                    var s = C({}, this.l),
-                                        o = C(s, n);
-                                    return i && (o.headers = i), z.fetch(e, o).then((function(e) {
-                                        if (e.ok) t.onSuccess && t.onSuccess();
-                                        else {
-                                            var i = new Error("Sentry error code: " + e.status);
-                                            i.request = e, t.onError && t.onError(i)
-                                        }
-                                    }))["catch"]((function() {
-                                        t.onError && t.onError(new Error("Sentry error code: network unavailable"))
-                                    }))
-                                }
-                                var r = z.XMLHttpRequest && new z.XMLHttpRequest;
-                                r && (("withCredentials" in r || "undefined" != typeof XDomainRequest) && ("withCredentials" in r ? r.onreadystatechange = function() {
-                                    if (4 === r.readyState)
-                                        if (200 === r.status) t.onSuccess && t.onSuccess();
-                                        else if (t.onError) {
-                                        var e = new Error("Sentry error code: " + r.status);
-                                        e.request = r, t.onError(e)
-                                    }
-                                } : (r = new XDomainRequest, e = e.replace(/^https?:/, ""), t.onSuccess && (r.onload = t.onSuccess), t.onError && (r.onerror = function() {
-                                    var e = new Error("Sentry error code: XDomainRequest");
-                                    e.request = r, t.onError(e)
-                                })), r.open("POST", e), i && k(i, (function(t, e) {
-                                    r.setRequestHeader(t, e)
-                                })), r.send(a(t.data))))
-                            },
-                            sa: function(t) {
-                                var e = {};
-                                for (var i in t)
-                                    if (t.hasOwnProperty(i)) {
-                                        var n = t[i];
-                                        e[i] = "function" == typeof n ? n() : n
-                                    } return e
-                            },
-                            z: function(t) {
-                                this.q[t] && (this.debug || this.k.debug) && Function.prototype.apply.call(this.q[t], this.p, [].slice.call(arguments, 1))
-                            },
-                            Z: function(t, e) {
-                                g(e) ? delete this.j[t] : this.j[t] = C(this.j[t] || {}, e)
-                            }
-                        }, o.prototype.setUser = o.prototype.setUserContext, o.prototype.setReleaseContext = o.prototype.setRelease, e.exports = o
-                    }).call(this, "undefined" != typeof global ? global : "undefined" != typeof self ? self : "undefined" != typeof window ? window : {})
-                }, {
-                    1: 1,
-                    2: 2,
-                    5: 5,
-                    6: 6,
-                    7: 7,
-                    8: 8
-                }],
-                4: [function(t, e, i) {
-                    (function(i) {
-                        var n = t(3),
-                            s = "undefined" != typeof window ? window : void 0 !== i ? i : "undefined" != typeof self ? self : {},
-                            o = s.Raven,
-                            r = new n;
-                        r.noConflict = function() {
-                            return s.Raven = o, r
-                        }, r.afterLoad(), e.exports = r, e.exports.Client = n
-                    }).call(this, "undefined" != typeof global ? global : "undefined" != typeof self ? self : "undefined" != typeof window ? window : {})
-                }, {
-                    3: 3
-                }],
-                5: [function(t, e, i) {
-                    (function(i) {
-                        function n(t) {
-                            switch (Object.prototype.toString.call(t)) {
-                                case "[object Error]":
-                                case "[object Exception]":
-                                case "[object DOMException]":
-                                    return !0;
-                                default:
-                                    return t instanceof Error
-                            }
-                        }
-
-                        function s(t) {
-                            return "[object DOMError]" === Object.prototype.toString.call(t)
-                        }
-
-                        function o(t) {
-                            return void 0 === t
-                        }
-
-                        function r(t) {
-                            return "[object Object]" === Object.prototype.toString.call(t)
-                        }
-
-                        function a(t) {
-                            return "[object String]" === Object.prototype.toString.call(t)
-                        }
-
-                        function l(t) {
-                            return "[object Array]" === Object.prototype.toString.call(t)
-                        }
-
-                        function c() {
-                            if (!("fetch" in x)) return !1;
-                            try {
-                                return new Headers, new Request(""), new Response, !0
-                            } catch (t) {
-                                return !1
-                            }
-                        }
-
-                        function h(t, e) {
-                            var i, n;
-                            if (o(t.length))
-                                for (i in t) d(t, i) && e.call(null, i, t[i]);
-                            else if (n = t.length)
-                                for (i = 0; i < n; i++) e.call(null, i, t[i])
-                        }
-
-                        function u(t, e) {
-                            if ("number" != typeof e) throw new Error("2nd argument to `truncate` function should be a number");
-                            return "string" != typeof t || 0 === e || t.length <= e ? t : t.substr(0, e) + "…"
-                        }
-
-                        function d(t, e) {
-                            return Object.prototype.hasOwnProperty.call(t, e)
-                        }
-
-                        function p(t) {
-                            for (var e, i = [], n = 0, s = t.length; n < s; n++) a(e = t[n]) ? i.push(e.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1")) : e && e.source && i.push(e.source);
-                            return new RegExp(i.join("|"), "i")
-                        }
-
-                        function f(t) {
-                            var e, i, n, s, o, r = [];
-                            if (!t || !t.tagName) return "";
-                            if (r.push(t.tagName.toLowerCase()), t.id && r.push("#" + t.id), (e = t.className) && a(e))
-                                for (i = e.split(/\s+/), o = 0; o < i.length; o++) r.push("." + i[o]);
-                            var l = ["type", "name", "title", "alt"];
-                            for (o = 0; o < l.length; o++) n = l[o], (s = t.getAttribute(n)) && r.push("[" + n + '="' + s + '"]');
-                            return r.join("")
-                        }
-
-                        function m(t, e) {
-                            return !!(!!t ^ !!e)
-                        }
-
-                        function y(t, e) {
-                            if (m(t, e)) return !1;
-                            var i = t.frames,
-                                n = e.frames;
-                            if (void 0 === i || void 0 === n) return !1;
-                            if (i.length !== n.length) return !1;
-                            for (var s, o, r = 0; r < i.length; r++)
-                                if (s = i[r], o = n[r], s.filename !== o.filename || s.lineno !== o.lineno || s.colno !== o.colno || s["function"] !== o["function"]) return !1;
-                            return !0
-                        }
-
-                        function g(t) {
-                            return function(t) {
-                                return ~-encodeURI(t).split(/%..|./).length
-                            }(JSON.stringify(t))
-                        }
-
-                        function v(t) {
-                            if ("string" == typeof t) {
-                                return u(t, 40)
-                            }
-                            if ("number" == typeof t || "boolean" == typeof t || void 0 === t) return t;
-                            var e = Object.prototype.toString.call(t);
-                            return "[object Object]" === e ? "[Object]" : "[object Array]" === e ? "[Array]" : "[object Function]" === e ? t.name ? "[Function: " + t.name + "]" : "[Function]" : t
-                        }
-
-                        function b(t, e) {
-                            return 0 === e ? v(t) : r(t) ? Object.keys(t).reduce((function(i, n) {
-                                return i[n] = b(t[n], e - 1), i
-                            }), {}) : Array.isArray(t) ? t.map((function(t) {
-                                return b(t, e - 1)
-                            })) : v(t)
-                        }
-                        var w = t(7),
-                            x = "undefined" != typeof window ? window : void 0 !== i ? i : "undefined" != typeof self ? self : {},
-                            k = 3,
-                            C = 51200,
-                            _ = 40;
-                        e.exports = {
-                            isObject: function(t) {
-                                return "object" == typeof t && null !== t
-                            },
-                            isError: n,
-                            isErrorEvent: function(t) {
-                                return "[object ErrorEvent]" === Object.prototype.toString.call(t)
-                            },
-                            isDOMError: s,
-                            isDOMException: function(t) {
-                                return "[object DOMException]" === Object.prototype.toString.call(t)
-                            },
-                            isUndefined: o,
-                            isFunction: function(t) {
-                                return "function" == typeof t
-                            },
-                            isPlainObject: r,
-                            isString: a,
-                            isArray: l,
-                            isEmptyObject: function(t) {
-                                if (!r(t)) return !1;
-                                for (var e in t)
-                                    if (t.hasOwnProperty(e)) return !1;
-                                return !0
-                            },
-                            supportsErrorEvent: function() {
-                                try {
-                                    return new ErrorEvent(""), !0
-                                } catch (t) {
-                                    return !1
-                                }
-                            },
-                            supportsDOMError: function() {
-                                try {
-                                    return new DOMError(""), !0
-                                } catch (t) {
-                                    return !1
-                                }
-                            },
-                            supportsDOMException: function() {
-                                try {
-                                    return new DOMException(""), !0
-                                } catch (t) {
-                                    return !1
-                                }
-                            },
-                            supportsFetch: c,
-                            supportsReferrerPolicy: function() {
-                                if (!c()) return !1;
-                                try {
-                                    return new Request("pickleRick", {
-                                        referrerPolicy: "origin"
-                                    }), !0
-                                } catch (t) {
-                                    return !1
-                                }
-                            },
-                            supportsPromiseRejectionEvent: function() {
-                                return "function" == typeof PromiseRejectionEvent
-                            },
-                            wrappedCallback: function(t) {
-                                return function(e, i) {
-                                    var n = t(e) || e;
-                                    return i && i(n) || n
-                                }
-                            },
-                            each: h,
-                            objectMerge: function(t, e) {
-                                return e ? (h(e, (function(e, i) {
-                                    t[e] = i
-                                })), t) : t
-                            },
-                            truncate: u,
-                            objectFrozen: function(t) {
-                                return !!Object.isFrozen && Object.isFrozen(t)
-                            },
-                            hasKey: d,
-                            joinRegExp: p,
-                            urlencode: function(t) {
-                                var e = [];
-                                return h(t, (function(t, i) {
-                                    e.push(encodeURIComponent(t) + "=" + encodeURIComponent(i))
-                                })), e.join("&")
-                            },
-                            uuid4: function() {
-                                var t = x.crypto || x.msCrypto;
-                                if (!o(t) && t.getRandomValues) {
-                                    var e = new Uint16Array(8);
-                                    t.getRandomValues(e), e[3] = 4095 & e[3] | 16384, e[4] = 16383 & e[4] | 32768;
-                                    var i = function(t) {
-                                        for (var e = t.toString(16); e.length < 4;) e = "0" + e;
-                                        return e
-                                    };
-                                    return i(e[0]) + i(e[1]) + i(e[2]) + i(e[3]) + i(e[4]) + i(e[5]) + i(e[6]) + i(e[7])
-                                }
-                                return "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, (function(t) {
-                                    var e = 16 * Math.random() | 0;
-                                    return ("x" === t ? e : 3 & e | 8).toString(16)
-                                }))
-                            },
-                            htmlTreeAsString: function(t) {
-                                for (var e, i = [], n = 0, s = 0, o = " > ".length; t && n++ < 5 && !("html" === (e = f(t)) || n > 1 && s + i.length * o + e.length >= 80);) i.push(e), s += e.length, t = t.parentNode;
-                                return i.reverse().join(" > ")
-                            },
-                            htmlElementAsString: f,
-                            isSameException: function(t, e) {
-                                return !m(t, e) && (t = t.values[0], e = e.values[0], t.type === e.type && t.value === e.value && ! function(t, e) {
-                                    return o(t) && o(e)
-                                }(t.stacktrace, e.stacktrace) && y(t.stacktrace, e.stacktrace))
-                            },
-                            isSameStacktrace: y,
-                            parseUrl: function(t) {
-                                if ("string" != typeof t) return {};
-                                var e = t.match(/^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?$/),
-                                    i = e[6] || "",
-                                    n = e[8] || "";
-                                return {
-                                    protocol: e[2],
-                                    host: e[4],
-                                    path: e[5],
-                                    relative: e[5] + i + n
-                                }
-                            },
-                            fill: function(t, e, i, n) {
-                                if (null != t) {
-                                    var s = t[e];
-                                    t[e] = i(s), t[e].M = !0, t[e].O = s, n && n.push([t, e, s])
-                                }
-                            },
-                            safeJoin: function(t, e) {
-                                if (!l(t)) return "";
-                                for (var i = [], s = 0; s < t.length; s++) try {
-                                    i.push(String(t[s]))
-                                } catch (n) {
-                                    i.push("[value cannot be serialized]")
-                                }
-                                return i.join(e)
-                            },
-                            serializeException: function E(t, e, i) {
-                                if (!r(t)) return t;
-                                i = "number" != typeof(e = "number" != typeof e ? k : e) ? C : i;
-                                var n = b(t, e);
-                                return g(w(n)) > i ? E(t, e - 1) : n
-                            },
-                            serializeKeysForMessage: function(t, e) {
-                                if ("number" == typeof t || "string" == typeof t) return t.toString();
-                                if (!Array.isArray(t)) return "";
-                                if (0 === (t = t.filter((function(t) {
-                                        return "string" == typeof t
-                                    }))).length) return "[object has no keys]";
-                                if (e = "number" != typeof e ? _ : e, t[0].length >= e) return t[0];
-                                for (var i = t.length; i > 0; i--) {
-                                    var n = t.slice(0, i).join(", ");
-                                    if (!(n.length > e)) return i === t.length ? n : n + "…"
-                                }
-                                return ""
-                            },
-                            sanitize: function(t, e) {
-                                if (!l(e) || l(e) && 0 === e.length) return t;
-                                var i, n = p(e),
-                                    o = "********";
-                                try {
-                                    i = JSON.parse(w(t))
-                                } catch (s) {
-                                    return t
-                                }
-                                return function a(t) {
-                                    return l(t) ? t.map((function(t) {
-                                        return a(t)
-                                    })) : r(t) ? Object.keys(t).reduce((function(e, i) {
-                                        return e[i] = n.test(i) ? o : a(t[i]), e
-                                    }), {}) : t
-                                }(i)
-                            }
-                        }
-                    }).call(this, "undefined" != typeof global ? global : "undefined" != typeof self ? self : "undefined" != typeof window ? window : {})
-                }, {
-                    7: 7
-                }],
-                6: [function(t, e, i) {
-                    (function(i) {
-                        function n() {
-                            return "undefined" == typeof document || null == document.location ? "" : document.location.href
-                        }
-                        var s = t(5),
-                            o = {
-                                collectWindowErrors: !0,
-                                debug: !1
-                            },
-                            r = "undefined" != typeof window ? window : void 0 !== i ? i : "undefined" != typeof self ? self : {},
-                            a = [].slice,
-                            l = "?",
-                            c = /^(?:[Uu]ncaught (?:exception: )?)?(?:((?:Eval|Internal|Range|Reference|Syntax|Type|URI|)Error): )?(.*)$/;
-                        o.report = function() {
-                            function t(e, i) {
-                                var n = null;
-                                if (!i || o.collectWindowErrors) {
-                                    for (var s in p)
-                                        if (p.hasOwnProperty(s)) try {
-                                            p[s].apply(null, [e].concat(a.call(arguments, 2)))
-                                        } catch (t) {
-                                            n = t
-                                        }
-                                    if (n) throw n
-                                }
-                            }
-
-                            function e(e, r, a, h, d) {
-                                var p = s.isErrorEvent(d) ? d.error : d,
-                                    f = s.isErrorEvent(e) ? e.message : e;
-                                if (y) o.computeStackTrace.augmentStackTraceWithInitialElement(y, r, a, f), i();
-                                else if (p && s.isError(p)) t(o.computeStackTrace(p), !0);
-                                else {
-                                    var m, g = {
-                                            url: r,
-                                            line: a,
-                                            column: h
-                                        },
-                                        v = void 0;
-                                    if ("[object String]" === {}.toString.call(f))(m = f.match(c)) && (v = m[1], f = m[2]);
-                                    g.func = l, t({
-                                        name: v,
-                                        message: f,
-                                        url: n(),
-                                        stack: [g]
-                                    }, !0)
-                                }
-                                return !!u && u.apply(this, arguments)
-                            }
-
-                            function i() {
-                                var e = y,
-                                    i = f;
-                                f = null, y = null, m = null, t.apply(null, [e, !1].concat(i))
-                            }
-
-                            function h(t, e) {
-                                var n = a.call(arguments, 1);
-                                if (y) {
-                                    if (m === t) return;
-                                    i()
-                                }
-                                var s = o.computeStackTrace(t);
-                                if (y = s, m = t, f = n, setTimeout((function() {
-                                        m === t && i()
-                                    }), s.incomplete ? 2e3 : 0), !1 !== e) throw t
-                            }
-                            var u, d, p = [],
-                                f = null,
-                                m = null,
-                                y = null;
-                            return h.subscribe = function(t) {
-                                d || (u = r.onerror, r.onerror = e, d = !0), p.push(t)
-                            }, h.unsubscribe = function(t) {
-                                for (var e = p.length - 1; e >= 0; --e) p[e] === t && p.splice(e, 1)
-                            }, h.uninstall = function() {
-                                d && (r.onerror = u, d = !1, u = void 0), p = []
-                            }, h
-                        }(), o.computeStackTrace = function() {
-                            function t(t) {
-                                if ("undefined" != typeof t.stack && t.stack) {
-                                    for (var e, i, s, o = /^\s*at (?:(.*?) ?\()?((?:file|https?|blob|chrome-extension|native|eval|webpack|<anonymous>|[a-z]:|\/).*?)(?::(\d+))?(?::(\d+))?\)?\s*$/i, r = /^\s*at (?:((?:\[object object\])?.+) )?\(?((?:file|ms-appx(?:-web)|https?|webpack|blob):.*?):(\d+)(?::(\d+))?\)?\s*$/i, a = /^\s*(.*?)(?:\((.*?)\))?(?:^|@)((?:file|https?|blob|chrome|webpack|resource|moz-extension).*?:\/.*?|\[native code\]|[^@]*(?:bundle|\d+\.js))(?::(\d+))?(?::(\d+))?\s*$/i, c = /(\S+) line (\d+)(?: > eval line \d+)* > eval/i, h = /\((\S*)(?::(\d+))(?::(\d+))\)/, u = t.stack.split("\n"), d = [], p = (/^(.*) is undefined$/.exec(t.message), 0), f = u.length; p < f; ++p) {
-                                        if (i = o.exec(u[p])) {
-                                            var m = i[2] && 0 === i[2].indexOf("native");
-                                            i[2] && 0 === i[2].indexOf("eval") && (e = h.exec(i[2])) && (i[2] = e[1], i[3] = e[2], i[4] = e[3]), s = {
-                                                url: m ? null : i[2],
-                                                func: i[1] || l,
-                                                args: m ? [i[2]] : [],
-                                                line: i[3] ? +i[3] : null,
-                                                column: i[4] ? +i[4] : null
-                                            }
-                                        } else if (i = r.exec(u[p])) s = {
-                                            url: i[2],
-                                            func: i[1] || l,
-                                            args: [],
-                                            line: +i[3],
-                                            column: i[4] ? +i[4] : null
-                                        };
-                                        else {
-                                            if (!(i = a.exec(u[p]))) continue;
-                                            i[3] && i[3].indexOf(" > eval") > -1 && (e = c.exec(i[3])) ? (i[3] = e[1], i[4] = e[2], i[5] = null) : 0 !== p || i[5] || "undefined" == typeof t.columnNumber || (d[0].column = t.columnNumber + 1), s = {
-                                                url: i[3],
-                                                func: i[1] || l,
-                                                args: i[2] ? i[2].split(",") : [],
-                                                line: i[4] ? +i[4] : null,
-                                                column: i[5] ? +i[5] : null
-                                            }
-                                        }
-                                        if (!s.func && s.line && (s.func = l), s.url && "blob:" === s.url.substr(0, 5)) {
-                                            var y = new XMLHttpRequest;
-                                            if (y.open("GET", s.url, !1), y.send(null), 200 === y.status) {
-                                                var g = y.responseText || "",
-                                                    v = (g = g.slice(-300)).match(/\/\/# sourceMappingURL=(.*)$/);
-                                                if (v) {
-                                                    var b = v[1];
-                                                    "~" === b.charAt(0) && (b = ("undefined" == typeof document || null == document.location ? "" : document.location.origin ? document.location.origin : document.location.protocol + "//" + document.location.hostname + (document.location.port ? ":" + document.location.port : "")) + b.slice(1)), s.url = b.slice(0, -4)
-                                                }
-                                            }
-                                        }
-                                        d.push(s)
-                                    }
-                                    return d.length ? {
-                                        name: t.name,
-                                        message: t.message,
-                                        url: n(),
-                                        stack: d
-                                    } : null
-                                }
-                            }
-
-                            function e(t, e, i, n) {
-                                var s = {
-                                    url: e,
-                                    line: i
-                                };
-                                if (s.url && s.line) {
-                                    if (t.incomplete = !1, s.func || (s.func = l), t.stack.length > 0 && t.stack[0].url === s.url) {
-                                        if (t.stack[0].line === s.line) return !1;
-                                        if (!t.stack[0].line && t.stack[0].func === s.func) return t.stack[0].line = s.line, !1
-                                    }
-                                    return t.stack.unshift(s), t.partial = !0, !0
-                                }
-                                return t.incomplete = !0, !1
-                            }
-
-                            function i(t, r) {
-                                for (var a, c, h = /function\s+([_$a-zA-Z\xA0-\uFFFF][_$a-zA-Z0-9\xA0-\uFFFF]*)?\s*\(/i, u = [], d = {}, p = !1, f = i.caller; f && !p; f = f.caller)
-                                    if (f !== s && f !== o.report) {
-                                        if (c = {
-                                                url: null,
-                                                func: l,
-                                                line: null,
-                                                column: null
-                                            }, f.name ? c.func = f.name : (a = h.exec(f.toString())) && (c.func = a[1]), "undefined" == typeof c.func) try {
-                                            c.func = a.input.substring(0, a.input.indexOf("{"))
-                                        } catch (y) {}
-                                        d["" + f] ? p = !0 : d["" + f] = !0, u.push(c)
-                                    } r && u.splice(0, r);
-                                var m = {
-                                    name: t.name,
-                                    message: t.message,
-                                    url: n(),
-                                    stack: u
-                                };
-                                return e(m, t.sourceURL || t.fileName, t.line || t.lineNumber, t.message || t.description), m
-                            }
-
-                            function s(e, s) {
-                                var a = null;
-                                s = null == s ? 0 : +s;
-                                try {
-                                    if (a = t(e)) return a
-                                } catch (r) {
-                                    if (o.debug) throw r
-                                }
-                                try {
-                                    if (a = i(e, s + 1)) return a
-                                } catch (r) {
-                                    if (o.debug) throw r
-                                }
-                                return {
-                                    name: e.name,
-                                    message: e.message,
-                                    url: n()
-                                }
-                            }
-                            return s.augmentStackTraceWithInitialElement = e, s.computeStackTraceFromStackProp = t, s
-                        }(), e.exports = o
-                    }).call(this, "undefined" != typeof global ? global : "undefined" != typeof self ? self : "undefined" != typeof window ? window : {})
-                }, {
-                    5: 5
-                }],
-                7: [function(t, e, i) {
-                    function n(t, e) {
-                        for (var i = 0; i < t.length; ++i)
-                            if (t[i] === e) return i;
-                        return -1
-                    }
-
-                    function s(t, e) {
-                        var i = [],
-                            s = [];
-                        return null == e && (e = function(t, e) {
-                                return i[0] === e ? "[Circular ~]" : "[Circular ~." + s.slice(0, n(i, e)).join(".") + "]"
-                            }),
-                            function(o, r) {
-                                if (i.length > 0) {
-                                    var a = n(i, this);
-                                    ~a ? i.splice(a + 1) : i.push(this), ~a ? s.splice(a, 1 / 0, o) : s.push(o), ~n(i, r) && (r = e.call(this, o, r))
-                                } else i.push(r);
-                                return null == t ? r instanceof Error ? function(t) {
-                                    var e = {
-                                        stack: t.stack,
-                                        message: t.message,
-                                        name: t.name
-                                    };
-                                    for (var i in t) Object.prototype.hasOwnProperty.call(t, i) && (e[i] = t[i]);
-                                    return e
-                                }(r) : r : t.call(this, o, r)
-                            }
-                    }
-                    i = e.exports = function(t, e, i, n) {
-                        return JSON.stringify(t, s(e, n), i)
-                    }, i.getSerialize = s
-                }, {}],
-                8: [function(t, e, i) {
-                    function n(t, e) {
-                        var i = (65535 & t) + (65535 & e);
-                        return (t >> 16) + (e >> 16) + (i >> 16) << 16 | 65535 & i
-                    }
-
-                    function s(t, e, i, s, o, r) {
-                        return n(function(t, e) {
-                            return t << e | t >>> 32 - e
-                        }(n(n(e, t), n(s, r)), o), i)
-                    }
-
-                    function o(t, e, i, n, o, r, a) {
-                        return s(e & i | ~e & n, t, e, o, r, a)
-                    }
-
-                    function r(t, e, i, n, o, r, a) {
-                        return s(e & n | i & ~n, t, e, o, r, a)
-                    }
-
-                    function a(t, e, i, n, o, r, a) {
-                        return s(e ^ i ^ n, t, e, o, r, a)
-                    }
-
-                    function l(t, e, i, n, o, r, a) {
-                        return s(i ^ (e | ~n), t, e, o, r, a)
-                    }
-
-                    function c(t, e) {
-                        t[e >> 5] |= 128 << e % 32, t[14 + (e + 64 >>> 9 << 4)] = e;
-                        var i, s, c, h, u, d = 1732584193,
-                            p = -271733879,
-                            f = -1732584194,
-                            m = 271733878;
-                        for (i = 0; i < t.length; i += 16) s = d, c = p, h = f, u = m, d = o(d, p, f, m, t[i], 7, -680876936), m = o(m, d, p, f, t[i + 1], 12, -389564586), f = o(f, m, d, p, t[i + 2], 17, 606105819), p = o(p, f, m, d, t[i + 3], 22, -1044525330), d = o(d, p, f, m, t[i + 4], 7, -176418897), m = o(m, d, p, f, t[i + 5], 12, 1200080426), f = o(f, m, d, p, t[i + 6], 17, -1473231341), p = o(p, f, m, d, t[i + 7], 22, -45705983), d = o(d, p, f, m, t[i + 8], 7, 1770035416), m = o(m, d, p, f, t[i + 9], 12, -1958414417), f = o(f, m, d, p, t[i + 10], 17, -42063), p = o(p, f, m, d, t[i + 11], 22, -1990404162), d = o(d, p, f, m, t[i + 12], 7, 1804603682), m = o(m, d, p, f, t[i + 13], 12, -40341101), f = o(f, m, d, p, t[i + 14], 17, -1502002290), d = r(d, p = o(p, f, m, d, t[i + 15], 22, 1236535329), f, m, t[i + 1], 5, -165796510), m = r(m, d, p, f, t[i + 6], 9, -1069501632), f = r(f, m, d, p, t[i + 11], 14, 643717713), p = r(p, f, m, d, t[i], 20, -373897302), d = r(d, p, f, m, t[i + 5], 5, -701558691), m = r(m, d, p, f, t[i + 10], 9, 38016083), f = r(f, m, d, p, t[i + 15], 14, -660478335), p = r(p, f, m, d, t[i + 4], 20, -405537848), d = r(d, p, f, m, t[i + 9], 5, 568446438), m = r(m, d, p, f, t[i + 14], 9, -1019803690), f = r(f, m, d, p, t[i + 3], 14, -187363961), p = r(p, f, m, d, t[i + 8], 20, 1163531501), d = r(d, p, f, m, t[i + 13], 5, -1444681467), m = r(m, d, p, f, t[i + 2], 9, -51403784), f = r(f, m, d, p, t[i + 7], 14, 1735328473), d = a(d, p = r(p, f, m, d, t[i + 12], 20, -1926607734), f, m, t[i + 5], 4, -378558), m = a(m, d, p, f, t[i + 8], 11, -2022574463), f = a(f, m, d, p, t[i + 11], 16, 1839030562), p = a(p, f, m, d, t[i + 14], 23, -35309556), d = a(d, p, f, m, t[i + 1], 4, -1530992060), m = a(m, d, p, f, t[i + 4], 11, 1272893353), f = a(f, m, d, p, t[i + 7], 16, -155497632), p = a(p, f, m, d, t[i + 10], 23, -1094730640), d = a(d, p, f, m, t[i + 13], 4, 681279174), m = a(m, d, p, f, t[i], 11, -358537222), f = a(f, m, d, p, t[i + 3], 16, -722521979), p = a(p, f, m, d, t[i + 6], 23, 76029189), d = a(d, p, f, m, t[i + 9], 4, -640364487), m = a(m, d, p, f, t[i + 12], 11, -421815835), f = a(f, m, d, p, t[i + 15], 16, 530742520), d = l(d, p = a(p, f, m, d, t[i + 2], 23, -995338651), f, m, t[i], 6, -198630844), m = l(m, d, p, f, t[i + 7], 10, 1126891415), f = l(f, m, d, p, t[i + 14], 15, -1416354905), p = l(p, f, m, d, t[i + 5], 21, -57434055), d = l(d, p, f, m, t[i + 12], 6, 1700485571), m = l(m, d, p, f, t[i + 3], 10, -1894986606), f = l(f, m, d, p, t[i + 10], 15, -1051523), p = l(p, f, m, d, t[i + 1], 21, -2054922799), d = l(d, p, f, m, t[i + 8], 6, 1873313359), m = l(m, d, p, f, t[i + 15], 10, -30611744), f = l(f, m, d, p, t[i + 6], 15, -1560198380), p = l(p, f, m, d, t[i + 13], 21, 1309151649), d = l(d, p, f, m, t[i + 4], 6, -145523070), m = l(m, d, p, f, t[i + 11], 10, -1120210379), f = l(f, m, d, p, t[i + 2], 15, 718787259), p = l(p, f, m, d, t[i + 9], 21, -343485551), d = n(d, s), p = n(p, c), f = n(f, h), m = n(m, u);
-                        return [d, p, f, m]
-                    }
-
-                    function h(t) {
-                        var e, i = "",
-                            n = 32 * t.length;
-                        for (e = 0; e < n; e += 8) i += String.fromCharCode(t[e >> 5] >>> e % 32 & 255);
-                        return i
-                    }
-
-                    function u(t) {
-                        var e, i = [];
-                        for (i[(t.length >> 2) - 1] = void 0, e = 0; e < i.length; e += 1) i[e] = 0;
-                        var n = 8 * t.length;
-                        for (e = 0; e < n; e += 8) i[e >> 5] |= (255 & t.charCodeAt(e / 8)) << e % 32;
-                        return i
-                    }
-
-                    function d(t) {
-                        var e, i, n = "0123456789abcdef",
-                            s = "";
-                        for (i = 0; i < t.length; i += 1) e = t.charCodeAt(i), s += n.charAt(e >>> 4 & 15) + n.charAt(15 & e);
-                        return s
-                    }
-
-                    function p(t) {
-                        return unescape(encodeURIComponent(t))
-                    }
-
-                    function f(t) {
-                        return function(t) {
-                            return h(c(u(t), 8 * t.length))
-                        }(p(t))
-                    }
-
-                    function m(t, e) {
-                        return function(t, e) {
-                            var i, n, s = u(t),
-                                o = [],
-                                r = [];
-                            for (o[15] = r[15] = void 0, s.length > 16 && (s = c(s, 8 * t.length)), i = 0; i < 16; i += 1) o[i] = 909522486 ^ s[i], r[i] = 1549556828 ^ s[i];
-                            return n = c(o.concat(u(e)), 512 + 8 * e.length), h(c(r.concat(n), 640))
-                        }(p(t), p(e))
-                    }
-                    e.exports = function(t, e, i) {
-                        return e ? i ? m(e, t) : function(t, e) {
-                            return d(m(t, e))
-                        }(e, t) : i ? f(t) : function(t) {
-                            return d(f(t))
-                        }(t)
-                    }
-                }, {}]
-            }, {}, [4])(4)
-        }));
-    var z = [{
+    var uaPatterns = [{
             family: "UC Browser",
             patterns: ["(UC? ?Browser|UCWEB|U3)[ /]?(\\d+)\\.(\\d+)\\.(\\d+)"]
         }, {
@@ -1618,7 +95,7 @@
             family: "Firefox",
             patterns: ["(Firefox)/(\\d+)\\.(\\d+)\\.(\\d+)", "(Firefox)/(\\d+)\\.(\\d+)(pre|[ab]\\d+[a-z]*|)"]
         }],
-        Z = [{
+        osPatterns = [{
             family: "Windows",
             name_replace: "Windows Phone",
             patterns: ["(Windows Phone) (?:OS[ /])?(\\d+)\\.(\\d+)", "^UCWEB.*; (wds) (\\d+)\\.(d+)(?:\\.(\\d+)|);", "^UCWEB.*; (wds) (\\d+)\\.(\\d+)(?:\\.(\\d+)|);"]
@@ -1704,18 +181,18 @@
         }, {
             patterns: ["(Fedora|Red Hat|PCLinuxOS|Puppy|Ubuntu|Kindle|Bada|Sailfish|Lubuntu|BackTrack|Slackware|(?:Free|Open|Net|\\b)BSD)[/ ](\\d+)\\.(\\d+)(?:\\.(\\d+)|)(?:\\.(\\d+)|)"]
         }],
-        U = navigator.userAgent,
-        W = function() {
-            return U
+        uaString = navigator.userAgent,
+        getUAstring = function() {
+            return uaString
         },
-        K = function(t) {
-            return J(t || U, z)
+        getUAvalue = function(t) {
+            return parseUserAgent(t || uaString, uaPatterns)
         },
-        q = function(t) {
-            return J(t || U, Z)
+        getOSvalue = function(t) {
+            return parseUserAgent(t || uaString, osPatterns)
         };
 
-    function G(t, e) {
+    function applyPatterns(t, e) {
         try {
             var i = new RegExp(e).exec(t);
             return i ? {
@@ -1729,10 +206,10 @@
         }
     }
 
-    function J(t, e) {
+    function parseUserAgent(ua, e) {
         for (var i = null, n = null, s = -1, o = !1; ++s < e.length && !o;) {
             i = e[s];
-            for (var r = -1; ++r < i.patterns.length && !o;) o = null !== (n = G(t, i.patterns[r]))
+            for (var r = -1; ++r < i.patterns.length && !o;) o = null !== (n = applyPatterns(ua, i.patterns[r]))
         }
         return o ? (n.family = i.family || i.name_replace || n.name, i.name_replace && (n.name = i.name_replace), i.major_replace && (n.major = i.major_replace), i.minor_replace && (n.minor = i.minor_replace), i.patch_replace && (n.minor = i.patch_replace), n) : {
             family: "Other",
@@ -1743,10 +220,10 @@
         }
     }
 
-    function Y() {
+    function BrowserCapabilities() {
         var t = this,
-            e = K(),
-            i = W();
+            e = getUAvalue(),
+            i = getUAstring();
         this.agent = i.toLowerCase(), this.language = window.navigator.userLanguage || window.navigator.language, this.isCSS1 = "CSS1Compat" === (document.compatMode || ""), this.width = function() {
             return window.innerWidth && window.document.documentElement.clientWidth ? Math.min(window.innerWidth, document.documentElement.clientWidth) : window.innerWidth || window.document.documentElement.clientWidth || document.body.clientWidth
         }, this.height = function() {
@@ -1757,13 +234,13 @@
             return window.pageYOffset !== undefined ? window.pageYOffset : t.isCSS1 ? document.documentElement.scrollTop : document.body.scrollTop
         }, this.type = "Edge" === e.family ? "edge" : "Internet Explorer" === e.family ? "ie" : "Chrome" === e.family ? "chrome" : "Safari" === e.family ? "safari" : "Firefox" === e.family ? "firefox" : e.family.toLowerCase(), this.version = 1 * (e.major + "." + e.minor) || 0, this.hasPostMessage = !!window.postMessage
     }
-    Y.prototype.hasEvent = function(t, e) {
+    BrowserCapabilities.prototype.hasEvent = function(t, e) {
         return "on" + t in (e || document.createElement("div"))
-    }, Y.prototype.getScreenDimensions = function() {
+    }, BrowserCapabilities.prototype.getScreenDimensions = function() {
         var t = {};
         for (var e in window.screen) t[e] = window.screen[e];
         return delete t.orientation, t
-    }, Y.prototype.interrogateNavigator = function() {
+    }, BrowserCapabilities.prototype.interrogateNavigator = function() {
         var t = {};
         for (var e in window.navigator)
             if ("webkitPersistentStorage" !== e) try {
@@ -1772,12 +249,12 @@
         if (delete t.plugins, delete t.mimeTypes, t.plugins = [], window.navigator.plugins)
             for (var i = 0; i < window.navigator.plugins.length; i++) t.plugins[i] = window.navigator.plugins[i].filename;
         return t
-    }, Y.prototype.supportsPST = function() {
+    }, BrowserCapabilities.prototype.supportsPST = function() {
         return document.hasPrivateToken !== undefined
-    }, Y.prototype.supportsCanvas = function() {
+    }, BrowserCapabilities.prototype.supportsCanvas = function() {
         var t = document.createElement("canvas");
         return !(!t.getContext || !t.getContext("2d"))
-    }, Y.prototype.supportsWebAssembly = function() {
+    }, BrowserCapabilities.prototype.supportsWebAssembly = function() {
         try {
             if ("object" == typeof WebAssembly && "function" == typeof WebAssembly.instantiate) {
                 var t = new WebAssembly.Module(Uint8Array.of(0, 97, 115, 109, 1, 0, 0, 0));
@@ -1787,10 +264,10 @@
             return !1
         }
     };
-    var Q = new Y,
-        X = new function() {
-            var t, e, i = q(),
-                n = W();
+    var browserCaps = new BrowserCapabilities;
+    var systemCaps = new function() {
+            var t, e, i = getOSvalue(),
+                n = getUAstring();
             this.mobile = (t = !!("ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0), e = !1, i && (e = ["iOS", "Windows Phone", "Windows Mobile", "Android", "BlackBerry OS"].indexOf(i.name) >= 0), t && e), this.dpr = function() {
                 return window.devicePixelRatio || 1
             }, this.mobile && i && "Windows" === i.family && n.indexOf("touch") < 0 && (this.mobile = !1), this.os = "iOS" === i.family ? "ios" : "Android" === i.family ? "android" : "Mac OS X" === i.family ? "mac" : "Windows" === i.family ? "windows" : "Linux" === i.family ? "linux" : i.family.toLowerCase(), this.version = function() {
@@ -1799,14 +276,14 @@
                 return i.minor && (t += "." + i.minor), i.patch && (t += "." + i.patch), t
             }()
         },
-        tt = {
-            Browser: Q,
-            System: X,
+        browserData = {
+            Browser: browserCaps,
+            System: systemCaps,
             supportsPAT: function() {
-                return ("mac" === X.os || "ios" === X.os) && "safari" === Q.type && Q.version >= 16.2
+                return ("mac" === systemCaps.os || "ios" === systemCaps.os) && "safari" === browserCaps.type && browserCaps.version >= 16.2
             }
         },
-        et = {
+        challengeStatus = {
             CHALLENGE_PASSED: "challenge-passed",
             CHALLENGE_ESCAPED: "challenge-escaped",
             CHALLENGE_CLOSED: "challenge-closed",
@@ -1815,7 +292,7 @@
             AUTHENTICATION_DONE: "authentication-done",
             AUTHENTICATION_PASSED: "authentication-passed"
         },
-        it = {
+        captchaStatus = {
             INVALID_DATA: "invalid-data",
             BUNDLE_ERROR: "bundle-error",
             NETWORK_ERROR: "network-error",
@@ -1827,27 +304,27 @@
             INVALID_CAPTCHA_ID: "invalid-captcha-id",
             AUTHENTICATION_ERROR: "authentication-error"
         },
-        nt = "https://hcaptcha.com",
-        st = "https://api.hcaptcha.com",
-        ot = "https://api2.hcaptcha.com",
-        rt = "https://cloudflare.hcaptcha.com",
-        at = [nt, ot, rt],
-        lt = {
+        hDomain = "https://hcaptcha.com",
+        api_hDomain = "https://api.hcaptcha.com",
+        api2_hDomain = "https://api2.hcaptcha.com",
+        cf_hDomain = "https://cloudflare.hcaptcha.com",
+        main_endpoints = [hDomain, api2_hDomain, cf_hDomain],
+        constantsLib = {
             __proto__: null,
-            CaptchaEvent: et,
-            CaptchaError: it,
-            DEFAULT_ENDPOINT: nt,
-            FALLBACK_ENDPOINT: st,
-            API2_ENDPOINT: ot,
-            CF_ENDPOINT: rt,
-            MAIN_ENDPOINTS: at
+            CaptchaEvent: challengeStatus,
+            CaptchaError: captchaStatus,
+            DEFAULT_ENDPOINT: hDomain,
+            FALLBACK_ENDPOINT: api_hDomain,
+            API2_ENDPOINT: api2_hDomain,
+            CF_ENDPOINT: cf_hDomain,
+            MAIN_ENDPOINTS: main_endpoints
         },
-        ct = {
+        hcaptchaDummyObj = {
             host: null,
             file: null,
             sitekey: null,
             a11y_tfe: null,
-            pingdom: "safari" === tt.Browser.type && "windows" !== tt.System.os && "mac" !== tt.System.os && "ios" !== tt.System.os && "android" !== tt.System.os,
+            pingdom: "safari" === browserData.Browser.type && "windows" !== browserData.System.os && "mac" !== browserData.System.os && "ios" !== browserData.System.os && "android" !== browserData.System.os,
             assetDomain: "https://newassets.hcaptcha.com",
             assetUrl: "https://newassets.hcaptcha.com/captcha/v1/1b812e2/static",
             width: null,
@@ -1856,7 +333,7 @@
             orientation: "portrait",
             challenge_type: null
         },
-        ht = {
+        ColorStyles = {
             theme: {
                 contrast: {
                     hcolor: "#FFF",
@@ -1890,13 +367,13 @@
             error: "#fc481e",
             outline: "#262D38"
         },
-        ut = {
+        config_options = {
             se: null,
             custom: !1,
             tplinks: "on",
             language: null,
             reportapi: "https://accounts.hcaptcha.com",
-            endpoint: nt,
+            endpoint: hDomain,
             pstIssuer: "https://pst-issuer.hcaptcha.com",
             size: "normal",
             theme: "light",
@@ -1906,18 +383,18 @@
             pat: "on",
             confirmNav: !1
         },
-        dt = "https://30910f52569b4c17b1081ead2dae43b4@sentry.hcaptcha.com/6",
-        pt = "1b812e2",
-        ft = "prod";
+        sentryLink = "https://30910f52569b4c17b1081ead2dae43b4@sentry.hcaptcha.com/6",
+        static_path = "1b812e2",
+        script_env = "prod";
 
-    function mt(t, e) {
+    function createDiv_(t, e) {
         t.style.width = "304px", t.style.height = "78px", t.style.backgroundColor = "#f9e5e5", t.style.position = "relative", t.innerHTML = "";
         var i = document.createElement("div");
         i.style.width = "284px", i.style.position = "absolute", i.style.top = "12px", i.style.left = "10px", i.style.color = "#7c0a06", i.style.fontSize = "14px", i.style.fontWeight = "normal", i.style.lineHeight = "18px", i.innerHTML = e || "Please <a style='color:inherit;text-decoration:underline; font: inherit' target='_blank' href='https://www.whatismybrowser.com/guides/how-to-update-your-browser/auto'>upgrade your browser</a> to complete this captcha.", t.appendChild(i)
     }
-    var yt = [];
+    var SomeArr = [];
 
-    function gt(t) {
+    function ConsoleFilter(t) {
         for (var e = [], i = /(https?|wasm):\/\//, n = /^at /, s = /:\d+:\d+/g, o = 0, r = t.length; o < r; o++) {
             var a = t[o];
             if (!i.test(a)) {
@@ -1928,61 +405,61 @@
         return e.join("\n").trim()
     }
 
-    function vt(t) {
+    function reportError(t) {
         var e = {
             message: t.name + ": " + t.message
         };
         t.stack && (e.stack_trace = {
             trace: t.stack
-        }), kt("report error", "internal", "debug", e), wt("internal error", "error", ct.file)
+        }), ravenCaptureBreadCrumb("report error", "internal", "debug", e), captureMessageRaven("internal error", "error", hcaptchaDummyObj.file)
     }
 
-    function bt(t) {
-        ut.sentry && (window.Raven && Raven.config(dt, {
-            release: pt,
-            environment: ft,
+    function ravenSetup(t) {
+        config_options.sentry && (window.Raven && Raven.config(sentryLink, {
+            release: static_path,
+            environment: script_env,
             autoBreadcrumbs: {
                 xhr: !0,
                 dom: !0,
                 sentry: !0
             },
             tags: {
-                "site-host": ct.host,
-                "site-key": ct.sitekey,
-                "endpoint-url": ut.endpoint,
-                "asset-url": ct.assetUrl
+                "site-host": hcaptchaDummyObj.host,
+                "site-key": hcaptchaDummyObj.sitekey,
+                "endpoint-url": config_options.endpoint,
+                "asset-url": hcaptchaDummyObj.assetUrl
             },
             sampleRate: .01,
             ignoreErrors: ["canvas.contentDocument", "Can't find variable: ZiteReader", "Cannot redefine property: hcaptcha", "Cannot redefine property: BetterJsPop", "grecaptcha is not defined", "jQuery is not defined", "$ is not defined", "Script is not a function"]
         }), window.Raven && Raven.setUserContext({
-            "Browser-Agent": tt.Browser.agent,
-            "Browser-Type": tt.Browser.type,
-            "Browser-Version": tt.Browser.version,
-            "System-OS": tt.System.os,
-            "System-Version": tt.System.version,
-            "Is-Mobile": tt.System.mobile
-        }), kt(ct.file + "_internal", "setup", "info"), t && (window.onerror = function(t, e, i, n, s) {
+            "Browser-Agent": browserData.Browser.agent,
+            "Browser-Type": browserData.Browser.type,
+            "Browser-Version": browserData.Browser.version,
+            "System-OS": browserData.System.os,
+            "System-Version": browserData.System.version,
+            "Is-Mobile": browserData.System.mobile
+        }), ravenCaptureBreadCrumb(hcaptchaDummyObj.file + "_internal", "setup", "info"), t && (window.onerror = function(t, e, i, n, s) {
             var o = s.name || "Error",
                 r = s.stack || "";
             ! function(t) {
-                if (t && "string" == typeof t && -1 === yt.indexOf(t) && !(yt.length >= 10)) {
-                    var e = gt(t.trim().split("\n").slice(0, 2));
-                    yt.push(e)
+                if (t && "string" == typeof t && -1 === SomeArr.indexOf(t) && !(SomeArr.length >= 10)) {
+                    var e = ConsoleFilter(t.trim().split("\n").slice(0, 2));
+                    SomeArr.push(e)
                 }
-            }(r), -1 === r.indexOf("at chrome-extension://") && (kt(t, "global", "debug", {
+            }(r), -1 === r.indexOf("at chrome-extension://") && (ravenCaptureBreadCrumb(t, "global", "debug", {
                 name: o,
                 url: e,
                 line: i,
                 column: n,
                 stack: r
-            }), xt("global", s, {
+            }), handleMissingErrorMessageRaven("global", s, {
                 message: t
             }))
         }))
     }
 
-    function wt(t, e, i, n) {
-        if (e = e || "error", ut.sentry) {
+    function captureMessageRaven(t, e, i, n) {
+        if (e = e || "error", config_options.sentry) {
             var s = "warn" === e ? "warning" : e;
             window.Raven && Raven.captureMessage(t, {
                 level: s,
@@ -1992,19 +469,20 @@
         }
     }
 
-    function xt(t, e, i) {
-        return (i = i || {}).error = e, wt(e.message || "Missing error message", "error", t, i)
+    function handleMissingErrorMessageRaven(t, e, i) {
+        return (i = i || {}).error = e, captureMessageRaven(e.message || "Missing error message", "error", t, i)
     }
 
-    function kt(t, e, i, n) {
-        ut.sentry && window.Raven && Raven.captureBreadcrumb({
+    function ravenCaptureBreadCrumb(t, e, i, n) {
+        config_options.sentry && window.Raven && Raven.captureBreadcrumb({
             message: t,
             category: e,
             level: i,
             data: n
         })
     }
-    var Ct = {
+
+    var browserApis = {
             getCookie: function(t) {
                 var e = document.cookie.replace(/ /g, "").split(";");
                 try {
@@ -2015,7 +493,7 @@
                 }
             },
             hasCookie: function(t) {
-                return !!Ct.getCookie(t)
+                return !!browserApis.getCookie(t)
             },
             supportsAPI: function() {
                 try {
@@ -2041,7 +519,7 @@
                 }
             }
         },
-        _t = {
+        shuffleObjFunc = {
             array: function(t) {
                 if (0 === t.length) return t;
                 for (var e, i, n = t.length; --n > -1;) i = Math.floor(Math.random() * (n + 1)), e = t[n], t[n] = t[i], t[i] = e;
@@ -2049,32 +527,32 @@
             }
         };
 
-    function Et(t) {
+    function ColorLib(t) {
         this.r = 255, this.g = 255, this.b = 255, this.a = 1, this.h = 1, this.s = 1, this.l = 1, this.parseString(t)
     }
 
-    function At(t, e, i) {
+    function colorLib_hsl(t, e, i) {
         return i < 0 && (i += 1), i > 1 && (i -= 1), i < 1 / 6 ? t + 6 * (e - t) * i : i < .5 ? e : i < 2 / 3 ? t + (e - t) * (2 / 3 - i) * 6 : t
     }
 
-    function St(t) {
+    function stufffff(t) {
         for (var e, i = window.atob(t), n = i.length, s = new Uint8Array(n), o = 0; o < n; o++) e = i.charCodeAt(o), s[o] = e;
         return s
     }
 
-    function Lt(t) {
-        return crypto.subtle.importKey("spki", St(t), {
+    function importKeyVerify(t) {
+        return crypto.subtle.importKey("spki", stufffff(t), {
             name: "RSASSA-PKCS1-v1_5",
             hash: {
                 name: "SHA-256"
             }
         }, !1, ["verify"])
     }
-    Et.hasAlpha = function(t) {
+    ColorLib.hasAlpha = function(t) {
         return "string" == typeof t && (-1 !== t.indexOf("rgba") || 9 === t.length && "#" === t[0])
-    }, Et.prototype.parseString = function(t) {
+    }, ColorLib.prototype.parseString = function(t) {
         t && (0 === t.indexOf("#") ? this.fromHex(t) : 0 === t.indexOf("rgb") && this.fromRGBA(t))
-    }, Et.prototype.fromHex = function(t) {
+    }, ColorLib.prototype.fromHex = function(t) {
         var e = 1;
         9 === t.length && (e = parseInt(t.substr(7, 2), 16) / 255);
         var i = (t = t.substr(1, 6)).replace(/^([a-f\d])([a-f\d])([a-f\d])?$/i, (function(t, e, i, n) {
@@ -2085,7 +563,7 @@
             o = n >> 8 & 255,
             r = 255 & n;
         this.setRGBA(s, o, r, e)
-    }, Et.prototype.fromRGBA = function(t) {
+    }, ColorLib.prototype.fromRGBA = function(t) {
         var e = t.indexOf("rgba"),
             i = t.substr(e).replace(/rgba?\(/, "").replace(/\)/, "").replace(/[\s+]/g, "").split(","),
             n = Math.floor(parseInt(i[0])),
@@ -2093,19 +571,19 @@
             o = Math.floor(parseInt(i[2])),
             r = parseFloat(i[3]);
         this.setRGBA(n, s, o, r)
-    }, Et.prototype.setRGB = function(t, e, i) {
+    }, ColorLib.prototype.setRGB = function(t, e, i) {
         this.setRGBA(t, e, i, 1)
-    }, Et.prototype.setRGBA = function(t, e, i, n) {
+    }, ColorLib.prototype.setRGBA = function(t, e, i, n) {
         this.r = t, this.g = e, this.b = i, this.a = isNaN(n) ? this.a : n, this.updateHSL()
-    }, Et.prototype.hsl2rgb = function(t, e, i) {
+    }, ColorLib.prototype.hsl2rgb = function(t, e, i) {
         if (0 === e) {
             var n = Math.round(255 * i);
             return this.setRGB(n, n, n), this
         }
         var s = i <= .5 ? i * (1 + e) : i + e - i * e,
             o = 2 * i - s;
-        return this.r = Math.round(255 * At(o, s, t + 1 / 3)), this.g = Math.round(255 * At(o, s, t)), this.b = Math.round(255 * At(o, s, t - 1 / 3)), this.h = t, this.s = e, this.l = i, this
-    }, Et.prototype.updateHSL = function() {
+        return this.r = Math.round(255 * colorLib_hsl(o, s, t + 1 / 3)), this.g = Math.round(255 * colorLib_hsl(o, s, t)), this.b = Math.round(255 * colorLib_hsl(o, s, t - 1 / 3)), this.h = t, this.s = e, this.l = i, this
+    }, ColorLib.prototype.updateHSL = function() {
         var t, e = this.r / 255,
             i = this.g / 255,
             n = this.b / 255,
@@ -2129,33 +607,33 @@
             r /= 6
         }
         return this.h = r, this.s = t, this.l = a, this
-    }, Et.prototype.getHex = function() {
+    }, ColorLib.prototype.getHex = function() {
         return "#" + ((1 << 24) + (this.r << 16) + (this.g << 8) + this.b).toString(16).slice(1)
-    }, Et.prototype.getRGBA = function() {
+    }, ColorLib.prototype.getRGBA = function() {
         return "rgba(" + this.r + "," + this.g + "," + this.b + "," + this.a + ")"
-    }, Et.prototype.clone = function() {
-        var t = new Et;
+    }, ColorLib.prototype.clone = function() {
+        var t = new ColorLib;
         return t.setRGBA(this.r, this.g, this.b, this.a), t
-    }, Et.prototype.mix = function(t, e) {
-        t instanceof Et || (t = new Et(t));
-        var i = new Et,
+    }, ColorLib.prototype.mix = function(t, e) {
+        t instanceof ColorLib || (t = new ColorLib(t));
+        var i = new ColorLib,
             n = Math.round(this.r + e * (t.r - this.r)),
             s = Math.round(this.g + e * (t.g - this.g)),
             o = Math.round(this.b + e * (t.b - this.b));
         return i.setRGB(n, s, o), i
-    }, Et.prototype.blend = function(t, e) {
+    }, ColorLib.prototype.blend = function(t, e) {
         var i;
-        t instanceof Et || (t = new Et(t));
+        t instanceof ColorLib || (t = new ColorLib(t));
         for (var n = [], s = 0; s < e; s++) i = this.mix.call(this, t, s / e), n.push(i);
         return n
-    }, Et.prototype.lightness = function(t) {
+    }, ColorLib.prototype.lightness = function(t) {
         return t > 1 && (t /= 100), this.hsl2rgb(this.h, this.s, t), this
-    }, Et.prototype.saturation = function(t) {
+    }, ColorLib.prototype.saturation = function(t) {
         return t > 1 && (t /= 100), this.hsl2rgb(this.h, t, this.l), this
-    }, Et.prototype.hue = function(t) {
+    }, ColorLib.prototype.hue = function(t) {
         return this.hsl2rgb(t / 360, this.s, this.l), this
     };
-    var Bt = {
+    var JWTLib = {
             decode: function(t) {
                 try {
                     var e = t.split(".");
@@ -2179,7 +657,7 @@
                     hash: {
                         name: "SHA-256"
                     }
-                }, s, St(n), (new TextEncoder).encode(i))).then((function(t) {
+                }, s, stufffff(n), (new TextEncoder).encode(i))).then((function(t) {
                     if (!t) throw new Error("Token is invalid.")
                 }));
                 var i, n, s
@@ -2189,7 +667,7 @@
                 return !0
             }
         },
-        Ht = {
+        RenderLib = {
             _setup: !1,
             _af: null,
             _fps: 60,
@@ -2211,45 +689,45 @@
             cancelFrame: null,
             _init: function() {
                 for (var t, e = window.requestAnimationFrame, i = window.cancelAnimationFrame, n = ["ms", "moz", "webkit", "o"], s = n.length; --s > -1 && !e;) e = window[n[s] + "RequestAnimationFrame"], i = window[n[s] + "CancelAnimationFrame"] || window[n[s] + "CancelRequestAnimationFrame"];
-                e ? (Ht.requestFrame = e.bind(window), Ht.cancelFrame = i.bind(window)) : (Ht.requestFrame = (t = Date.now(), function(e) {
+                e ? (RenderLib.requestFrame = e.bind(window), RenderLib.cancelFrame = i.bind(window)) : (RenderLib.requestFrame = (t = Date.now(), function(e) {
                     window.setTimeout((function() {
                         e(Date.now() - t)
-                    }), 1e3 * Ht._singleFrame)
-                }), Ht.cancelFrame = function(t) {
+                    }), 1e3 * RenderLib._singleFrame)
+                }), RenderLib.cancelFrame = function(t) {
                     return clearTimeout(t), null
-                }), Ht._setup = !0, Ht._startTime = Ht._lastTime = Date.now()
+                }), RenderLib._setup = !0, RenderLib._startTime = RenderLib._lastTime = Date.now()
             },
             add: function(t, e) {
-                Ht._renders.push({
+                RenderLib._renders.push({
                     callback: t,
                     paused: !1 == !e || !1
-                }), !1 == !e && Ht.start()
+                }), !1 == !e && RenderLib.start()
             },
             remove: function(t) {
-                for (var e = Ht._renders.length; --e > -1;) Ht._renders[e].callback === t && (Ht._renders[e].paused = !0, Ht._renders.splice(e, 1))
+                for (var e = RenderLib._renders.length; --e > -1;) RenderLib._renders[e].callback === t && (RenderLib._renders[e].paused = !0, RenderLib._renders.splice(e, 1))
             },
             start: function(t) {
-                if (!1 === Ht._setup && Ht._init(), t)
-                    for (var e = Ht._renders.length; --e > -1;) Ht._renders[e].callback === t && (Ht._renders[e].paused = !1);
-                !0 !== Ht._running && (Ht._paused = !1, Ht._running = !0, Ht._af = Ht.requestFrame(Ht._update))
+                if (!1 === RenderLib._setup && RenderLib._init(), t)
+                    for (var e = RenderLib._renders.length; --e > -1;) RenderLib._renders[e].callback === t && (RenderLib._renders[e].paused = !1);
+                !0 !== RenderLib._running && (RenderLib._paused = !1, RenderLib._running = !0, RenderLib._af = RenderLib.requestFrame(RenderLib._update))
             },
             stop: function(t) {
                 if (t)
-                    for (var e = Ht._renders.length; --e > -1;) Ht._renders[e].callback === t && (Ht._renders[e].paused = !0);
-                else !1 !== Ht._running && (Ht._af = Ht.cancelFrame(Ht._af), Ht._paused = !0, Ht._running = !1)
+                    for (var e = RenderLib._renders.length; --e > -1;) RenderLib._renders[e].callback === t && (RenderLib._renders[e].paused = !0);
+                else !1 !== RenderLib._running && (RenderLib._af = RenderLib.cancelFrame(RenderLib._af), RenderLib._paused = !0, RenderLib._running = !1)
             },
             elapsed: function() {
-                return Date.now() - Ht._startTime
+                return Date.now() - RenderLib._startTime
             },
             fps: function(t) {
-                return arguments.length ? (Ht._fps = t, Ht._singleFrame = 1 / (Ht._fps || 60), Ht._adjustedLag = 2 * Ht._singleFrame, Ht._nextTime = Ht.time + Ht._singleFrame, Ht._fps) : Ht._fps
+                return arguments.length ? (RenderLib._fps = t, RenderLib._singleFrame = 1 / (RenderLib._fps || 60), RenderLib._adjustedLag = 2 * RenderLib._singleFrame, RenderLib._nextTime = RenderLib.time + RenderLib._singleFrame, RenderLib._fps) : RenderLib._fps
             },
             isRunning: function() {
-                return Ht._running
+                return RenderLib._running
             },
             _update: function() {
-                if (!Ht._paused && (Ht._elapsed = Date.now() - Ht._lastTime, Ht._tick = !1, Ht._elapsed > Ht._lagThreshold && (Ht._startTime += Ht._elapsed - Ht._adjustedLag), Ht._lastTime += Ht._elapsed, Ht.time = (Ht._lastTime - Ht._startTime) / 1e3, Ht._difference = Ht.time - Ht._nextTime, Ht._difference > 0 && (Ht.frame++, Ht._nextTime += Ht._difference + (Ht._difference >= Ht._singleFrame ? Ht._singleFrame / 4 : Ht._singleFrame - Ht._difference), Ht._tick = !0), Ht._af = Ht.requestFrame(Ht._update), !0 === Ht._tick && Ht._renders.length > 0))
-                    for (var t = Ht._renders.length; --t > -1;) Ht._renders[t] && !1 === Ht._renders[t].paused && Ht._renders[t].callback(Ht.time)
+                if (!RenderLib._paused && (RenderLib._elapsed = Date.now() - RenderLib._lastTime, RenderLib._tick = !1, RenderLib._elapsed > RenderLib._lagThreshold && (RenderLib._startTime += RenderLib._elapsed - RenderLib._adjustedLag), RenderLib._lastTime += RenderLib._elapsed, RenderLib.time = (RenderLib._lastTime - RenderLib._startTime) / 1e3, RenderLib._difference = RenderLib.time - RenderLib._nextTime, RenderLib._difference > 0 && (RenderLib.frame++, RenderLib._nextTime += RenderLib._difference + (RenderLib._difference >= RenderLib._singleFrame ? RenderLib._singleFrame / 4 : RenderLib._singleFrame - RenderLib._difference), RenderLib._tick = !0), RenderLib._af = RenderLib.requestFrame(RenderLib._update), !0 === RenderLib._tick && RenderLib._renders.length > 0))
+                    for (var t = RenderLib._renders.length; --t > -1;) RenderLib._renders[t] && !1 === RenderLib._renders[t].paused && RenderLib._renders[t].callback(RenderLib.time)
             }
         },
         Mt = function(t) {
@@ -2269,7 +747,7 @@
             }
             return e.join("&")
         },
-        Tt = {
+        queryLib = {
             __proto__: null,
             Decode: Mt,
             Encode: Ot
@@ -2291,7 +769,7 @@
     function Dt(t) {
         return 180 * t / Math.PI
     }
-    var Ft = {
+    var MathUtilLib = {
         __proto__: null,
         clamp: Vt,
         range: Rt,
@@ -2416,7 +894,7 @@
     var Wt = {
             eventName: function(t) {
                 var e = t;
-                return "down" === t || "up" === t || "move" === t || "over" === t || "out" === t ? e = !tt.System.mobile || "down" !== t && "up" !== t && "move" !== t ? "mouse" + t : "down" === t ? "touchstart" : "up" === t ? "touchend" : "touchmove" : "enter" === t && (e = "keydown"), e
+                return "down" === t || "up" === t || "move" === t || "over" === t || "out" === t ? e = !browserData.System.mobile || "down" !== t && "up" !== t && "move" !== t ? "mouse" + t : "down" === t ? "touchstart" : "up" === t ? "touchend" : "touchmove" : "enter" === t && (e = "keydown"), e
             },
             actionName: function(t) {
                 var e = t;
@@ -2478,10 +956,10 @@
             var i = new Yt(t, e, !1);
             return this.appendElement.call(this, i), this._nodes.push(i), i
         } catch (Do) {
-            return xt("element", Do), null
+            return handleMissingErrorMessageRaven("element", Do), null
         }
     }, Yt.prototype.appendElement = function(t) {
-        if (t === undefined) return vt({
+        if (t === undefined) return reportError({
             name: "DomElement Add Child",
             message: "Child Element is undefined"
         });
@@ -2490,7 +968,7 @@
         try {
             t instanceof Yt && (t._parent = this), this.dom.appendChild(e)
         } catch (Do) {
-            vt({
+            reportError({
                 name: "DomElement Add Child",
                 message: "Failed to append child."
             })
@@ -2507,7 +985,7 @@
             if (n.removeChild && n.removeChild(i), !n) throw new Error("Child component does not have correct setup");
             t.__destroy && t.__destroy()
         } catch (Do) {
-            vt({
+            reportError({
                 name: "DomElement Remove Child",
                 message: Do.message || "Failed to remove child."
             })
@@ -2529,13 +1007,13 @@
             return this.dom.textContent = t, this
         }
     }, Yt.prototype.content = Yt.prototype.text, Yt.prototype.css = function(t) {
-        var e, i = "ie" === tt.Browser.type && 8 === tt.Browser.version;
+        var e, i = "ie" === browserData.Browser.type && 8 === browserData.Browser.version;
         for (var n in t) {
             e = t[n];
             try {
                 "opacity" !== n && "zIndex" !== n && "fontWeight" !== n && isFinite(e) && parseFloat(e) === e && (e += "px");
                 var s = Jt(n);
-                i && "opacity" === n ? this.dom.style.filter = "alpha(opacity=" + 100 * e + ")" : i && Et.hasAlpha(e) ? this.dom.style[s] = new Et(e).getHex() : this.dom.style[s] = e
+                i && "opacity" === n ? this.dom.style.filter = "alpha(opacity=" + 100 * e + ")" : i && ColorLib.hasAlpha(e) ? this.dom.style[s] = new ColorLib(e).getHex() : this.dom.style[s] = e
             } catch (Po) {}
         }
         return this
@@ -2550,7 +1028,7 @@
                 l = a / r;
             n.cover && l < i && (a = (l = i) * r), n.contain && l > i && (a = (l = i) * r), o.width = a, o.height = l, n.center && (o.marginLeft = -a / 2, o.marginTop = -l / 2, o.position = "absolute", o.left = "50%", o.top = "50%"), (n.left || n.right) && (o.left = n.left || 0, o.top = n.top || 0)
         }
-        "ie" === tt.Browser.type && 8 === tt.Browser.version ? o.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + t.src + "',sizingMethod='scale')" : (o.background = "url(" + t.src + ")", o.backgroundPosition = "50% 50%", o.backgroundRepeat = "no-repeat", o.backgroundSize = s ? a + "px " + l + "px" : n.cover ? "cover" : n.contain ? "contain" : "100%"), this.css.call(this, o)
+        "ie" === browserData.Browser.type && 8 === browserData.Browser.version ? o.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + t.src + "',sizingMethod='scale')" : (o.background = "url(" + t.src + ")", o.backgroundPosition = "50% 50%", o.backgroundRepeat = "no-repeat", o.backgroundSize = s ? a + "px " + l + "px" : n.cover ? "cover" : n.contain ? "contain" : "100%"), this.css.call(this, o)
     }, Yt.prototype.setAttribute = function(t, e) {
         var i;
         if ("object" == typeof t)
@@ -2622,7 +1100,7 @@
             var n = new t(e);
             return n._parent = this, this.children.push(n), n.dom && (i !== undefined ? i.appendElement && i.appendElement(n) : this.appendElement(n)), n
         } catch (Do) {
-            return xt("component", Do), null
+            return handleMissingErrorMessageRaven("component", Do), null
         }
     }, Xt.prototype.removeComponent = function(t) {
         for (var e = this.children.length; --e > -1;)
@@ -2651,7 +1129,7 @@
             for (var t = this._events.length; --t > -1;) this._events.splice(t, 1);
             this.children = null, this._destroy = null, this._events = null, this.destroy = null, this.emit = null, this.on = null, this.off = null, this.initComponent = null
         } catch (Do) {
-            vt({
+            reportError({
                 name: "DomComponent",
                 message: "Failed to destroy."
             })
@@ -2966,24 +1444,24 @@
             }
         },
         re = null,
-        ae = {
+        languageLib = {
             translate: function(t, e) {
-                var i = ae.getBestTrans(oe),
+                var i = languageLib.getBestTrans(oe),
                     n = i && i[t];
                 if (n = n || t, e)
                     for (var s = Object.keys(e), o = s.length; o--;) n = n.replace(new RegExp("{{" + s[o] + "}}", "g"), e[s[o]]);
                 return n
             },
             getBestTrans: function(t) {
-                var e = ae.getLocale();
-                return e in t ? t[e] : ae.getShortLocale(e) in t ? t[ae.getShortLocale(e)] : "en" in t ? t.en : null
+                var e = languageLib.getLocale();
+                return e in t ? t[e] : languageLib.getShortLocale(e) in t ? t[languageLib.getShortLocale(e)] : "en" in t ? t.en : null
             },
             resolveLocale: function(t) {
-                var e = ae.getShortLocale(t);
+                var e = languageLib.getShortLocale(t);
                 return "in" === e && (t = "id"), "iw" === e && (t = "he"), "nb" === e && (t = "no"), "ji" === e && (t = "yi"), "zh-CN" === t && (t = "zh"), "jv" === e && (t = "jw"), se[t] ? t : se[e] ? e : "en"
             },
             getLocale: function() {
-                return ae.resolveLocale(re || window.navigator.userLanguage || window.navigator.language)
+                return languageLib.resolveLocale(re || window.navigator.userLanguage || window.navigator.language)
             },
             setLocale: function(t) {
                 "zh-Hans" === t ? t = "zh-CN" : "zh-Hant" === t && (t = "zh-TW"), re = t
@@ -3005,7 +1483,7 @@
                 return oe[t]
             },
             addTables: function(t) {
-                for (var e in t) ae.addTable(e, t[e]);
+                for (var e in t) languageLib.addTable(e, t[e]);
                 return oe
             },
             getTables: function() {
@@ -3019,7 +1497,7 @@
         },
         ce = function(t) {
             try {
-                return ae.translate(le[t])
+                return languageLib.translate(le[t])
             } catch (Do) {
                 return !1
             }
@@ -3061,7 +1539,7 @@
                             r = JSON.parse(r)
                         } catch (h) {}
                         if ("error" === o || l >= 400 && l <= 511) return void s({
-                            event: it.NETWORK_ERROR,
+                            event: captchaStatus.NETWORK_ERROR,
                             endpoint: i,
                             response: r,
                             state: c,
@@ -3108,13 +1586,13 @@
             } : "send-redemption-record" === t.pst && (r = {
                 version: 1,
                 operation: "send-redemption-record",
-                issuers: [ut.pstIssuer]
+                issuers: [config_options.pstIssuer]
             }), o.privateToken = r
         }
         return new Promise((function(e, n) {
             fetch(i, o).then((function(s) {
                 return 200 !== s.status ? n({
-                    event: it.NETWORK_ERROR,
+                    event: captchaStatus.NETWORK_ERROR,
                     endpoint: i,
                     response: s,
                     state: 4,
@@ -3130,7 +1608,7 @@
                 }))
             }))["catch"]((function(t) {
                 n({
-                    event: it.NETWORK_ERROR,
+                    event: captchaStatus.NETWORK_ERROR,
                     endpoint: i,
                     response: t.error,
                     state: 4,
@@ -3152,10 +1630,10 @@
             return t.toLowerCase().match(/\.(?:jpg|gif|png|jpeg|svg)$/g) ? "image" : t.toLowerCase().match(/\.(?:js)$/g) ? "script" : "file"
         },
         ge = function(t) {
-            if (ut.assethost && t.indexOf(ct.assetDomain) >= 0) return ut.assethost + t.replace(ct.assetDomain, "");
-            if (ut.imghost && t.indexOf("imgs") >= 0) {
+            if (config_options.assethost && t.indexOf(hcaptchaDummyObj.assetDomain) >= 0) return config_options.assethost + t.replace(hcaptchaDummyObj.assetDomain, "");
+            if (config_options.imghost && t.indexOf("imgs") >= 0) {
                 var e = t.indexOf(".ai") >= 0 ? t.indexOf(".ai") + 3 : t.indexOf(".com") + 4;
-                return ut.imghost + t.substr(e, t.length)
+                return config_options.imghost + t.substr(e, t.length)
             }
             return t
         },
@@ -3212,7 +1690,7 @@
     }
     be.prototype.load = function() {
         return ("svg" === this.ext ? this._loadSvg() : this._loadImg())["catch"]((function(t) {
-            throw wt("Asset failed", "error", "assets", {
+            throw captureMessageRaven("Asset failed", "error", "assets", {
                 error: t
             }), t
         }))
@@ -3361,7 +1839,7 @@
     }
     var Ve = new Yt(document),
         Re = new Yt(window),
-        Pe = {
+        CoreLib = {
             __proto__: null,
             Loader: Ae,
             BaseComponent: Ut,
@@ -3525,7 +2003,7 @@
     We.prototype.record = function(t, e, i, n) {
         if (this._manifest.st = Date.now(), this.state.record.mouse = t === undefined ? this.state.record.mouse : t, this.state.record.touch = i === undefined ? this.state.record.touch : i, this.state.record.keys = e === undefined ? this.state.record.keys : e, this.state.record.motion = n === undefined ? this.state.record.motion : n, !1 === this.state.initRecord) {
             var s = new Yt(document.body);
-            this.state.record.mouse && (s.addEventListener("mousedown", Ne("mousedown", this._recordEvent), !0), s.addEventListener("mousemove", Ne("mousemove", this._recordEvent), !0), s.addEventListener("mouseup", Ne("mouseup", this._recordEvent), !0)), !0 === this.state.record.keys && (s.addEventListener("keyup", Ze("keyup", this._recordEvent), !0), s.addEventListener("keydown", Ze("keydown", this._recordEvent), !0)), this.state.record.touch && !0 === tt.Browser.hasEvent("touchstart", document.body) && (s.addEventListener("touchstart", ze("touchstart", this._recordEvent), !0), s.addEventListener("touchmove", ze("touchmove", this._recordEvent), !0), s.addEventListener("touchend", ze("touchend", this._recordEvent), !0)), this.state.record.motion && !0 === tt.Browser.hasEvent("devicemotion", window) && s.addEventListener("devicemotion", Ue("devicemotion", this._recordEvent), !0), this.state.initRecord = !0
+            this.state.record.mouse && (s.addEventListener("mousedown", Ne("mousedown", this._recordEvent), !0), s.addEventListener("mousemove", Ne("mousemove", this._recordEvent), !0), s.addEventListener("mouseup", Ne("mouseup", this._recordEvent), !0)), !0 === this.state.record.keys && (s.addEventListener("keyup", Ze("keyup", this._recordEvent), !0), s.addEventListener("keydown", Ze("keydown", this._recordEvent), !0)), this.state.record.touch && !0 === browserData.Browser.hasEvent("touchstart", document.body) && (s.addEventListener("touchstart", ze("touchstart", this._recordEvent), !0), s.addEventListener("touchmove", ze("touchmove", this._recordEvent), !0), s.addEventListener("touchend", ze("touchend", this._recordEvent), !0)), this.state.record.motion && !0 === browserData.Browser.hasEvent("devicemotion", window) && s.addEventListener("devicemotion", Ue("devicemotion", this._recordEvent), !0), this.state.initRecord = !0
         }
         this.state.recording = !0
     }, We.prototype.stop = function() {
@@ -3546,20 +2024,20 @@
             var i = e[e.length - 1];
             this.state.timeBuffers[t] || (this.state.timeBuffers[t] = new De(16, 15e3)), this.state.timeBuffers[t].push(i, e)
         } catch (Po) {
-            xt("motion", Po)
+            handleMissingErrorMessageRaven("motion", Po)
         }
     };
     var Ke = new We;
 
-    function qe(t) {
+    function PointLib(t) {
         t = t || {}, this.x = t.x || 0, this.y = t.y || 0, this.rotate = this.rotate.bind(this), this.getDistance = this.getDistance.bind(this), this.radius = 0, this.tolerance = 0, this.fill = !1, this.stroke = !1, this.fillColor = "#fff", this.strokeColor = "#fff", this.strokeWidth = 1
     }
 
-    function Ge(t, e, i) {
-        Qt.self(this, qe, t), this.handleIn = new qe(e), this.handleOut = new qe(i), this.prev = null, this.next = null, this.index = 0
+    function SegmentLib(t, e, i) {
+        Qt.self(this, PointLib, t), this.handleIn = new PointLib(e), this.handleOut = new PointLib(i), this.prev = null, this.next = null, this.index = 0
     }
 
-    function Je(t) {
+    function PathLib(t) {
         this._closed = !1, this.stroke = !1, this.fill = !1, this.fillColor = "#fff", this.strokeColor = "#fff", this.strokeWidth = 1, this.showPoints = !1, this.pointRadius = 0, this._head = null, this._tail = null, this.segments = [], this.addPoint = this.addPoint.bind(this), this.removePoint = this.removePoint.bind(this), this.forEachPoint = this.forEachPoint.bind(this), this.getBounding = this.getBounding.bind(this), this.getCenter = this.getCenter.bind(this), this.destroy = this.destroy.bind(this), t && t.length && this.addPoints(t)
     }
 
@@ -3574,8 +2052,8 @@
         return (e.x - t.x) * (i.y - t.y) - (i.x - t.x) * (e.y - t.y)
     }
 
-    function Xe(t) {
-        Qt.self(this, Je), this.bounding = {
+    function PathSVGLib(t) {
+        Qt.self(this, PathLib), this.bounding = {
             left: 0,
             top: 0,
             width: 0,
@@ -3633,30 +2111,30 @@
         }
         return i
     }
-    qe.prototype.rotate = function(t, e) {
+    PointLib.prototype.rotate = function(t, e) {
         var i = Pt(e),
             n = Math.sin(i),
             s = Math.cos(i),
             o = this.x - t.x,
             r = this.y - t.y;
         this.x = o * s - r * n + t.x, this.y = o * n + r * s + t.y
-    }, qe.prototype.getDistance = function(t) {
+    }, PointLib.prototype.getDistance = function(t) {
         return Math.sqrt(Math.pow(this.x - t.x, 2) + Math.pow(this.y - t.y, 2))
-    }, qe.prototype.getAngle = function(t) {
+    }, PointLib.prototype.getAngle = function(t) {
         var e = t.x - this.x,
             i = t.y - this.y,
             n = Dt(Math.atan2(i, e));
         return n < 0 && (n += 360), n
-    }, qe.prototype.hitTest = function(t) {
+    }, PointLib.prototype.hitTest = function(t) {
         return this.radius + this.tolerance >= this.getDistance(t)
-    }, qe.prototype.restrict = function(t, e, i, n) {
+    }, PointLib.prototype.restrict = function(t, e, i, n) {
         if ("x" !== t && "y" !== t) throw new Error("Point.restrict requires a value: x or y");
         return e + this[t] < i ? e = this[t] - i : e + this[t] > n && (e = n - this[t]), this[t] + e
-    }, qe.prototype.draw = function(t) {
+    }, PointLib.prototype.draw = function(t) {
         t.ctx.beginPath(), t.ctx.arc(this.x, this.y, this.radius / t.scale, 0, 2 * Math.PI, !1), this.fill && (t.ctx.fillStyle = this.fillColor, t.ctx.fill()), this.stroke && (t.ctx.strokeStyle = this.strokeColor, t.ctx.lineWidth = this.strokeWidth / t.scale, t.ctx.stroke())
-    }, Qt.proto(Ge, qe), Ge.prototype.set = function(t, e, i) {
+    }, Qt.proto(SegmentLib, PointLib), SegmentLib.prototype.set = function(t, e, i) {
         this.x = t.x || this.x, this.y = t.y || this.y, e === undefined ? (this.handleIn.x = this.x, this.handleIn.y = this.y) : (this.handleIn.x = e.x, this.handleIn.y = e.y), i === undefined ? (this.handleOut.x = this.x, this.handleOut.y = this.y) : (this.handleOut.x = i.x, this.handleOut.y = i.y)
-    }, Ge.prototype.clone = function() {
+    }, SegmentLib.prototype.clone = function() {
         var t = {
                 x: this.x,
                 y: this.y
@@ -3669,60 +2147,60 @@
                 x: this.handleOut.x,
                 y: this.handleOut.y
             },
-            n = new Ge;
+            n = new SegmentLib;
         return e.x === i.x && e.y === i.y ? n.set(t) : n.set(t, e, i), n.index = this.index, n.prev = this.prev, n.next = this.next, n.radius = this.radius, n.tolerance = this.tolerance, n.fill = this.fill, n.stroke = this.stroke, n.fillColor = this.fillColor, n.strokeColor = this.strokeColor, n.strokeWidth = this.strokeWidth, n
-    }, Ge.prototype.move = function(t, e) {
+    }, SegmentLib.prototype.move = function(t, e) {
         this.x += t, this.y += e, this.handleIn.x += t, this.handleIn.y += e, this.handleOut.x += t, this.handleOut.y += e
-    }, Ge.prototype.render = function(t) {
+    }, SegmentLib.prototype.render = function(t) {
         this.handleIn.x !== this.x && this.handleIn.y !== this.y && this.handleIn.draw(t), this.handleOut.x !== this.x && this.handleOut.y !== this.y && this.handleOut.draw(t), this.draw(t)
-    }, Je.prototype.addPoint = function(t) {
+    }, PathLib.prototype.addPoint = function(t) {
         var e;
-        return t instanceof Ge ? e = t.clone() : ((e = new Ge).set(t), e.radius = this.pointRadius), e.index = this.segments.length, null === this._head ? (this._head = e, this._tail = e) : (e.prev = this._tail, this._tail.next = e, this._tail = e), this._head.prev = this._tail, this._tail.next = this._head, this.segments.push(e), e
-    }, Je.prototype.addPoints = function(t) {
+        return t instanceof SegmentLib ? e = t.clone() : ((e = new SegmentLib).set(t), e.radius = this.pointRadius), e.index = this.segments.length, null === this._head ? (this._head = e, this._tail = e) : (e.prev = this._tail, this._tail.next = e, this._tail = e), this._head.prev = this._tail, this._tail.next = this._head, this.segments.push(e), e
+    }, PathLib.prototype.addPoints = function(t) {
         for (var e = 0; e < t.length; e++) this.addPoint(t[e]);
         t = null
-    }, Je.prototype.setPoints = function(t, e) {
+    }, PathLib.prototype.setPoints = function(t, e) {
         e === undefined && (e = 0);
         for (var i = e; i < t.length; i++) this.segments[i] === undefined ? this.addPoint(t[i]) : this.segments[i].set(t[i]);
         t = null, e = null
-    }, Je.prototype.setPointRadius = function(t) {
+    }, PathLib.prototype.setPointRadius = function(t) {
         for (var e = -1; ++e < this.segments.length;) undefined.radius = t
-    }, Je.prototype.removePoint = function(t) {
+    }, PathLib.prototype.removePoint = function(t) {
         for (var e = this.segments.length, i = null; --e > -1 && null === i;) i = this.segments[e], t.x === i.x && t.y === i.y && (this.segments.splice(e, 1), i === this._head && i === this._tail ? (this._head = null, this._tail = null) : i === this.head ? (this._head = this._head.next, this._head.prev = null) : i === this._tail ? (this._tail = this._tail.prev, this._tail.next = null) : (i.prev.next = i.next, i.next.prev = i.prev));
         return i
-    }, Je.prototype.forEachPoint = function(t, e) {
+    }, PathLib.prototype.forEachPoint = function(t, e) {
         if (0 !== this.segments.length && this.segments)
             for (var i, n = !1, s = this.segments.length; --s > -1 && !n;) i = this.segments[e ? this.segments.length - 1 - s : s], t && (n = t(i))
-    }, Je.prototype.close = function(t) {
+    }, PathLib.prototype.close = function(t) {
         this._closed = t
-    }, Je.prototype.isClosed = function() {
+    }, PathLib.prototype.isClosed = function() {
         return this._closed
-    }, Je.prototype.start = function() {
+    }, PathLib.prototype.start = function() {
         return this._head
-    }, Je.prototype.end = function() {
+    }, PathLib.prototype.end = function() {
         return this._tail
-    }, Je.prototype.rotate = function(t, e) {
+    }, PathLib.prototype.rotate = function(t, e) {
         e === undefined && (e = this.getCenter());
         for (var i, n = -1; ++n < this.segments.length;)(i = this.segments[n]).handleIn.rotate(e, t), i.rotate(e, t), i.handleOut.rotate(e, t)
-    }, Je.prototype.move = function(t, e) {
+    }, PathLib.prototype.move = function(t, e) {
         for (var i = -1; ++i < this.segments.length;) this.segments[i].move(t, e)
-    }, Je.prototype.getPoint = function(t) {
+    }, PathLib.prototype.getPoint = function(t) {
         return this.segments[t]
-    }, Je.prototype.getLength = function() {
+    }, PathLib.prototype.getLength = function() {
         return this.segments.length
-    }, Je.prototype.getCenter = function() {
+    }, PathLib.prototype.getCenter = function() {
         var t = this.getBounding();
         return {
             x: (t.right - t.left) / 2 + t.left,
             y: (t.bottom - t.top) / 2 + t.top
         }
-    }, Je.prototype.getDimensions = function() {
+    }, PathLib.prototype.getDimensions = function() {
         var t = this.getBounding();
         return {
             width: t.right - t.left,
             height: t.bottom - t.top
         }
-    }, Je.prototype.getBounding = function() {
+    }, PathLib.prototype.getBounding = function() {
         for (var t, e = null, i = null, n = null, s = null, o = -1; ++o < this.segments.length;) t = this.segments[o], (null === e || t.x < e) && (e = t.x), (null === i || t.x > i) && (i = t.x), (null === n || t.y < n) && (n = t.y), (null === s || t.y > s) && (s = t.y);
         return {
             left: e,
@@ -3730,7 +2208,7 @@
             bottom: s,
             right: i
         }
-    }, Je.prototype.draw = function(t) {
+    }, PathLib.prototype.draw = function(t) {
         t.ctx.beginPath();
         for (var e = -1, i = this.segments.length; ++e < i;) {
             var n = this.segments[e],
@@ -3743,7 +2221,7 @@
         this._closed && t.ctx.closePath(), this.fill && (t.ctx.fillStyle = this.fillColor, t.ctx.fill()), this.stroke && (t.ctx.strokeStyle = this.strokeColor, t.ctx.lineWidth = this.strokeWidth / t.scale, t.ctx.stroke()), !0 === this.showPoints && this.forEachPoint((function(e) {
             e.fill = !0, e.render(t)
         }))
-    }, Je.prototype.hitTest = function(t, e) {
+    }, PathLib.prototype.hitTest = function(t, e) {
         e === undefined && (e = {});
         var i, n = !1,
             s = 0,
@@ -3757,23 +2235,23 @@
             type: "segment",
             geometry: o
         }), n
-    }, Je.prototype.destroy = function() {
+    }, PathLib.prototype.destroy = function() {
         for (var t = this.segments.length; --t > -1;) this.segments.splice(t, 1);
         return this._head = null, this._tail = null, this.segments = [], null
-    }, Qt.proto(Xe, Je), Xe.prototype.size = function(t, e) {
+    }, Qt.proto(PathSVGLib, PathLib), PathSVGLib.prototype.size = function(t, e) {
         t ? (e || (e = t), this.bounding.width = t, this.bounding.height = e) : (this.bounding.width = this.svgData.viewport.width, this.bounding.height = this.svgData.viewport.height)
-    }, Xe.prototype.move = function(t, e) {
+    }, PathSVGLib.prototype.move = function(t, e) {
         t && (e || (e = t), this.bounding.left = t, this.bounding.top = e)
-    }, Xe.prototype.destroy = function() {
+    }, PathSVGLib.prototype.destroy = function() {
         this.bounding = {
             left: 0,
             top: 0,
             width: 0,
             height: 0
         }, this.svgData = null
-    }, Xe.prototype.getBounding = function() {
+    }, PathSVGLib.prototype.getBounding = function() {
         return this.bounding
-    }, Xe.prototype.drawSVG = function(t) {
+    }, PathSVGLib.prototype.drawSVG = function(t) {
         ei(t, this.svgData, this.bounding)
     };
     var ei = function(t, e, i) {
@@ -3830,11 +2308,11 @@
         }
     };
 
-    function ii() {
-        Qt.self(this, qe), this.radius = 0, this.tolerance = 0, this.fill = !1, this.stroke = !1, this.fillColor = "#fff", this.strokeWidth = 1, this.hovered = !1, this.complete = !1
+    function ReticlePointLib() {
+        Qt.self(this, PointLib), this.radius = 0, this.tolerance = 0, this.fill = !1, this.stroke = !1, this.fillColor = "#fff", this.strokeWidth = 1, this.hovered = !1, this.complete = !1
     }
 
-    function ni() {
+    function CanvasLib() {
         Qt.self(this, Yt, "canvas");
         var t = this;
         this.element = this.dom, this.ctx = this.element.getContext("2d"), this.scale = 1, this.dpr = window.devicePixelRatio || 1, this.clearColor = "#fff", this.ctx.roundedRect = function(e, i, n, s, o) {
@@ -3859,24 +2337,24 @@
     function ri(t, e, i) {
         this.target = t, this.setTargetOrigin(i), this.id = e, this.messages = [], this.incoming = [], this.waiting = [], this.isReady = !0, this.queue = []
     }
-    Qt.proto(ii, qe), ii.prototype.draw = function(t) {
+    Qt.proto(ReticlePointLib, PointLib), ReticlePointLib.prototype.draw = function(t) {
         var e = this.radius / t.scale;
-        if (this.complete) t.ctx.save(), t.ctx.beginPath(), t.ctx.arc(this.x, this.y, e + 2, 0, 2 * Math.PI), t.ctx.strokeStyle = ht.white, t.ctx.fillStyle = ht.white, t.ctx.lineWidth = 2, t.ctx.stroke(), t.ctx.fill(), t.ctx.beginPath(), t.ctx.arc(this.x, this.y, e + 3, 0, 2 * Math.PI), t.ctx.strokeStyle = ht.outline, t.ctx.lineWidth = 1, t.ctx.stroke(), t.ctx.restore(), this.hovered && (t.ctx.beginPath(), t.ctx.arc(this.x, this.y, e + 9, 0, 2 * Math.PI), t.ctx.strokeStyle = ht.white, t.ctx.lineWidth = 2, t.ctx.stroke(), t.ctx.beginPath(), t.ctx.arc(this.x, this.y, e + 10, 0, 2 * Math.PI), t.ctx.strokeStyle = ht.outline, t.ctx.lineWidth = 1, t.ctx.stroke());
+        if (this.complete) t.ctx.save(), t.ctx.beginPath(), t.ctx.arc(this.x, this.y, e + 2, 0, 2 * Math.PI), t.ctx.strokeStyle = ColorStyles.white, t.ctx.fillStyle = ColorStyles.white, t.ctx.lineWidth = 2, t.ctx.stroke(), t.ctx.fill(), t.ctx.beginPath(), t.ctx.arc(this.x, this.y, e + 3, 0, 2 * Math.PI), t.ctx.strokeStyle = ColorStyles.outline, t.ctx.lineWidth = 1, t.ctx.stroke(), t.ctx.restore(), this.hovered && (t.ctx.beginPath(), t.ctx.arc(this.x, this.y, e + 9, 0, 2 * Math.PI), t.ctx.strokeStyle = ColorStyles.white, t.ctx.lineWidth = 2, t.ctx.stroke(), t.ctx.beginPath(), t.ctx.arc(this.x, this.y, e + 10, 0, 2 * Math.PI), t.ctx.strokeStyle = ColorStyles.outline, t.ctx.lineWidth = 1, t.ctx.stroke());
         else {
             var i = 2.5,
                 n = [2.5, 4];
-            t.ctx.beginPath(), t.ctx.arc(this.x, this.y, 1.5, 0, 2 * Math.PI, !1), t.ctx.strokeStyle = ht.white, t.ctx.lineWidth = .5, t.ctx.fillStyle = this.fillColor, t.ctx.fill(), t.ctx.strokeStyle = ht.outline, t.ctx.lineWidth = t.scale < 1 ? .5 : 1, t.ctx.stroke(), t.ctx.beginPath(), t.ctx.arc(this.x, this.y, e + 2, 0, 2 * Math.PI), t.ctx.strokeStyle = ht.white, t.ctx.lineWidth = 2, t.ctx.stroke(), t.ctx.beginPath(), t.ctx.arc(this.x, this.y, e + 3, 0, 2 * Math.PI), t.ctx.strokeStyle = ht.outline, t.ctx.lineWidth = 1, t.ctx.stroke(), t.ctx.fillStyle = ht.outline, t.ctx.roundedRect(this.x - (e + 5), this.y - 2, n[0], n[1], 2), t.ctx.fill(), t.ctx.fillStyle = ht.white, t.ctx.roundedRect(this.x - (e + 5 - 1), this.y - 1, n[0], n[1] / 2, 1), t.ctx.fill(), t.ctx.fillStyle = ht.outline, t.ctx.roundedRect(this.x + e + i, this.y - 2, n[0], n[1], 2), t.ctx.fill(), t.ctx.fillStyle = ht.white, t.ctx.roundedRect(this.x + e + i - 1, this.y - 1, n[0], n[1] / 2, 1), t.ctx.fill(), t.ctx.fillStyle = ht.outline, t.ctx.roundedRect(this.x - 2, this.y - e - 5, n[1], n[0], 2), t.ctx.fill(), t.ctx.fillStyle = ht.white, t.ctx.roundedRect(this.x - 1, this.y - e - 5 + 1, n[1] / 2, n[0], 1), t.ctx.fill(), t.ctx.fillStyle = ht.outline, t.ctx.roundedRect(this.x - 2, this.y + e + i, n[1], n[0], 2), t.ctx.fill(), t.ctx.fillStyle = ht.white, t.ctx.roundedRect(this.x - 1, this.y + e + i - 1, n[1] / 2, n[0], 1), t.ctx.fill()
+            t.ctx.beginPath(), t.ctx.arc(this.x, this.y, 1.5, 0, 2 * Math.PI, !1), t.ctx.strokeStyle = ColorStyles.white, t.ctx.lineWidth = .5, t.ctx.fillStyle = this.fillColor, t.ctx.fill(), t.ctx.strokeStyle = ColorStyles.outline, t.ctx.lineWidth = t.scale < 1 ? .5 : 1, t.ctx.stroke(), t.ctx.beginPath(), t.ctx.arc(this.x, this.y, e + 2, 0, 2 * Math.PI), t.ctx.strokeStyle = ColorStyles.white, t.ctx.lineWidth = 2, t.ctx.stroke(), t.ctx.beginPath(), t.ctx.arc(this.x, this.y, e + 3, 0, 2 * Math.PI), t.ctx.strokeStyle = ColorStyles.outline, t.ctx.lineWidth = 1, t.ctx.stroke(), t.ctx.fillStyle = ColorStyles.outline, t.ctx.roundedRect(this.x - (e + 5), this.y - 2, n[0], n[1], 2), t.ctx.fill(), t.ctx.fillStyle = ColorStyles.white, t.ctx.roundedRect(this.x - (e + 5 - 1), this.y - 1, n[0], n[1] / 2, 1), t.ctx.fill(), t.ctx.fillStyle = ColorStyles.outline, t.ctx.roundedRect(this.x + e + i, this.y - 2, n[0], n[1], 2), t.ctx.fill(), t.ctx.fillStyle = ColorStyles.white, t.ctx.roundedRect(this.x + e + i - 1, this.y - 1, n[0], n[1] / 2, 1), t.ctx.fill(), t.ctx.fillStyle = ColorStyles.outline, t.ctx.roundedRect(this.x - 2, this.y - e - 5, n[1], n[0], 2), t.ctx.fill(), t.ctx.fillStyle = ColorStyles.white, t.ctx.roundedRect(this.x - 1, this.y - e - 5 + 1, n[1] / 2, n[0], 1), t.ctx.fill(), t.ctx.fillStyle = ColorStyles.outline, t.ctx.roundedRect(this.x - 2, this.y + e + i, n[1], n[0], 2), t.ctx.fill(), t.ctx.fillStyle = ColorStyles.white, t.ctx.roundedRect(this.x - 1, this.y + e + i - 1, n[1] / 2, n[0], 1), t.ctx.fill()
         }
-    }, Qt.proto(ni, Yt), ni.prototype.dimensions = function(t, e) {
+    }, Qt.proto(CanvasLib, Yt), CanvasLib.prototype.dimensions = function(t, e) {
         this.css({
             width: t,
             height: e
         }), this.element.width = Math.round(t / this.scale) * this.dpr, this.element.height = Math.round(e / this.scale) * this.dpr, this.ctx.scale(this.dpr, this.dpr), this.width = Math.round(t / this.scale), this.height = Math.round(e / this.scale)
-    }, ni.prototype.clear = function() {
+    }, CanvasLib.prototype.clear = function() {
         this.ctx && this.ctx.clearRect(0, 0, this.element.width, this.element.height)
-    }, ni.prototype.draw = function() {
+    }, CanvasLib.prototype.draw = function() {
         this.ctx && (this.ctx.fillStyle = this.clearColor, this.ctx.fillRect(0, 0, this.element.width, this.element.height))
-    }, ni.prototype._destroy = function() {
+    }, CanvasLib.prototype._destroy = function() {
         this.__destroy(), this.element = null, this.ctx = null, this.width = null, this.height = null
     }, si.prototype.on = function(t, e, i) {
         oi.call(this, t, e, i, !1)
@@ -3901,7 +2379,7 @@
         try {
             i ? t.contentWindow && t.contentWindow.postMessage(JSON.stringify(e), this.targetOrigin) : t.postMessage(JSON.stringify(e), this.targetOrigin)
         } catch (Po) {
-            xt("messaging", Po), "*" !== this.targetOrigin && (this.setTargetOrigin("*"), this._sendMessage(t, e))
+            handleMissingErrorMessageRaven("messaging", Po), "*" !== this.targetOrigin && (this.setTargetOrigin("*"), this._sendMessage(t, e))
         }
     }, ri.prototype.setReady = function(t) {
         var e = this;
@@ -4052,7 +2530,7 @@
                     n.id === e.id && r && n.respond(e)
                 }
             } catch (Po) {
-                kt("postMessage handler error", "postMessage", "debug", {
+                ravenCaptureBreadCrumb("postMessage handler error", "postMessage", "debug", {
                     event: t,
                     error: Po
                 })
@@ -4067,7 +2545,7 @@
     var ci = null;
 
     function hi(t) {
-        ci && ut.confirmNav ? ci.display("link", {
+        ci && config_options.confirmNav ? ci.display("link", {
             url: t
         }) : window.open(t, "_blank")
     }
@@ -4229,7 +2707,7 @@
     }, _i.merge = function(t, e) {
         return mi(t, e || {})
     };
-    var Ei = {
+    var ThemeLib = {
             __proto__: null,
             Colors: wi,
             Theme: _i
@@ -4335,7 +2813,7 @@
             closedAt: Date.now(),
             downAt: 0,
             style: Ti(this._theme.get())
-        }, this.addClass("button"), this.setAttribute("tabindex", 0), this.setAttribute("role", "button"), this.onDown = this.onDown.bind(this), this.onHover = this.onHover.bind(this), this.onSelect = this.onSelect.bind(this), this.onFocus = this.onFocus.bind(this), this.onBlur = this.onBlur.bind(this), this.addEventListener("down", this.onDown), this.addEventListener("click", this.onSelect), this.addEventListener("enter", this.onSelect), this.addEventListener("focus", this.onFocus), this.addEventListener("blur", this.onBlur), !1 === tt.System.mobile && (this.addEventListener("over", this.onHover), this.addEventListener("out", this.onHover)), this.setCopy()
+        }, this.addClass("button"), this.setAttribute("tabindex", 0), this.setAttribute("role", "button"), this.onDown = this.onDown.bind(this), this.onHover = this.onHover.bind(this), this.onSelect = this.onSelect.bind(this), this.onFocus = this.onFocus.bind(this), this.onBlur = this.onBlur.bind(this), this.addEventListener("down", this.onDown), this.addEventListener("click", this.onSelect), this.addEventListener("enter", this.onSelect), this.addEventListener("focus", this.onFocus), this.addEventListener("blur", this.onBlur), !1 === browserData.System.mobile && (this.addEventListener("over", this.onHover), this.addEventListener("out", this.onHover)), this.setCopy()
     }
     Ai.add("contrast", {
         component: {
@@ -4405,7 +2883,7 @@
             lineHeight: e
         })
     }, Li.prototype.translate = function() {
-        var t = ae.translate(this.config.text);
+        var t = languageLib.translate(this.config.text);
         this.content(t)
     }, Li.prototype.onHover = function(t) {
         var e = "over" === t.action;
@@ -4433,7 +2911,7 @@
             lineHeight: e
         })
     }, Bi.prototype.translate = function() {
-        var t = ae.translate(this.config.text);
+        var t = languageLib.translate(this.config.text);
         this.text(t)
     }, Qt.proto(Hi, Xt), Hi.prototype.style = function(t) {
         for (var e = this.children.length; --e > -1;) this.children[e].style(t)
@@ -4486,7 +2964,7 @@
         }).then((function(e) {
             t.image = e, t.appendElement(e.element), t.size(), t.fill()
         }))["catch"]((function() {
-            kt("graphic failed to load", "image", "info", {
+            ravenCaptureBreadCrumb("graphic failed to load", "image", "info", {
                 src: e
             })
         }))
@@ -4558,9 +3036,9 @@
             backgroundColor: this.state.style.main.fill
         }), t ? this._updateStyle(!0) : this.state.closedAt = Date.now(), this.emit("state-changed", t)
     }, Vi.prototype.setLabel = function(t) {
-        t && (this.state.label = t), this.state.label && this.setAttribute("aria-label", ae.translate(this.state.label))
+        t && (this.state.label = t), this.state.label && this.setAttribute("aria-label", languageLib.translate(this.state.label))
     }, Vi.prototype.setTitle = function(t) {
-        t && (this.state.title = t), this.state.title && this.setAttribute("title", ae.translate(this.state.title))
+        t && (this.state.title = t), this.state.title && this.setAttribute("title", languageLib.translate(this.state.title))
     }, Vi.prototype.setCopy = function() {
         this.setLabel(), this.setTitle()
     }, Vi.prototype.controlsMenu = function(t) {
@@ -4683,7 +3161,7 @@
             left: i
         })
     }, Pi.prototype._onStyleUpdate = function(t) {
-        "ie" === tt.Browser.type && 8 === tt.Browser.version ? (this.$on.css({
+        "ie" === browserData.Browser.type && 8 === browserData.Browser.version ? (this.$on.css({
             display: t ? "block" : "none"
         }), this.$off.css({
             display: t ? "none" : "block"
@@ -4693,7 +3171,7 @@
             opacity: t ? 0 : 1
         }))
     }, Pi.prototype._onStateChange = function(t) {
-        "ie" === tt.Browser.type && 8 === tt.Browser.version ? (this.$on.css({
+        "ie" === browserData.Browser.type && 8 === browserData.Browser.version ? (this.$on.css({
             display: t ? "block" : "none"
         }), this.$off.css({
             display: t ? "none" : "block"
@@ -4717,7 +3195,7 @@
             position: "absolute"
         })
     }, Qt.proto(Fi, Vi), Fi.prototype.setText = function(t) {
-        t && (this.state.text = t), this.$text.text(ae.translate(this.state.text || this.state.title)), this.setCopy()
+        t && (this.state.text = t), this.$text.text(languageLib.translate(this.state.text || this.state.title)), this.setCopy()
     }, Fi.prototype._onStyle = function() {
         var t = this._theme.get().palette,
             e = "light" === t.mode,
@@ -4811,7 +3289,7 @@
     }, $i.prototype.lock = function(t) {
         this.state.locked = t
     }, $i.prototype.setCopy = function() {
-        var t = ae.translate(this.state.text);
+        var t = languageLib.translate(this.state.text);
         this.$text.text(t)
     }, $i.prototype.onSelect = function(t) {
         this.emit("select", this)
@@ -4866,11 +3344,11 @@
     }, Ni.prototype.setValue = function(t) {
         this.$textarea.dom.value = t
     }, Ni.prototype.setPlaceholder = function() {
-        this.$textarea.setAttribute("placeholder", ae.translate(this.state.placeholder))
+        this.$textarea.setAttribute("placeholder", languageLib.translate(this.state.placeholder))
     }, Qt.proto(zi, Xt), zi.prototype.getSelected = function() {
         return this._selected
     }, zi.prototype.setCopy = function() {
-        for (var t = this._options.length; t--;) this._options[t].element.text(ae.translate(this._options[t].text))
+        for (var t = this._options.length; t--;) this._options[t].element.text(languageLib.translate(this._options[t].text))
     }, zi.prototype.setOptions = function(t) {
         for (var e, i = this._options.length; i--;) this.removeElement(this._options[i].element);
         for (this._options = t, i = 0; i < t.length; i++)(e = this.createElement("option", t[i].selector || ".option")).dom.value = t[i].value, e.text(t[i].text), this._options[i].element = e
@@ -5115,19 +3593,19 @@
         var t = {
             passive: !1
         };
-        ("ie" !== tt.Browser.type || "ie" === tt.Browser.type && 8 !== tt.Browser.version) && (this.element.addEventListener("DOMMouseScroll", this.onWheel), this.element.addEventListener("wheel", this.onWheel, t)), this.element.addEventListener("mousewheel", this.onWheel, t), qi && (this.element.addEventListener("touchstart", this.onTouch), this.element.addEventListener("touchmove", this.onTouch)), Ji && Gi && (this.msBodyTouch = document.body.style.msTouchAction, document.body.style.msTouchAction = "none", this.element.addEventListener("MSPointerDown", this.onTouch, !0), this.element.addEventListener("MSPointerMove", this.onTouch, !0)), this.config.arrowScrolling && Yi && this.element.addEventListener("keydown", this.onKey)
+        ("ie" !== browserData.Browser.type || "ie" === browserData.Browser.type && 8 !== browserData.Browser.version) && (this.element.addEventListener("DOMMouseScroll", this.onWheel), this.element.addEventListener("wheel", this.onWheel, t)), this.element.addEventListener("mousewheel", this.onWheel, t), qi && (this.element.addEventListener("touchstart", this.onTouch), this.element.addEventListener("touchmove", this.onTouch)), Ji && Gi && (this.msBodyTouch = document.body.style.msTouchAction, document.body.style.msTouchAction = "none", this.element.addEventListener("MSPointerDown", this.onTouch, !0), this.element.addEventListener("MSPointerMove", this.onTouch, !0)), this.config.arrowScrolling && Yi && this.element.addEventListener("keydown", this.onKey)
     }, Qi.prototype._removeListeners = function() {
         var t = {
             passive: !1
         };
-        ("ie" !== tt.Browser.type || "ie" === tt.Browser.type && 8 !== tt.Browser.version) && (this.element.removeEventListener("DOMMouseScroll", this.onWheel), this.element.removeEventListener("wheel", this.onWheel, t)), this.element.removeEventListener("mousewheel", this.onWheel, t), qi && (this.element.removeEventListener("touchstart", this.onTouch), this.element.removeEventListener("touchmove", this.onTouch)), Ji && Gi && (this.msBodyTouch = document.body.style.msTouchAction, document.body.style.msTouchAction = "none", this.element.removeEventListener("MSPointerDown", this.onTouch, !0), this.element.removeEventListener("MSPointerMove", this.onTouch, !0)), this.config.arrowScrolling && Yi && this.element.removeEventListener("keydown", this.onKey)
+        ("ie" !== browserData.Browser.type || "ie" === browserData.Browser.type && 8 !== browserData.Browser.version) && (this.element.removeEventListener("DOMMouseScroll", this.onWheel), this.element.removeEventListener("wheel", this.onWheel, t)), this.element.removeEventListener("mousewheel", this.onWheel, t), qi && (this.element.removeEventListener("touchstart", this.onTouch), this.element.removeEventListener("touchmove", this.onTouch)), Ji && Gi && (this.msBodyTouch = document.body.style.msTouchAction, document.body.style.msTouchAction = "none", this.element.removeEventListener("MSPointerDown", this.onTouch, !0), this.element.removeEventListener("MSPointerMove", this.onTouch, !0)), this.config.arrowScrolling && Yi && this.element.removeEventListener("keydown", this.onKey)
     }, Qi.prototype.onWheel = function(t) {
         if (!this.state.pause) {
             (t = window.event || t).preventDefault && t.preventDefault();
             var e = this.state.delta,
                 i = this.config.mouseMult,
                 n = this.config.firefoxMult;
-            "detail" in t && "wheel" !== t.type && 0 !== t.detail ? (e.y = -1 * t.detail, e.y *= n) : "wheelDelta" in t && !("wheelDeltaY" in t) ? e.y = -1 * t.wheelDelta : (e.x = -1 * (t.deltaX || t.wheelDeltaX), e.y = -1 * (t.deltaY || t.wheelDeltaY), "firefox" === tt.Browser.type && 1 === t.deltaMode && n && (e.x *= n, e.y *= n)), i && (e.x *= i, e.y *= i), this.state.action = "wheel", this.update.call(this, t)
+            "detail" in t && "wheel" !== t.type && 0 !== t.detail ? (e.y = -1 * t.detail, e.y *= n) : "wheelDelta" in t && !("wheelDeltaY" in t) ? e.y = -1 * t.wheelDelta : (e.x = -1 * (t.deltaX || t.wheelDeltaX), e.y = -1 * (t.deltaY || t.wheelDeltaY), "firefox" === browserData.Browser.type && 1 === t.deltaMode && n && (e.x *= n, e.y *= n)), i && (e.x *= i, e.y *= i), this.state.action = "wheel", this.update.call(this, t)
         }
     }, Qi.prototype.onTouch = function(t) {
         if (!this.state.pause) {
@@ -5225,7 +3703,7 @@
             i = this._handle.dom.offsetHeight,
             n = this.dom.clientHeight,
             s = (Rt(e, 0, n - this._container.dom.scrollHeight, 0, 1) || 0) * (n - i - 4);
-        "ie" === tt.Browser.type && 8 === tt.Browser.version ? (this._container.css({
+        "ie" === browserData.Browser.type && 8 === browserData.Browser.version ? (this._container.css({
             top: e
         }), this._handle.css({
             top: s
@@ -5264,7 +3742,7 @@
     }, nn.prototype.getOptionData = function() {
         return this.state.option
     }, nn.prototype.setCopy = function() {
-        this._text.text(ae.translate(this.state.option.text))
+        this._text.text(languageLib.translate(this.state.option.text))
     }, nn.prototype._onHover = function(t) {
         this.emit("hover", t), this.usingKb(!1), this.updateStyle(t)
     }, nn.prototype.updateStyle = function(t) {
@@ -5427,7 +3905,7 @@
             display: t ? "block" : "none"
         })
     }, on.prototype.setAriaLabel = function(t) {
-        t ? this.setAttribute("aria-label", t) : this.boxState.ariaLabel && this.setAttribute("aria-label", ae.translate(this.boxState.ariaLabel))
+        t ? this.setAttribute("aria-label", t) : this.boxState.ariaLabel && this.setAttribute("aria-label", languageLib.translate(this.boxState.ariaLabel))
     }, Qt.proto(rn, Xt), rn.prototype.style = function(t, e, i) {
         e || (e = t), i !== undefined && (this.state.thickness = i), this.css({
             width: t,
@@ -5627,7 +4105,7 @@
             transition: "none"
         })
     };
-    var un = {
+    var UI_Lib = {
         __proto__: null,
         Graphic: Mi,
         ListNative: zi,
@@ -5754,7 +4232,7 @@
             width: t
         }
     }, pn.prototype.setCopy = function(t) {
-        var e = ae.translate(t);
+        var e = languageLib.translate(t);
         this.$title.text(e)
     }, pn.prototype.display = function(t) {
         this.state.visible = t, this.css({
@@ -5810,7 +4288,7 @@
             display: "inline"
         }))
     }, yn.prototype.translate = function() {
-        var t = ae.translate(this.state.text);
+        var t = languageLib.translate(this.state.text);
         if (this.state.link)
             if (this.link.translate(), this.state.replaceText) {
                 var e = t.split("{{" + this.state.replaceText + "}}"),
@@ -5833,7 +4311,7 @@
             text: "hCaptcha is a service that reduces bots and spam by asking simple questions. Please follow the instructions at the top of the screen for each challenge. For more information visit {{site-url}}",
             link: !0,
             linkText: "hcaptcha.com",
-            linkTo: "https://www.hcaptcha.com/what-is-hcaptcha-about?ref=" + ct.host + "&utm_campaign=" + ct.sitekey + "&utm_medium=embed_about",
+            linkTo: "https://www.hcaptcha.com/what-is-hcaptcha-about?ref=" + hcaptchaDummyObj.host + "&utm_campaign=" + hcaptchaDummyObj.sitekey + "&utm_medium=embed_about",
             replaceText: "site-url"
         }), this.copy.on("click", (function(e) {
             e.preventDefault(), hi(t.copy.state.linkTo)
@@ -5901,7 +4379,7 @@
             marginLeft: 3
         })
     }, vn.prototype.setCopy = function() {
-        var t = ae.translate("Provide feedback regarding the hCaptcha service.");
+        var t = languageLib.translate("Provide feedback regarding the hCaptcha service.");
         this.info.translate(), this.link.translate(), this.link.setAttribute("aria-label", t)
     }, Qt.proto(bn, Xt), bn.prototype.style = function(t, e, i) {
         var n = Math.floor(Rt(t, 250, 275, 12, 14));
@@ -6073,7 +4551,7 @@
                 hi("https://www.hcaptcha.com/reporting-bugs")
             })), this.$option.link.on("click", (function() {
                 hi("https://hcaptcha.com/accessibility")
-            })), !1 === tt.System.mobile) {
+            })), !1 === browserData.System.mobile) {
             var e = function(e) {
                 var i = Ai.get().palette,
                     n = "light" === i.mode;
@@ -6108,7 +4586,7 @@
         var e = function(t) {
             hi("https://hcaptcha.com/accessibility")
         };
-        if (this.$option.addEventListener("enter", e), this.$option.addEventListener("down", e), !1 === tt.System.mobile) {
+        if (this.$option.addEventListener("enter", e), this.$option.addEventListener("down", e), !1 === browserData.System.mobile) {
             var i = function(e) {
                 var i = Ai.get().palette,
                     n = "light" === i.mode;
@@ -6203,11 +4681,11 @@
             cursor: "pointer"
         })
     }, Mn.prototype.setCopy = function() {
-        var t = ae.translate("Thank you for your feedback."),
-            e = ae.translate("We'll resolve your issue as quickly as we can.");
+        var t = languageLib.translate("Thank you for your feedback."),
+            e = languageLib.translate("We'll resolve your issue as quickly as we can.");
         this.$copy.text(t), this.$resolve.text(e), this.$bug.content.translate(), this.$bug.link.translate(), this.$option.content.translate(), this.$option.link.translate();
-        var i = ae.translate("View our accessibility option."),
-            n = ae.translate("Give a detailed report of a bug you've encountered.");
+        var i = languageLib.translate("View our accessibility option."),
+            n = languageLib.translate("Give a detailed report of a bug you've encountered.");
         this.$option.link.setAttribute("aria-label", i), this.$bug.link.setAttribute("aria-label", n)
     }, Qt.proto(On, Xt), On.prototype.style = function(t, e) {
         var i = Rt(t, 280, 310, 260, 310),
@@ -6241,10 +4719,10 @@
             margin: "0 auto"
         })
     }, On.prototype.setCopy = function() {
-        var t = ae.translate("Sorry to hear that!"),
-            e = ae.translate("Our accessibility option may help."),
-            i = ae.translate("This lets you avoid future questions by registering and setting a cookie."),
-            n = ae.translate("Please also try turning off your ad blocker.‍");
+        var t = languageLib.translate("Sorry to hear that!"),
+            e = languageLib.translate("Our accessibility option may help."),
+            i = languageLib.translate("This lets you avoid future questions by registering and setting a cookie."),
+            n = languageLib.translate("Please also try turning off your ad blocker.‍");
         this.$sorry.text(t + " "), this.$option.text(e), this.$avoid.text(i + " " + n)
     }, Qt.proto(Tn, Xt), Tn.prototype.style = function(t, e) {
         var i = Rt(t, 280, 310, 260, 310),
@@ -6271,8 +4749,8 @@
         })
     }, Tn.prototype.setCopy = function() {
         var t = {
-            thanks: ae.translate("Thank you for your feedback."),
-            resolve: ae.translate("We will look into the issue immediately.")
+            thanks: languageLib.translate("Thank you for your feedback."),
+            resolve: languageLib.translate("We will look into the issue immediately.")
         };
         this.$copy.text(t.thanks), this.$resolve.text(t.resolve)
     }, Qt.proto(Vn, mn), Vn.prototype.style = function(t, e, i) {
@@ -6300,7 +4778,7 @@
             src: "data:image/svg+xml,%3csvg width='155' height='155' viewBox='0 0 155 155' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cmask id='mask0' mask-type='alpha' maskUnits='userSpaceOnUse' x='3' y='4' width='150' height='149'%3e%3cpath d='M153 78C153 119.421 119.421 153 78 153C36.5786 153 3 119.421 3 78C3 42.6044 27.5196 12.9356 60.5 5.05259C66.1145 3.7106 68 3.99999 69.5 5.05259C71.6884 6.58829 62.5 20 69.5 31.5C76.5 43 89.5 39.5 101.5 53C107.488 59.737 105.376 73.2409 117.5 79C137.5 88.5 151 71 153 78Z' fill='%23555555'/%3e%3c/mask%3e%3cg mask='url(%23mask0)'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M78 153C119.421 153 153 119.421 153 78C153 36.5786 119.421 3 78 3C36.5786 3 3 36.5786 3 78C3 119.421 36.5786 153 78 153ZM57 41.5C57 45.6421 53.6421 49 49.5 49C45.3579 49 42 45.6421 42 41.5C42 37.3579 45.3579 34 49.5 34C53.6421 34 57 37.3579 57 41.5ZM83 74C83 79.5228 78.5228 84 73 84C67.4772 84 63 79.5228 63 74C63 68.4772 67.4772 64 73 64C78.5228 64 83 68.4772 83 74ZM54 117C54 122.523 49.5229 127 44 127C38.4772 127 34 122.523 34 117C34 111.477 38.4772 107 44 107C49.5229 107 54 111.477 54 117ZM119.5 122C123.642 122 127 118.642 127 114.5C127 110.358 123.642 107 119.5 107C115.358 107 112 110.358 112 114.5C112 118.642 115.358 122 119.5 122ZM32 83C34.7614 83 37 80.7614 37 78C37 75.2386 34.7614 73 32 73C29.2386 73 27 75.2386 27 78C27 80.7614 29.2386 83 32 83ZM88 111C88 113.761 85.7614 116 83 116C80.2386 116 78 113.761 78 111C78 108.239 80.2386 106 83 106C85.7614 106 88 108.239 88 111Z' fill='%2300838f'/%3e%3c/g%3e%3c/svg%3e",
             fallback: Rn + "/cookie-found.png",
             width: 18
-        }), "ie" === tt.Browser.type && 8 === tt.Browser.version ? (this.$none.css({
+        }), "ie" === browserData.Browser.type && 8 === browserData.Browser.version ? (this.$none.css({
             display: "none"
         }), this.$blocked.css({
             display: "none"
@@ -6330,7 +4808,7 @@
         };
         this.$none.css(t), this.$blocked.css(t), this.$found.css(t)
     }, Pn.prototype.display = function(t) {
-        "ie" === tt.Browser.type && 8 === tt.Browser.version ? (this.$none.css({
+        "ie" === browserData.Browser.type && 8 === browserData.Browser.version ? (this.$none.css({
             display: "none" === t ? "block" : "none"
         }), this.$blocked.css({
             display: "blocked" === t ? "block" : "none"
@@ -6379,7 +4857,7 @@
             linkTo: "mailto:" + In,
             replaceText: "support"
         }), this.retrieve.dom.id = "status-retrieve", this.disabled.dom.id = "status-disabled", this.help.dom.id = "status-help", this.disabled.on("click", (function() {
-            Ct.requestAccess().then((function() {
+            browserApis.requestAccess().then((function() {
                 t.setType()
             }))
         }))
@@ -6413,12 +4891,12 @@
     }, $n.prototype.checkAccess = function() {
         var t = this;
         li.contact("get-ac").then((function(e) {
-            t.state.hasCookie = !!e, Ct.supportsAPI() ? (t.state.hasAccess = !0, Ct.hasAccess().then((function(e) {
+            t.state.hasCookie = !!e, browserApis.supportsAPI() ? (t.state.hasAccess = !0, browserApis.hasAccess().then((function(e) {
                 t.state.allowedAccess = e, t.setType()
             }))) : (t.state.hasAccess = !1, t.setType())
         }))
     }, $n.prototype.setType = function() {
-        this.$header.copy.text(ae.translate("Status:"));
+        this.$header.copy.text(languageLib.translate("Status:"));
         var t = this.state.hasCookie;
         this.help.css({
             display: t ? "block" : "none"
@@ -6434,7 +4912,7 @@
         var n = this.state.hasCookie ? "found" : this.state.hasAccess ? "blocked" : "none";
         this.icon.display(n)
     }, $n.prototype.translate = function() {
-        this.$header.copy.text(ae.translate("Status:")), this.retrieve.translate(), this.disabled.translate(), this.help.translate()
+        this.$header.copy.text(languageLib.translate("Status:")), this.retrieve.translate(), this.disabled.translate(), this.help.translate()
     };
 
     function jn() {
@@ -6445,7 +4923,7 @@
             link: !0,
             linkText: "Learn more about hCaptcha Accessibility.",
             linkUnderline: !0,
-            linkTo: "https://hcaptcha.com/accessibility?ref=" + ct.host + "&utm_campaign=" + ct.sitekey + "&utm_medium=challenge"
+            linkTo: "https://hcaptcha.com/accessibility?ref=" + hcaptchaDummyObj.host + "&utm_campaign=" + hcaptchaDummyObj.sitekey + "&utm_medium=challenge"
         }), this.copy.on("click", (function(e) {
             e.preventDefault(), hi(t.copy.state.linkTo)
         })), this.status = this.initComponent($n), this.status.checkAccess()
@@ -6461,7 +4939,7 @@
             height: 0,
             mobile: !1
         }, this.display = this.display.bind(this), this.close = this.close.bind(this), this.$container = this.createElement(".container"), this.modal = this.initComponent(mn, null, this.$container), this.modal.on("close", this.close), this.$bg = this.createElement(".modal-bg"), this.$bg.addEventListener("click", this.close);
-        var t = "ie" === tt.Browser.type && 8 === tt.Browser.version;
+        var t = "ie" === browserData.Browser.type && 8 === browserData.Browser.version;
         this.css({
             visibility: "hidden",
             display: t ? "none" : "table",
@@ -6502,7 +4980,7 @@
         var n = Rt(t, 300, 450, 290, 375),
             s = Rt(e, 275, 300, 260, 275),
             o = n - 2 * Rt(t, 300, 450, 20, 25),
-            r = "ie" === tt.Browser.type && 8 === tt.Browser.version;
+            r = "ie" === browserData.Browser.type && 8 === browserData.Browser.version;
         this.css({
             position: "absolute",
             width: "100%",
@@ -6529,7 +5007,7 @@
     }, Nn.prototype.close = function() {
         if (this.state.visible) {
             this.state.visible = !1, this.modalContent && (this.modalContent.off("close", this.close), this.modalContent = this.modalContent.destroy());
-            var t = "ie" === tt.Browser.type && 8 === tt.Browser.version;
+            var t = "ie" === browserData.Browser.type && 8 === browserData.Browser.version;
             this.css({
                 visibility: "hidden",
                 display: t ? "none" : "table",
@@ -6563,7 +5041,7 @@
             e.emit("resize")
         }, this.handleCheck = function(i) {
             var n = "skip";
-            i ? n = t.breadcrumbs && t.served < t.breadcrumbs ? "next" : "check" : "landscape" === ct.orientation && t.breadcrumbs && t.served === t.breadcrumbs && (n = "check"), e.emit("action-changed", n)
+            i ? n = t.breadcrumbs && t.served < t.breadcrumbs ? "next" : "check" : "landscape" === hcaptchaDummyObj.orientation && t.breadcrumbs && t.served === t.breadcrumbs && (n = "check"), e.emit("action-changed", n)
         }, this.handleFocus = function() {
             e.emit("focus-check")
         }, this.handleSubmit = function() {
@@ -6576,7 +5054,7 @@
         return this.isMounted = !1, null
     }, Qt.proto(Zn, Xt), Zn.prototype.style = function(t) {
         var e = Ai.get().palette,
-            i = "landscape" === ct.orientation && "image_label_binary" === ct.challenge_type;
+            i = "landscape" === hcaptchaDummyObj.orientation && "image_label_binary" === hcaptchaDummyObj.challenge_type;
         this.copy.css({
             display: "table-cell",
             verticalAlign: "middle"
@@ -6592,7 +5070,7 @@
             opacity: t ? 1 : 0
         }), this.visible = t, this.setAttribute("aria-hidden", !t)
     }, Zn.prototype.setCopy = function() {
-        var t = ae.translate("Please try again.");
+        var t = languageLib.translate("Please try again.");
         this.copy.text(t)
     }, Qt.proto(Un, Xt), Un.prototype.style = function(t) {
         this.css({
@@ -6738,7 +5216,7 @@
             type: "check",
             label: "Verify Answers",
             locked: !1
-        }, this._verifyStyle = Gn(Ai.get()), this._skipStyle = Jn(Ai.get()), this.copy = this.createElement(".text"), this.addClass("button"), this.setAttribute("tabindex", 0), this.setAttribute("role", "button"), this.setLabel.call(this), this.onHover = this.onHover.bind(this), this.onSelect = this.onSelect.bind(this), this.onFocus = this.onFocus.bind(this), this.onBlur = this.onBlur.bind(this), this.addEventListener("click", this.onSelect), this.addEventListener("enter", this.onSelect), this.addEventListener("focus", this.onFocus), this.addEventListener("blur", this.onBlur), !1 === tt.System.mobile && (this.addEventListener("over", this.onHover), this.addEventListener("out", this.onHover))
+        }, this._verifyStyle = Gn(Ai.get()), this._skipStyle = Jn(Ai.get()), this.copy = this.createElement(".text"), this.addClass("button"), this.setAttribute("tabindex", 0), this.setAttribute("role", "button"), this.setLabel.call(this), this.onHover = this.onHover.bind(this), this.onSelect = this.onSelect.bind(this), this.onFocus = this.onFocus.bind(this), this.onBlur = this.onBlur.bind(this), this.addEventListener("click", this.onSelect), this.addEventListener("enter", this.onSelect), this.addEventListener("focus", this.onFocus), this.addEventListener("blur", this.onBlur), !1 === browserData.System.mobile && (this.addEventListener("over", this.onHover), this.addEventListener("out", this.onHover))
     }
 
     function Qn() {
@@ -6775,7 +5253,7 @@
         var t = this;
         this.state = {
             locked: !1
-        }, this.list = this.initComponent(tt.System.mobile ? zi : sn, {
+        }, this.list = this.initComponent(browserData.System.mobile ? zi : sn, {
             theme: Ai,
             selector: "#language-list",
             optionsVisible: 5
@@ -6788,7 +5266,7 @@
             text: se[i]
         });
         this.list.setOptions(e), this.list.on("select", (function(e) {
-            t.display.setLocale(e.value), e.value !== ae.getLocale() && (ae.setLocale(e.value), li.send("challenge-language", {
+            t.display.setLocale(e.value), e.value !== languageLib.getLocale() && (languageLib.setLocale(e.value), li.send("challenge-language", {
                 locale: e.value
             }))
         })), this.display.on("click", (function(e) {
@@ -6859,15 +5337,15 @@
             backgroundColor: e.main.fill
         })
     }, Yn.prototype.setLabel = function() {
-        var t = ae.translate(this.state.text),
-            e = ae.translate(this.state.label);
-        ae.getLocale().indexOf("en") >= 0 && "check" === this.state.type && (t = "Verify"), this.copy.text(t), this.setAttribute("title", e), this.setAttribute("aria-label", e)
+        var t = languageLib.translate(this.state.text),
+            e = languageLib.translate(this.state.label);
+        languageLib.getLocale().indexOf("en") >= 0 && "check" === this.state.type && (t = "Verify"), this.copy.text(t), this.setAttribute("title", e), this.setAttribute("aria-label", e)
     }, Yn.prototype.getElement = function() {
         return this && this.dom || null
     }, Qt.proto(Qn, Xt), Qn.prototype.removeCrumbs = function() {
         this.breadcrumbs.removeCrumbs()
     }, Qn.prototype.style = function(t, e, i) {
-        var n = "landscape" === ct.orientation && "image_label_binary" === ct.challenge_type,
+        var n = "landscape" === hcaptchaDummyObj.orientation && "image_label_binary" === hcaptchaDummyObj.challenge_type,
             s = n ? e : 16;
         this.breadcrumbs.display && (this.breadcrumbs.style(t, i), this.breadcrumbs.css({
             position: "absolute",
@@ -6908,7 +5386,7 @@
     }, Qn.prototype.isLocked = function() {
         return this.state.locked
     }, Qt.proto(Xn, Di), Xn.prototype.setLocale = function(t) {
-        this.setText(ae.getShortLocale(t).toUpperCase())
+        this.setText(languageLib.getShortLocale(t).toUpperCase())
     }, Xn.prototype.style = function() {
         var t = function(t) {
                 var e = t.palette,
@@ -6919,7 +5397,7 @@
                     }
                 }, i.button)
             }(this._theme.get()),
-            e = "landscape" === ct.orientation && "image_label_binary" === ct.challenge_type,
+            e = "landscape" === hcaptchaDummyObj.orientation && "image_label_binary" === hcaptchaDummyObj.challenge_type,
             i = e ? 14 : 11,
             n = e ? 35 : 26,
             s = e ? 35 : 16;
@@ -6938,7 +5416,7 @@
             verticalAlign: "middle"
         })
     }, Qt.proto(ts, Xt), ts.prototype.style = function(t) {
-        var e = "landscape" === ct.orientation && "image_label_binary" === ct.challenge_type;
+        var e = "landscape" === hcaptchaDummyObj.orientation && "image_label_binary" === hcaptchaDummyObj.challenge_type;
         this.display.style(), this.css({
             position: "relative",
             display: "inline-block",
@@ -6956,12 +5434,12 @@
         }
     }, ts.prototype.setLabel = function() {
         var t = this.list.getSelected().text,
-            e = ae.translate("Select a language {{language}}", {
+            e = languageLib.translate("Select a language {{language}}", {
                 language: t
             });
-        this.display.setLabel(e), this.display.setTitle(ae.translate("Language"))
+        this.display.setLabel(e), this.display.setTitle(languageLib.translate("Language"))
     }, ts.prototype.updateLocale = function() {
-        this.list.select(ae.getLocale())
+        this.list.select(languageLib.getLocale())
     }, ts.prototype.setVisible = function(t) {
         this.css({
             display: t ? "block" : "none "
@@ -6986,7 +5464,7 @@
     function is(t) {
         Qt.self(this, Xt, "hcaptcha-logo"), t || (t = {}), this.state = {
             label: "hCaptcha"
-        }, this.mobile = !1, this.link = "https://www.hcaptcha.com/what-is-hcaptcha-about?ref=" + ct.host + "&utm_campaign=" + ct.sitekey + "&utm_medium=challenge", this.icon = this.initComponent(es, !!t.charity), this.onClick = this.onClick.bind(this), this.addEventListener("click", this.onClick)
+        }, this.mobile = !1, this.link = "https://www.hcaptcha.com/what-is-hcaptcha-about?ref=" + hcaptchaDummyObj.host + "&utm_campaign=" + hcaptchaDummyObj.sitekey + "&utm_medium=challenge", this.icon = this.initComponent(es, !!t.charity), this.onClick = this.onClick.bind(this), this.addEventListener("click", this.onClick)
     }
     Qt.proto(es, Xt), es.prototype.load = function() {
         this.color.load()
@@ -7061,7 +5539,7 @@
             selector: "#menu",
             optionsVisible: -1
         }), this.state.a11yChallenge = !1, this.options = [], this.on("select", (function(t) {
-            t && ("link" === t.type ? hi(t.value) : "modal" === t.type ? this.emit("display", t.value) : "challenge" === t.type && ("text_challenge" === t.value && (ct.a11y_tfe = !0, this.emit("refresh")), "visual_challenge" === t.value && (ct.a11y_tfe = !1, this.emit("refresh"))))
+            t && ("link" === t.type ? hi(t.value) : "modal" === t.type ? this.emit("display", t.value) : "challenge" === t.type && ("text_challenge" === t.value && (hcaptchaDummyObj.a11y_tfe = !0, this.emit("refresh")), "visual_challenge" === t.value && (hcaptchaDummyObj.a11y_tfe = !1, this.emit("refresh"))))
         }))
     }
 
@@ -7093,7 +5571,7 @@
     }, ss.prototype._setOptions = function(t) {
         var e;
         for (this.options = [], e = 0; e < ns.length; e++) "report_image" === ns[e].value && t || this.options.push(ns[e]);
-        this.state.a11yChallenge && this.options.splice(1, 0, ct.a11y_tfe ? {
+        this.state.a11yChallenge && this.options.splice(1, 0, hcaptchaDummyObj.a11y_tfe ? {
             text: "Visual Challenge",
             value: "visual_challenge",
             selector: "#visual_challenge",
@@ -7115,7 +5593,7 @@
             charity: t
         }), this.logo.load()), this.logo.link = e || this.logo.link
     }, os.prototype.style = function(t, e, i) {
-        var n = "landscape" === ct.orientation && "image_label_binary" === ct.challenge_type,
+        var n = "landscape" === hcaptchaDummyObj.orientation && "image_label_binary" === hcaptchaDummyObj.challenge_type,
             s = !this.state.whiteLabel,
             o = !this.state.whiteLabel;
         if (this.language.style(i), this.refresh.style(i), this.menu.style(i, s), this.menuList.style(190), this.logo.style(t < 400, o), n) {
@@ -7195,7 +5673,7 @@
 
     function as(t, e) {
         var i = this;
-        e || (e = {}), ct.host = e.host ? e.host : "", ct.sitekey = e.sitekey ? e.sitekey : "", ct.charity = !!e.charity, ct.orientation = e.orientation;
+        e || (e = {}), hcaptchaDummyObj.host = e.host ? e.host : "", hcaptchaDummyObj.sitekey = e.sitekey ? e.sitekey : "", hcaptchaDummyObj.charity = !!e.charity, hcaptchaDummyObj.orientation = e.orientation;
         var n = new si,
             s = {
                 visible: !1,
@@ -7255,29 +5733,29 @@
         }, i.setup = function(t, e) {
             return new Promise((function(i, n) {
                 try {
-                    rs && rs.type !== e.request_type && (r.unmount(rs), rs = null), rs || (ct.challenge_type = e.request_type, rs = new t({
+                    rs && rs.type !== e.request_type && (r.unmount(rs), rs = null), rs || (hcaptchaDummyObj.challenge_type = e.request_type, rs = new t({
                         theme: {
                             name: Ai.active(),
                             config: Ai.get()
                         }
-                    }), r.mount(rs)), a.removeCrumbs(), rs.setup(e, ct.orientation).then(i)["catch"]((function(t) {
+                    }), r.mount(rs)), a.removeCrumbs(), rs.setup(e, hcaptchaDummyObj.orientation).then(i)["catch"]((function(t) {
                         var e = t;
                         t instanceof Error && (e = {
-                            event: it.CHALLENGE_ERROR,
+                            event: captchaStatus.CHALLENGE_ERROR,
                             message: "Challenge encountered an error during setup.",
                             reason: t.toString()
                         }), n(e)
                     })), rs.breadcrumbs && "number" == typeof rs.breadcrumbs && rs.breadcrumbs > 1 && (a.breadcrumbs.createCrumbs(rs.breadcrumbs), a.breadcrumbs.setIndex(rs.served))
                 } catch (Po) {
                     r.isMounted || (rs = null), n({
-                        event: it.CHALLENGE_ERROR,
+                        event: captchaStatus.CHALLENGE_ERROR,
                         message: "Creating challenge failed.",
                         reason: Po.toString()
                     })
                 }
             }))
         }, i.show = function(e) {
-            if (!s.create) return Promise.reject(new Error(et.CHALLENGE_ALREADY_CLOSED));
+            if (!s.create) return Promise.reject(new Error(challengeStatus.CHALLENGE_ALREADY_CLOSED));
             s.visible = !0, t.removeAttribute("aria-hidden"), Ke.resetData(), Ke.record(!0, !0, !0, !1), Ke.setData("dct", Date.now());
             var n = i.setup(e.bundle, e.bundleData),
                 o = i.style(e.width, e.height).then((function(n) {
@@ -7285,13 +5763,13 @@
                         var n = "info" === s.focus,
                             o = e.challengeType.indexOf("text") >= 0,
                             r = t.hasClass("using-kb");
-                        ct.a11y_tfe || !n || !r && o ? i.focus() : (l.menu.focus(!r), s.focus = "challenge")
+                        hcaptchaDummyObj.a11y_tfe || !n || !r && o ? i.focus() : (l.menu.focus(!r), s.focus = "challenge")
                     })))
                 }));
             return new Promise((function(t, i) {
                 o["catch"](i), n.then(t, i), s.timer && clearTimeout(s.timer), s.timer = setTimeout((function() {
                     s.timerExpired = !0, s.preventClose || i({
-                        event: et.CHALLENGE_EXPIRED
+                        event: challengeStatus.CHALLENGE_EXPIRED
                     })
                 }), e.expiration)
             }))
@@ -7303,7 +5781,7 @@
                             s = e.mobile ? 60 : 70,
                             h = e.width,
                             u = e.height + i + s;
-                        r.style(e.width, e.height, i), "landscape" === ct.orientation && "image_label_binary" === ct.challenge_type ? (s = 35, h = e.width + s + i, u = e.height + s + i, a.style(e.width, s), a.css({
+                        r.style(e.width, e.height, i), "landscape" === hcaptchaDummyObj.orientation && "image_label_binary" === hcaptchaDummyObj.challenge_type ? (s = 35, h = e.width + s + i, u = e.height + s + i, a.style(e.width, s), a.css({
                             position: "absolute",
                             right: 0,
                             bottom: 0
@@ -7342,14 +5820,14 @@
                         })
                     }))["catch"]((function(t) {
                         s({
-                            event: it.CHALLENGE_ERROR,
+                            event: captchaStatus.CHALLENGE_ERROR,
                             message: "Error occurred in promise of .style()",
                             reason: t.toString()
                         })
                     }))
                 } catch (Po) {
                     s({
-                        event: it.CHALLENGE_ERROR,
+                        event: captchaStatus.CHALLENGE_ERROR,
                         message: "Error when calling .style()",
                         reason: Po.toString()
                     })
@@ -7395,9 +5873,9 @@
             rs && (rs = r.unmount(rs)), s.timer && clearTimeout(s.timer), s.timer = null, t.setAttribute("aria-hidden", !0), a.displayTryAgain(!1), a.removeCrumbs(), c.close(), s.visible = !1, s.create = !1
         }, i.translateInterface = function(t) {
             if (t && t.locale && t.table) try {
-                t.table && (ae.setLocale(t.locale), ae.addTable(t.locale, t.table)), rs && rs.translate && rs.translate(), a.translate(), l.translate(), document.documentElement.setAttribute("lang", ae.getLocale())
+                t.table && (languageLib.setLocale(t.locale), languageLib.addTable(t.locale, t.table)), rs && rs.translate && rs.translate(), a.translate(), l.translate(), document.documentElement.setAttribute("lang", languageLib.getLocale())
             } catch (Po) {
-                xt("translation", Po)
+                handleMissingErrorMessageRaven("translation", Po)
             }
         }, i.translateBundle = function() {
             rs && rs.translate && rs.translate()
@@ -7455,12 +5933,12 @@
     var ps = null;
     var fs = null;
     var ms = function(t) {
-            if (kt("Set spec", "proof", "info", t), t) {
+            if (ravenCaptureBreadCrumb("Set spec", "proof", "info", t), t) {
                 cs = t, hs = null;
                 try {
-                    gs(hs = Bt.decode(t.req))["catch"]((function() {}))
+                    gs(hs = JWTLib.decode(t.req))["catch"]((function() {}))
                 } catch (Po) {
-                    xt("proof", Po)
+                    handleMissingErrorMessageRaven("proof", Po)
                 }
             }
         },
@@ -7469,7 +5947,7 @@
                 var e = cs,
                     i = hs;
                 if (e) try {
-                    if (kt("Solve Proof", "proof", "info", e), !(-1 !== ["hsw", "hsj", "hsl"].indexOf(e.type) && (!("n" in i.payload) || i.payload.n === e.type))) return wt("Asset script invalid file", "error", "proof", {
+                    if (ravenCaptureBreadCrumb("Solve Proof", "proof", "info", e), !(-1 !== ["hsw", "hsj", "hsl"].indexOf(e.type) && (!("n" in i.payload) || i.payload.n === e.type))) return captureMessageRaven("Asset script invalid file", "error", "proof", {
                         seen: e.type,
                         wanted: i.n
                     }), void t({
@@ -7481,17 +5959,17 @@
                             e = window.TextEncoder;
                         if (t && e) return function(t) {
                             return (ps || (ps = new Promise((function(t, e) {
-                                return Lt("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJEDGoSIwHTHfNtWy5e2MNv831yb7OqyAtvKn6bWr7plxlzs1+WxSQ+ZFgCaC+Am5Ujt4Ofm/lHcOfq7nvMdTokrgClQ16Fz0I5GSJGYQRKMXqMDng+gewZEMUivoJ+RlB3VF+1kBuiRUKoarP1go9q2/A11n+/xKmB2fnKPZrfQIDAQAB").then(t, e)
+                                return importKeyVerify("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJEDGoSIwHTHfNtWy5e2MNv831yb7OqyAtvKn6bWr7plxlzs1+WxSQ+ZFgCaC+Am5Ujt4Ofm/lHcOfq7nvMdTokrgClQ16Fz0I5GSJGYQRKMXqMDng+gewZEMUivoJ+RlB3VF+1kBuiRUKoarP1go9q2/A11n+/xKmB2fnKPZrfQIDAQAB").then(t, e)
                             }))), ps).then((function(e) {
-                                return Bt.verify(t, e)["catch"]((function() {
+                                return JWTLib.verify(t, e)["catch"]((function() {
                                     return (fs || (fs = new Promise((function(t, e) {
-                                        return Lt("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0GSPIW2DzUAQBwynPvt6n4R5MnhqIiHcD6ggM8vE3dDXuAe1rSm60kPG5pdhKvStYWmVb6a8DmGOJCnfR3vr2NmHJBUfso2rnYtYxT3WomZxJUyrKfk8Hiv0XMzlvhP9ViMh5uPnDyimisHwYhDlf4d7LfsUwV9Wyx5GnhTQuafUfmH1daaK4Dcs61Pw2dZfj2by77guM2xdphC7jiWnfwQN9HbNRtukQOHsah2uPW4nN4AvGUYsnazWNpxgXqs/DnJv3zODfT3yQ8mRkJ+vOwiY796th873TNjKD1cCsIf+nGwP/NebrqXsU7YjC5xYmFGy6zCrKyWS+40qumlAVwIDAQAB").then(t, e)
+                                        return importKeyVerify("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0GSPIW2DzUAQBwynPvt6n4R5MnhqIiHcD6ggM8vE3dDXuAe1rSm60kPG5pdhKvStYWmVb6a8DmGOJCnfR3vr2NmHJBUfso2rnYtYxT3WomZxJUyrKfk8Hiv0XMzlvhP9ViMh5uPnDyimisHwYhDlf4d7LfsUwV9Wyx5GnhTQuafUfmH1daaK4Dcs61Pw2dZfj2by77guM2xdphC7jiWnfwQN9HbNRtukQOHsah2uPW4nN4AvGUYsnazWNpxgXqs/DnJv3zODfT3yQ8mRkJ+vOwiY796th873TNjKD1cCsIf+nGwP/NebrqXsU7YjC5xYmFGy6zCrKyWS+40qumlAVwIDAQAB").then(t, e)
                                     }))), fs).then((function(e) {
-                                        return Bt.verify(t, e)
+                                        return JWTLib.verify(t, e)
                                     }))
                                 }))
                             }))["catch"]((function(t) {
-                                xt("proof", t)
+                                handleMissingErrorMessageRaven("proof", t)
                             }))
                         }(i)
                     })).then((function() {
@@ -7499,7 +5977,7 @@
                     })).then((function(t) {
                         if ("function" != typeof t) return Promise.reject(new Error("Script is not a function"));
                         var i = {
-                            assethost: ut.assethost,
+                            assethost: config_options.assethost,
                             fetchAsset: function(t) {
                                 return Ae.retrieve(t).then((function(e) {
                                     return e || Ae.file(t, {
@@ -7517,15 +5995,15 @@
                             spec: e
                         })
                     }))["catch"]((function(i) {
-                        "string" == typeof i && -1 !== i.indexOf("http") ? wt("Asset Script Failed", "error", "proof", {
+                        "string" == typeof i && -1 !== i.indexOf("http") ? captureMessageRaven("Asset Script Failed", "error", "proof", {
                             error: i
-                        }) : xt("proof", i), t({
+                        }) : handleMissingErrorMessageRaven("proof", i), t({
                             solved: "fail",
                             spec: e
                         })
                     }))
                 } catch (Po) {
-                    xt("proof", Po), t({
+                    handleMissingErrorMessageRaven("proof", Po), t({
                         solved: null,
                         spec: e
                     })
@@ -7588,14 +6066,14 @@
                 var s = e.proof,
                     o = {
                         v: "1b812e2",
-                        sitekey: ct.sitekey,
-                        host: ct.host,
-                        hl: ae.getLocale()
+                        sitekey: hcaptchaDummyObj.sitekey,
+                        host: hcaptchaDummyObj.host,
+                        hl: languageLib.getLocale()
                     };
-                return ut.se && (o.se = ut.se), !0 === ct.a11y_tfe && (o.a11y_tfe = !0), null !== Vs && (o.action = Vs, Vs = null), null !== Os && (o.extraData = JSON.stringify(Os), Os = null), t && (o.motionData = JSON.stringify(t)), i && (o.pd = JSON.stringify(i)), n && (o.pdc = JSON.stringify(n)), null !== Bs && (Hs = Bs, o.old_ekey = Bs), null !== Rs && (o.rqdata = Rs), s && (o.n = s.solved || null, o.c = s.spec ? JSON.stringify(s.spec) : null), e.authToken && (o.auth_token = e.authToken), e.hasPst !== undefined && (o.pst = e.hasPst), new Promise((function(t, i) {
+                return config_options.se && (o.se = config_options.se), !0 === hcaptchaDummyObj.a11y_tfe && (o.a11y_tfe = !0), null !== Vs && (o.action = Vs, Vs = null), null !== Os && (o.extraData = JSON.stringify(Os), Os = null), t && (o.motionData = JSON.stringify(t)), i && (o.pd = JSON.stringify(i)), n && (o.pdc = JSON.stringify(n)), null !== Bs && (Hs = Bs, o.old_ekey = Bs), null !== Rs && (o.rqdata = Rs), s && (o.n = s.solved || null, o.c = s.spec ? JSON.stringify(s.spec) : null), e.authToken && (o.auth_token = e.authToken), e.hasPst !== undefined && (o.pst = e.hasPst), new Promise((function(t, i) {
                     try {
                         me({
-                            url: ut.endpoint + "/getcaptcha/" + o.sitekey,
+                            url: config_options.endpoint + "/getcaptcha/" + o.sitekey,
                             data: o,
                             dataType: "query",
                             responseType: "json",
@@ -7608,7 +6086,7 @@
                         }).then((function(e) {
                             var i = e.body || null;
                             if (!i) throw new Error("Missing response body.");
-                            if (!1 === i.success) return -1 !== (i["error-codes"] || []).indexOf("invalid-data") && wt("invalid-data", "error", "api", {
+                            if (!1 === i.success) return -1 !== (i["error-codes"] || []).indexOf("invalid-data") && captureMessageRaven("invalid-data", "error", "api", {
                                 motionData: o.motionData
                             }), void t(i);
                             Ds.setData(i), t(i)
@@ -7627,7 +6105,7 @@
                             Ts[t] = window[t], e(Ts[t])
                         }))["catch"]((function(t) {
                             i({
-                                event: it.BUNDLE_ERROR,
+                                event: captchaStatus.BUNDLE_ERROR,
                                 message: "Failed to get challenge bundle.",
                                 reason: t
                             })
@@ -7636,21 +6114,21 @@
                 }))
             },
             createBundleUrl: function(t) {
-                return (ut.assethost || ct.assetDomain) + "/captcha/challenge/" + t + "/1b812e2/challenge.js"
+                return (config_options.assethost || hcaptchaDummyObj.assetDomain) + "/captcha/challenge/" + t + "/1b812e2/challenge.js"
             },
             checkAnswers: function(t, e, i) {
                 var n = {
                     v: "1b812e2",
                     job_mode: Os.request_type,
                     answers: t,
-                    serverdomain: ct.host,
-                    sitekey: ct.sitekey,
+                    serverdomain: hcaptchaDummyObj.host,
+                    sitekey: hcaptchaDummyObj.sitekey,
                     motionData: JSON.stringify(e)
                 };
-                return ut.se && (n.se = ut.se), i && (n.n = i.solved, n.c = JSON.stringify(i.spec)), new Promise((function(t, e) {
+                return config_options.se && (n.se = config_options.se), i && (n.n = i.solved, n.c = JSON.stringify(i.spec)), new Promise((function(t, e) {
                     try {
                         me({
-                            url: ut.endpoint + "/checkcaptcha/" + n.sitekey + "/" + Os.key,
+                            url: config_options.endpoint + "/checkcaptcha/" + n.sitekey + "/" + Os.key,
                             data: n,
                             dataType: "json",
                             responseType: "json",
@@ -7662,7 +6140,7 @@
                             var i = e.body || null;
                             if (!i) throw new Error("Missing response body.");
                             if (!1 === i.success) {
-                                var s = i["error-codes"] || [""]; - 1 !== s.indexOf("invalid-data") && wt("invalid-data", "error", "api", {
+                                var s = i["error-codes"] || [""]; - 1 !== s.indexOf("invalid-data") && captureMessageRaven("invalid-data", "error", "api", {
                                     motionData: n.motionData
                                 });
                                 var o = s.join(", ");
@@ -7678,7 +6156,7 @@
             reportIssue: function(t, e, i) {
                 var n = {
                     taskdata: Os,
-                    on_url: ct.url,
+                    on_url: hcaptchaDummyObj.url,
                     report_category: t,
                     sid: Ms
                 };
@@ -7687,7 +6165,7 @@
                     n.taskdata.tasklist = [o]
                 }
                 return me({
-                    url: ut.reportapi + "/bug-report",
+                    url: config_options.reportapi + "/bug-report",
                     data: n,
                     dataType: "json",
                     responseType: "json",
@@ -7711,16 +6189,16 @@
             },
             hasPrivateStateToken: function() {
                 return document.hasPrivateToken ? new Promise((function(t) {
-                    document.hasRedemptionRecord(ut.pstIssuer).then((function(e) {
-                        e ? t(!0) : document.hasPrivateToken(ut.pstIssuer, "private-state-token").then((function(e) {
+                    document.hasRedemptionRecord(config_options.pstIssuer).then((function(e) {
+                        e ? t(!0) : document.hasPrivateToken(config_options.pstIssuer, "private-state-token").then((function(e) {
                             if (e) {
                                 var i = {
                                     v: "1b812e2",
-                                    sitekey: ct.sitekey,
-                                    host: ct.host
+                                    sitekey: hcaptchaDummyObj.sitekey,
+                                    host: hcaptchaDummyObj.host
                                 };
                                 me({
-                                    url: ut.pstIssuer + "/pst/redemption",
+                                    url: config_options.pstIssuer + "/pst/redemption",
                                     data: i,
                                     dataType: "json",
                                     responseType: "json",
@@ -7733,14 +6211,14 @@
                                 }).then((function() {
                                     t(!0)
                                 }))["catch"]((function(e) {
-                                    vt(e), t(undefined)
+                                    reportError(e), t(undefined)
                                 }))
                             } else t(!1)
                         }))["catch"]((function(e) {
-                            vt(e), t(undefined)
+                            reportError(e), t(undefined)
                         }))
                     }))["catch"]((function(e) {
-                        vt(e), t(undefined)
+                        reportError(e), t(undefined)
                     }))
                 })) : Promise.resolve(undefined)
             },
@@ -7753,11 +6231,11 @@
             authenticate: function(t) {
                 var e = {
                     v: "1b812e2",
-                    sitekey: ct.sitekey,
-                    host: ct.host
+                    sitekey: hcaptchaDummyObj.sitekey,
+                    host: hcaptchaDummyObj.host
                 };
-                return ut.se && (e.se = ut.se), t && (e.n = t.solved || null, e.c = t.spec ? JSON.stringify(t.spec) : null), me({
-                    url: ut.endpoint + "/authenticate",
+                return config_options.se && (e.se = config_options.se), t && (e.n = t.solved || null, e.c = t.spec ? JSON.stringify(t.spec) : null), me({
+                    url: config_options.endpoint + "/authenticate",
                     data: e,
                     dataType: "json",
                     responseType: "json",
@@ -7782,7 +6260,7 @@
                 if ("string" != typeof e) return;
                 var i = e.trim().split("\n");
                 "Error" === i[0] && (i = i.slice(1));
-                var n = gt(i = i.slice(-2));
+                var n = ConsoleFilter(i = i.slice(-2));
                 n && -1 === ks.indexOf(n) && ks.push(n)
             } catch (t) {
                 return
@@ -7821,7 +6299,7 @@
                 }
             },
             collect: function() {
-                return ks.concat(yt)
+                return ks.concat(SomeArr)
             }
         });
 
@@ -7833,7 +6311,7 @@
                 return i || Ae.file(e, {
                     prefix: "https://newassets.hcaptcha.com/captcha/v1/1b812e2/static/i18n"
                 }).then((function(e) {
-                    return ae.addTable(t, e.data), e
+                    return languageLib.addTable(t, e.data), e
                 }))
             })).then((function(t) {
                 i(t.data)
@@ -7853,20 +6331,20 @@
         };
 
     function Ns() {
-        var t, e, i, n, s, o, r = js.dummykey(ct.sitekey);
-        if ("localhost" === ct.host && !r) {
+        var t, e, i, n, s, o, r = js.dummykey(hcaptchaDummyObj.sitekey);
+        if ("localhost" === hcaptchaDummyObj.host && !r) {
             var a = "Warning: localhost detected. Please use a valid host.";
             return console.error(a), Promise.reject(new Error(a))
         }
-        return (t = ct.sitekey, e = ct.host, i = {
+        return (t = hcaptchaDummyObj.sitekey, e = hcaptchaDummyObj.host, i = {
             attempts: 3,
             delay: 5e3,
             onFail: function(t) {
-                return kt("challenge", "api", "debug", t), t && 0 === t.status && -1 !== at.indexOf(ut.endpoint) ? (ut.endpoint = st, !0) : (wt("api:checksiteconfig failed", "error", "challenge", {
+                return ravenCaptureBreadCrumb("challenge", "api", "debug", t), t && 0 === t.status && -1 !== main_endpoints.indexOf(config_options.endpoint) ? (config_options.endpoint = api_hDomain, !0) : (captureMessageRaven("api:checksiteconfig failed", "error", "challenge", {
                     error: t
                 }), t instanceof Error || 400 === t.status)
             }
-        }, n = tt.Browser.supportsCanvas() >>> 0, s = tt.Browser.supportsWebAssembly() >>> 0, o = tt.Browser.supportsPST() >>> 0, new Promise((function(r, a) {
+        }, n = browserData.Browser.supportsCanvas() >>> 0, s = browserData.Browser.supportsWebAssembly() >>> 0, o = browserData.Browser.supportsPST() >>> 0, new Promise((function(r, a) {
             var l = {
                 v: "1b812e2",
                 host: e,
@@ -7875,10 +6353,10 @@
                 swa: s,
                 spst: o
             };
-            ut.se && (l.se = ut.se), me({
+            config_options.se && (l.se = config_options.se), me({
                 url: function() {
-                    var e = ut.endpoint;
-                    return e === nt && ("78c843a4-f80d-4a14-b3e5-74b492762487" === t || Math.random() < .2) && (e = ot), e + "/checksiteconfig?" + Ot(l)
+                    var e = config_options.endpoint;
+                    return e === hDomain && ("78c843a4-f80d-4a14-b3e5-74b492762487" === t || Math.random() < .2) && (e = api2_hDomain), e + "/checksiteconfig?" + Ot(l)
                 },
                 responseType: "json",
                 withCredentials: !0,
@@ -7898,7 +6376,7 @@
                 else a(new Error("Missing response body."))
             }))["catch"](a)
         }))).then((function(t) {
-            return kt("/checksiteconfig success", "request", "info", t), ut.endpoint === nt && t.endpoint ? (ut.endpoint = t.endpoint, Ns()) : (t.endpoint && -1 !== at.indexOf(ut.endpoint) && (ut.endpoint = t.endpoint), delete t.endpoint, t)
+            return ravenCaptureBreadCrumb("/checksiteconfig success", "request", "info", t), config_options.endpoint === hDomain && t.endpoint ? (config_options.endpoint = t.endpoint, Ns()) : (t.endpoint && -1 !== main_endpoints.indexOf(config_options.endpoint) && (config_options.endpoint = t.endpoint), delete t.endpoint, t)
         }))
     }
     var zs = new _i;
@@ -7949,7 +6427,7 @@
         this.state.ticked = "passed" === t, this.translate()
     }, Zs.prototype.translate = function() {
         var t = this.state.ticked ? "hCaptcha checkbox. You are verified" : "hCaptcha checkbox. Select in order to trigger the challenge, or to bypass it if you have an accessibility cookie.";
-        this.content(ae.translate(t))
+        this.content(languageLib.translate(t))
     }, Qt.proto(Ws, Xt), Ws.prototype.style = function() {
         this._style = Us(zs);
         var t = this.state.visible ? this._style.main.fill : "transparent",
@@ -8118,7 +6596,7 @@
             fontSize: 14
         })
     }, Js.prototype.translate = function() {
-        var t = ae.translate("I am human");
+        var t = languageLib.translate("I am human");
         this.text.content(t)
     };
     var Ys = "Privacy",
@@ -8135,13 +6613,13 @@
         }, this.privacy = this.initComponent(Li, {
             theme: zs,
             text: Ys,
-            url: (t.privacyUrl || Qs) + "?ref=" + ct.host + "&utm_campaign=" + ct.sitekey + "&utm_medium=checkbox"
+            url: (t.privacyUrl || Qs) + "?ref=" + hcaptchaDummyObj.host + "&utm_campaign=" + hcaptchaDummyObj.sitekey + "&utm_medium=checkbox"
         }), this.hyphen = this.initComponent(Bi, {
             text: " - "
         }), this.terms = this.initComponent(Li, {
             theme: zs,
             text: to,
-            url: (t.termsUrl || eo) + "?ref=" + ct.host + "&utm_campaign=" + ct.sitekey + "&utm_medium=checkbox"
+            url: (t.termsUrl || eo) + "?ref=" + hcaptchaDummyObj.host + "&utm_campaign=" + hcaptchaDummyObj.sitekey + "&utm_medium=checkbox"
         }), this.translate()
     }
     Qt.proto(no, Xt), no.prototype.style = function() {
@@ -8159,14 +6637,14 @@
             };
         this.privacy.style(e), this.hyphen.style(e), this.terms.style(e)
     }, no.prototype.translate = function() {
-        this.privacy.translate(), this.terms.translate(), this.privacy.setAttribute("aria-label", ae.translate(Xs)), this.terms.setAttribute("aria-label", ae.translate(io))
+        this.privacy.translate(), this.terms.translate(), this.privacy.setAttribute("aria-label", languageLib.translate(Xs)), this.terms.setAttribute("aria-label", languageLib.translate(io))
     };
     var so = "https://www.hcaptcha.com/what-is-hcaptcha-about",
         oo = "Visit hcaptcha.com to learn more about the service and its accessibility options.";
 
     function ro(t) {
         Qt.self(this, Xt, "anchor-brand"), this.state = {
-            url: t.logoUrl || so + "?ref=" + ct.host + "&utm_campaign=" + ct.sitekey + "&utm_medium=checkbox",
+            url: t.logoUrl || so + "?ref=" + hcaptchaDummyObj.host + "&utm_campaign=" + hcaptchaDummyObj.sitekey + "&utm_medium=checkbox",
             theme: "dark" === t.theme ? "dark" : "light",
             display: t.displayLogo,
             label: "hCaptcha"
@@ -8237,7 +6715,7 @@
 
     function po(t, e) {
         var i = this;
-        t instanceof Yt || (t = new Yt(t)), ct.host = e.host ? e.host : "", ct.sitekey = e.sitekey ? e.sitekey : "";
+        t instanceof Yt || (t = new Yt(t)), hcaptchaDummyObj.host = e.host ? e.host : "", hcaptchaDummyObj.sitekey = e.sitekey ? e.sitekey : "";
         var n = new si,
             s = new uo(e);
         return s.style(), s.reset(), t.appendElement(s), t.css({
@@ -8278,15 +6756,15 @@
     }
 
     function mo(t) {
-        fo.call(this, it.INVALID_CAPTCHA_ID, "Invalid hCaptcha id: " + t)
+        fo.call(this, captchaStatus.INVALID_CAPTCHA_ID, "Invalid hCaptcha id: " + t)
     }
 
     function yo() {
-        fo.call(this, it.MISSING_CAPTCHA, "No hCaptcha exists.")
+        fo.call(this, captchaStatus.MISSING_CAPTCHA, "No hCaptcha exists.")
     }
 
     function go() {
-        fo.call(this, it.MISSING_SITEKEY, "Missing sitekey - https://hcaptcha.com/docs/configuration#jsapi")
+        fo.call(this, captchaStatus.MISSING_SITEKEY, "Missing sitekey - https://hcaptcha.com/docs/configuration#jsapi")
     }
     Qt.proto(ro, Xt), ro.prototype.style = function() {
         if (this.state.display) {
@@ -8295,7 +6773,7 @@
             })
         }
     }, ro.prototype.translate = function() {
-        this.logo.setAttribute("aria-label", ae.translate(oo)), this.setAttribute("title", this.state.label)
+        this.logo.setAttribute("aria-label", languageLib.translate(oo)), this.setAttribute("title", this.state.label)
     }, ro.prototype.getLogoUrl = function() {
         return this.state.url
     }, Qt.proto(ao, Xt), ao.prototype.style = function() {
@@ -8345,7 +6823,7 @@
         })
     }, lo.prototype.translate = function() {
         if ("" !== this.state.copy) {
-            var t = ae.translate(this.state.copy);
+            var t = languageLib.translate(this.state.copy);
             this.setAttribute("aria-label", t), this.content(t)
         }
     }, lo.prototype.isVisible = function() {
@@ -8369,7 +6847,7 @@
         })
     }, co.prototype.translate = function() {
         if ("" !== this.state.copy) {
-            var t = ae.translate(this.state.copy);
+            var t = languageLib.translate(this.state.copy);
             this.setAttribute("aria-label", t), this.$copy.parseText(t)
         }
     }, co.prototype.isVisible = function() {
@@ -8470,10 +6948,10 @@
         if (r.resolve = n, r.reject = s, i = t ? wo.getById(t) : wo.getByIndex(0)) Ke.setData("exec", !0), o && i.setPromise(r), i.onReady(i.initChallenge, e);
         else if (t) {
             if (!o) throw new mo(t);
-            r.reject(it.INVALID_CAPTCHA_ID)
+            r.reject(captchaStatus.INVALID_CAPTCHA_ID)
         } else {
             if (!o) throw new yo;
-            r.reject(it.MISSING_CAPTCHA)
+            r.reject(captchaStatus.MISSING_CAPTCHA)
         }
         if (o) return r
     }
@@ -8506,22 +6984,22 @@
             n = !1;
         this.id = t, this.width = null, this.height = null, this.mobile = !1, this.ready = !1, this.listeners = [], this.config = e, this._visible = !1, this._selected = !1, this.$iframe = new Yt("iframe"), this.$iframe.dom.addEventListener("load", (function() {
             n || i.chat && i.chat.setReady(!0), n = !0
-        })), this._host = ct.host || window.location.hostname;
-        var s = ct.assetUrl;
-        ut.assethost && (s = ut.assethost + ct.assetUrl.replace(ct.assetDomain, "")), this.$iframe.dom.src = s + "/hcaptcha.html#frame=challenge&id=" + this.id + "&host=" + this._host + (e ? "&" + Ot(this.config) : ""), this.$iframe.dom.frameBorder = 0, this.$iframe.dom.scrolling = "no", tt.Browser.supportsPST() && (this.$iframe.dom.allow = "private-state-token-issuance 'src'; private-state-token-redemption 'src'"), this.translate(), this.setupParentContainer(e), this._hasCustomContainer ? (this._hideIframe(), this._parent.appendChild(this.$iframe.dom)) : (this.$container = new Yt("div"), this.$wrapper = this.$container.createElement("div"), this.$overlay = this.$container.createElement("div"), this.$arrow = this.$container.createElement("div"), this.$arrow.fg = this.$arrow.createElement("div"), this.$arrow.bg = this.$arrow.createElement("div"), this.style.call(this), this.$wrapper.appendElement(this.$iframe), this._parent.appendChild(this.$container.dom), this.$container.setAttribute("aria-hidden", !0));
+        })), this._host = hcaptchaDummyObj.host || window.location.hostname;
+        var s = hcaptchaDummyObj.assetUrl;
+        config_options.assethost && (s = config_options.assethost + hcaptchaDummyObj.assetUrl.replace(hcaptchaDummyObj.assetDomain, "")), this.$iframe.dom.src = s + "/hcaptcha.html#frame=challenge&id=" + this.id + "&host=" + this._host + (e ? "&" + Ot(this.config) : ""), this.$iframe.dom.frameBorder = 0, this.$iframe.dom.scrolling = "no", browserData.Browser.supportsPST() && (this.$iframe.dom.allow = "private-state-token-issuance 'src'; private-state-token-redemption 'src'"), this.translate(), this.setupParentContainer(e), this._hasCustomContainer ? (this._hideIframe(), this._parent.appendChild(this.$iframe.dom)) : (this.$container = new Yt("div"), this.$wrapper = this.$container.createElement("div"), this.$overlay = this.$container.createElement("div"), this.$arrow = this.$container.createElement("div"), this.$arrow.fg = this.$arrow.createElement("div"), this.$arrow.bg = this.$arrow.createElement("div"), this.style.call(this), this.$wrapper.appendElement(this.$iframe), this._parent.appendChild(this.$container.dom), this.$container.setAttribute("aria-hidden", !0));
         var o = s.match(/^.+\:\/\/[^\/]+/),
             r = o ? o[0] : null;
-        this.chat = ai.createChat(this.$iframe.dom, t, r), "edge" === tt.Browser.type && tt.Browser.version < 80 || "ie" === tt.Browser.type || (n = this.$iframe.dom.contentWindow && this.$iframe.dom.contentWindow.document && "complete" === this.$iframe.dom.contentWindow.document.readyState), this.chat.setReady(n), this.style()
+        this.chat = ai.createChat(this.$iframe.dom, t, r), "edge" === browserData.Browser.type && browserData.Browser.version < 80 || "ie" === browserData.Browser.type || (n = this.$iframe.dom.contentWindow && this.$iframe.dom.contentWindow.document && "complete" === this.$iframe.dom.contentWindow.document.readyState), this.chat.setReady(n), this.style()
     }
     Eo.prototype.setupParentContainer = function(t) {
         var e, i = t["challenge-container"];
         i && (e = "string" == typeof i ? document.getElementById(i) : i), e ? (this._hasCustomContainer = !0, this._parent = e) : (this._hasCustomContainer = !1, this._parent = document.body)
     }, Eo.prototype._hideIframe = function() {
         var t = {};
-        "ie" !== tt.Browser.type || "ie" === tt.Browser.type && 8 !== tt.Browser.version ? (t.opacity = 0, t.visibility = "hidden") : t.display = "none", this.$iframe.setAttribute("aria-hidden", !0), this.$iframe.css(t)
+        "ie" !== browserData.Browser.type || "ie" === browserData.Browser.type && 8 !== browserData.Browser.version ? (t.opacity = 0, t.visibility = "hidden") : t.display = "none", this.$iframe.setAttribute("aria-hidden", !0), this.$iframe.css(t)
     }, Eo.prototype._showIframe = function() {
         var t = {};
-        "ie" !== tt.Browser.type || "ie" === tt.Browser.type && 8 !== tt.Browser.version ? (t.opacity = 1, t.visibility = "visible") : t.display = "block", this.$iframe.removeAttribute("aria-hidden"), this.$iframe.css(t)
+        "ie" !== browserData.Browser.type || "ie" === browserData.Browser.type && 8 !== browserData.Browser.version ? (t.opacity = 1, t.visibility = "visible") : t.display = "block", this.$iframe.removeAttribute("aria-hidden"), this.$iframe.css(t)
     }, Eo.prototype.style = function() {
         var t = function(t) {
             var e = t.palette,
@@ -8549,7 +7027,7 @@
                 zIndex: -9999999999999,
                 position: "absolute"
             };
-            "ie" !== tt.Browser.type || "ie" === tt.Browser.type && 8 !== tt.Browser.version ? (e.transition = "opacity 0.15s ease-out", e.opacity = 0, e.visibility = "hidden") : e.display = "none", this.$container.css(e), this.$wrapper.css({
+            "ie" !== browserData.Browser.type || "ie" === browserData.Browser.type && 8 !== browserData.Browser.version ? (e.transition = "opacity 0.15s ease-out", e.opacity = 0, e.visibility = "hidden") : e.display = "none", this.$container.css(e), this.$wrapper.css({
                 position: "relative",
                 zIndex: 1
             }), this.$overlay.css({
@@ -8594,11 +7072,11 @@
     }, Eo.prototype.sendTranslation = function(t) {
         var e = {
             locale: t,
-            table: ae.getTable(t) || {}
+            table: languageLib.getTable(t) || {}
         };
         this.chat && this.chat.send("challenge-translate", e), this.translate()
     }, Eo.prototype.translate = function() {
-        this.$iframe.dom.title = ae.translate("Main content of the hCaptcha challenge")
+        this.$iframe.dom.title = languageLib.translate("Main content of the hCaptcha challenge")
     }, Eo.prototype.isVisible = function() {
         return this._visible
     }, Eo.prototype.getDimensions = function(t, e) {
@@ -8614,7 +7092,7 @@
                     zIndex: 9999999999999,
                     display: "block"
                 };
-                ("ie" !== tt.Browser.type || "ie" === tt.Browser.type && 8 !== tt.Browser.version) && (t.opacity = 1, t.visibility = "visible"), this.$container.css(t), this.$container.removeAttribute("aria-hidden"), this.$overlay.css({
+                ("ie" !== browserData.Browser.type || "ie" === browserData.Browser.type && 8 !== browserData.Browser.version) && (t.opacity = 1, t.visibility = "visible"), this.$container.css(t), this.$container.removeAttribute("aria-hidden"), this.$overlay.css({
                     pointerEvents: "auto",
                     cursor: "pointer"
                 })
@@ -8631,7 +7109,7 @@
                 top: -1e4,
                 zIndex: -9999999999999
             };
-            "ie" !== tt.Browser.type || "ie" === tt.Browser.type && 8 !== tt.Browser.version ? (e.opacity = 0, e.visibility = "hidden") : e.display = "none", this.$container.css(e), this._hasCustomContainer || this.$overlay.css({
+            "ie" !== browserData.Browser.type || "ie" === browserData.Browser.type && 8 !== browserData.Browser.version ? (e.opacity = 0, e.visibility = "hidden") : e.display = "none", this.$container.css(e), this._hasCustomContainer || this.$overlay.css({
                 pointerEvents: "none",
                 cursor: "default"
             }), this.chat.send("close-challenge", {
@@ -8654,9 +7132,9 @@
         if (!this._hasCustomContainer && t) {
             var e = 10,
                 i = window.document.documentElement,
-                n = tt.Browser.scrollY(),
-                s = tt.Browser.width(),
-                o = tt.Browser.height(),
+                n = browserData.Browser.scrollY(),
+                s = browserData.Browser.width(),
+                o = browserData.Browser.height(),
                 r = this.mobile || "invisible" === this.config.size || t.offset.left + t.tick.x <= t.tick.width / 2,
                 a = Math.round(t.bounding.top) + n !== t.offset.top,
                 l = r ? (s - this.width) / 2 : t.bounding.left + t.tick.right + 10;
@@ -8701,11 +7179,11 @@
             tick: null,
             offset: null,
             bounding: null
-        }, this.config = i, this._ticked = !0, this.$container = t instanceof Yt ? t : new Yt(t), this._host = ct.host || window.location.hostname, this.$iframe = new Yt("iframe"), this.$iframe.dom.addEventListener("load", (function() {
+        }, this.config = i, this._ticked = !0, this.$container = t instanceof Yt ? t : new Yt(t), this._host = hcaptchaDummyObj.host || window.location.hostname, this.$iframe = new Yt("iframe"), this.$iframe.dom.addEventListener("load", (function() {
             s || n.chat && n.chat.setReady(!0), s = !0
         }));
-        var o = ct.assetUrl;
-        ut.assethost && (o = ut.assethost + ct.assetUrl.replace(ct.assetDomain, "")), this.$iframe.dom.src = o + "/hcaptcha.html#frame=checkbox&id=" + this.id + "&host=" + this._host + (i ? "&" + Ot(this.config) : ""), this.$iframe.dom.tabIndex = this.config.tabindex || 0, this.$iframe.dom.frameBorder = "0", this.$iframe.dom.scrolling = "no", tt.Browser.supportsPST() && (this.$iframe.dom.allow = "private-state-token-issuance 'src'; private-state-token-redemption 'src'"), this.translate(), this.config.size && "invisible" === this.config.size && this.$iframe.setAttribute("aria-hidden", "true"), this.$iframe.setAttribute("data-hcaptcha-widget-id", e), this.$iframe.setAttribute("data-hcaptcha-response", ""), this.$container.appendElement(this.$iframe), "off" !== ut.recaptchacompat && (this.$textArea0 = this.$container.createElement("textarea", "#g-recaptcha-response-" + e), this.$textArea0.dom.name = "g-recaptcha-response", this.$textArea0.css({
+        var o = hcaptchaDummyObj.assetUrl;
+        config_options.assethost && (o = config_options.assethost + hcaptchaDummyObj.assetUrl.replace(hcaptchaDummyObj.assetDomain, "")), this.$iframe.dom.src = o + "/hcaptcha.html#frame=checkbox&id=" + this.id + "&host=" + this._host + (i ? "&" + Ot(this.config) : ""), this.$iframe.dom.tabIndex = this.config.tabindex || 0, this.$iframe.dom.frameBorder = "0", this.$iframe.dom.scrolling = "no", browserData.Browser.supportsPST() && (this.$iframe.dom.allow = "private-state-token-issuance 'src'; private-state-token-redemption 'src'"), this.translate(), this.config.size && "invisible" === this.config.size && this.$iframe.setAttribute("aria-hidden", "true"), this.$iframe.setAttribute("data-hcaptcha-widget-id", e), this.$iframe.setAttribute("data-hcaptcha-response", ""), this.$container.appendElement(this.$iframe), "off" !== config_options.recaptchacompat && (this.$textArea0 = this.$container.createElement("textarea", "#g-recaptcha-response-" + e), this.$textArea0.dom.name = "g-recaptcha-response", this.$textArea0.css({
             display: "none"
         })), this.$textArea1 = this.$container.createElement("textarea", "#h-captcha-response-" + e), this.$textArea1.dom.name = "h-captcha-response", this.$textArea1.css({
             display: "none"
@@ -8714,7 +7192,7 @@
             a = r ? r[0] : null;
         this.chat = ai.createChat(this.$iframe.dom, e, a), this.ready = new Promise((function(t) {
             n.chat.listen("checkbox-ready", t)
-        })), "edge" === tt.Browser.type && tt.Browser.version < 80 || "ie" === tt.Browser.type || (s = this.$iframe.dom.contentWindow && this.$iframe.dom.contentWindow.document && "complete" === this.$iframe.dom.contentWindow.document.readyState), this.chat.setReady(s), this.clearLoading = this.clearLoading.bind(this), this.style()
+        })), "edge" === browserData.Browser.type && browserData.Browser.version < 80 || "ie" === browserData.Browser.type || (s = this.$iframe.dom.contentWindow && this.$iframe.dom.contentWindow.document && "complete" === this.$iframe.dom.contentWindow.document.readyState), this.chat.setReady(s), this.clearLoading = this.clearLoading.bind(this), this.style()
     }
 
     function So(t, e, i) {
@@ -8724,7 +7202,7 @@
             bounding: null
         }, this.config = i, this.$container = t instanceof Yt ? t : new Yt(t), this.$iframe = new Yt("iframe"), this.$iframe.setAttribute("aria-hidden", "true"), this.$iframe.css({
             display: "none"
-        }), this.$iframe.setAttribute("data-hcaptcha-widget-id", e), this.$iframe.setAttribute("data-hcaptcha-response", ""), this.$container.appendElement(this.$iframe), "off" !== ut.recaptchacompat && (this.$textArea0 = this.$container.createElement("textarea", "#g-recaptcha-response-" + e), this.$textArea0.dom.name = "g-recaptcha-response", this.$textArea0.css({
+        }), this.$iframe.setAttribute("data-hcaptcha-widget-id", e), this.$iframe.setAttribute("data-hcaptcha-response", ""), this.$container.appendElement(this.$iframe), "off" !== config_options.recaptchacompat && (this.$textArea0 = this.$container.createElement("textarea", "#g-recaptcha-response-" + e), this.$textArea0.dom.name = "g-recaptcha-response", this.$textArea0.css({
             display: "none"
         })), this.$textArea1 = this.$container.createElement("textarea", "#h-captcha-response-" + e), this.$textArea1.dom.name = "h-captcha-response", this.$textArea1.css({
             display: "none"
@@ -8746,7 +7224,7 @@
         }, this._origData = null, this._promise = null, this._responseTimer = null, this.initChallenge = this.initChallenge.bind(this), this.closeChallenge = this.closeChallenge.bind(this), this.displayChallenge = this.displayChallenge.bind(this), this.getGetCaptchaManifest = this.getGetCaptchaManifest.bind(this), this.challenge = new Eo(e, i), "invisible" == this.config.size ? this.checkbox = new So(t, e, i) : this.checkbox = new Ao(t, e, i)
     }
     Ao.prototype.setResponse = function(t) {
-        this.response = t, this.$iframe.dom.setAttribute("data-hcaptcha-response", t), "off" !== ut.recaptchacompat && (this.$textArea0.dom.value = t), this.$textArea1.dom.value = t
+        this.response = t, this.$iframe.dom.setAttribute("data-hcaptcha-response", t), "off" !== config_options.recaptchacompat && (this.$textArea0.dom.value = t), this.$textArea1.dom.value = t
     }, Ao.prototype.style = function() {
         switch (this.config.size) {
             case "compact":
@@ -8774,11 +7252,11 @@
     }, Ao.prototype.sendTranslation = function(t) {
         var e = {
             locale: t,
-            table: ae.getTable(t) || {}
+            table: languageLib.getTable(t) || {}
         };
         this.chat && this.chat.send("checkbox-translate", e), this.translate()
     }, Ao.prototype.translate = function() {
-        this.$iframe.dom.title = ae.translate("Widget containing checkbox for hCaptcha security challenge")
+        this.$iframe.dom.title = languageLib.translate("Widget containing checkbox for hCaptcha security challenge")
     }, Ao.prototype.status = function(t, e) {
         this.chat && this.chat.send("checkbox-status", {
             text: t || null,
@@ -8799,9 +7277,9 @@
     }, Ao.prototype.getBounding = function() {
         return this.$iframe.dom.getBoundingClientRect()
     }, Ao.prototype.destroy = function() {
-        this._ticked && this.reset(), this.$container.removeElement(this.$iframe), this.$container.removeElement(this.$textArea1), "off" !== ut.recaptchacompat && (this.$container.removeElement(this.$textArea0), this.$textArea0 = this.$textArea0.__destroy()), this.$textArea1 = this.$textArea1.__destroy(), this.$container = this.$container.__destroy(), this.$iframe = this.$iframe.__destroy(), ai.removeChat(this.chat), this.chat = this.chat.destroy()
+        this._ticked && this.reset(), this.$container.removeElement(this.$iframe), this.$container.removeElement(this.$textArea1), "off" !== config_options.recaptchacompat && (this.$container.removeElement(this.$textArea0), this.$textArea0 = this.$textArea0.__destroy()), this.$textArea1 = this.$textArea1.__destroy(), this.$container = this.$container.__destroy(), this.$iframe = this.$iframe.__destroy(), ai.removeChat(this.chat), this.chat = this.chat.destroy()
     }, So.prototype.setResponse = function(t) {
-        this.response = t, this.$iframe.dom.setAttribute("data-hcaptcha-response", t), "off" !== ut.recaptchacompat && (this.$textArea0.dom.value = t), this.$textArea1.dom.value = t
+        this.response = t, this.$iframe.dom.setAttribute("data-hcaptcha-response", t), "off" !== config_options.recaptchacompat && (this.$textArea0.dom.value = t), this.$textArea1.dom.value = t
     }, So.prototype.reset = function() {}, So.prototype.clearLoading = function() {}, So.prototype.sendTranslation = function(t) {}, So.prototype.status = function(t, e) {}, So.prototype.tick = function() {}, So.prototype.getTickLocation = function() {
         return Promise.resolve({
             left: 0,
@@ -8824,7 +7302,7 @@
     }, So.prototype.getBounding = function() {
         return this.$iframe.dom.getBoundingClientRect()
     }, So.prototype.destroy = function() {
-        this._ticked && this.reset(), this.$container.removeElement(this.$iframe), this.$container.removeElement(this.$textArea1), "off" !== ut.recaptchacompat && (this.$container.removeElement(this.$textArea0), this.$textArea0 = this.$textArea0.__destroy()), this.$textArea1 = this.$textArea1.__destroy(), this.$container = this.$container.__destroy(), this.$iframe = this.$iframe.__destroy()
+        this._ticked && this.reset(), this.$container.removeElement(this.$iframe), this.$container.removeElement(this.$textArea1), "off" !== config_options.recaptchacompat && (this.$container.removeElement(this.$textArea0), this.$textArea0 = this.$textArea0.__destroy()), this.$textArea1 = this.$textArea1.__destroy(), this.$container = this.$container.__destroy(), this.$iframe = this.$iframe.__destroy()
     }, Lo.prototype._resetTimer = function() {
         null !== this._responseTimer && (clearTimeout(this._responseTimer), this._responseTimer = null)
     }, Lo.prototype.initChallenge = function(t) {
@@ -8836,8 +7314,8 @@
             o = t.action || "",
             r = t.rqdata || null,
             a = t.errors || [],
-            l = tt.Browser.width(),
-            c = tt.Browser.height();
+            l = browserData.Browser.width(),
+            c = browserData.Browser.height();
         this._active = !0, this._resetTimer(), this._resetState(), this.checkbox.setResponse(""), this.challenge.setup({
             a11yChallenge: n,
             manifest: e,
@@ -8859,10 +7337,10 @@
             this.visible = !0;
             var i = this.checkbox,
                 n = this.challenge,
-                s = tt.Browser.height();
-            if (!("ie" === tt.Browser.type && 8 === tt.Browser.version)) {
+                s = browserData.Browser.height();
+            if (!("ie" === browserData.Browser.type && 8 === browserData.Browser.version)) {
                 var o = window.getComputedStyle(document.body).getPropertyValue("overflow-y");
-                this.overflow.override = "hidden" === o, this.overflow.override && (this.overflow.cssUsed = "" === document.body.style.overflow && "" === document.body.style.overflowY, this.overflow.cssUsed || (this.overflow.value = "" === o ? "auto" : o), this.overflow.scroll = tt.Browser.scrollY(), document.body.style.overflowY = "auto")
+                this.overflow.override = "hidden" === o, this.overflow.override && (this.overflow.cssUsed = "" === document.body.style.overflow && "" === document.body.style.overflowY, this.overflow.cssUsed || (this.overflow.value = "" === o ? "auto" : o), this.overflow.scroll = browserData.Browser.scrollY(), document.body.style.overflowY = "auto")
             }
             return new Promise((function(o) {
                 i.status(), i.getTickLocation().then((function(r) {
@@ -8880,10 +7358,10 @@
             s = this.checkbox,
             o = this.challenge;
         o.getDimensions(t, e).then((function(t) {
-            t && o.size(t.width, t.height, t.mobile), s.location.bounding = s.getBounding(), s.location.offset = s.getOffset(), tt.System.mobile && !i || o.position(s.location)
+            t && o.size(t.width, t.height, t.mobile), s.location.bounding = s.getBounding(), s.location.offset = s.getOffset(), browserData.System.mobile && !i || o.position(s.location)
         }))["catch"]((function(t) {
             n.closeChallenge.call(n, {
-                event: it.CHALLENGE_ERROR,
+                event: captchaStatus.CHALLENGE_ERROR,
                 message: "Captcha resize caused error.",
                 error: t
             })
@@ -8891,7 +7369,7 @@
     }, Lo.prototype.position = function() {
         var t = this.checkbox,
             e = this.challenge;
-        tt.System.mobile || (t.location.bounding = t.getBounding(), e.position(t.location))
+        browserData.System.mobile || (t.location.bounding = t.getBounding(), e.position(t.location))
     }, Lo.prototype.reset = function() {
         this.checkbox.reset(), this.checkbox.setResponse(""), this._resetTimer(), this._resetState()
     }, Lo.prototype._resetState = function() {
@@ -8904,19 +7382,19 @@
         this.overflow.override && ((window.document.scrollingElement || document.getElementsByTagName("html")[0]).scrollTop = this.overflow.scroll, this.overflow.override = !1, this.overflow.scroll = 0, document.body.style.overflowY = this.overflow.cssUsed ? null : this.overflow.value);
         var s = t.response || "";
         switch (i.setResponse(s), n.close(t.event), i.$iframe.dom.focus(), t.event) {
-            case et.CHALLENGE_ESCAPED:
-                this._state.escaped = !0, i.reset(), e.onClose && $t(e.onClose), e._promise && e._promise.reject(et.CHALLENGE_CLOSED);
+            case challengeStatus.CHALLENGE_ESCAPED:
+                this._state.escaped = !0, i.reset(), e.onClose && $t(e.onClose), e._promise && e._promise.reject(challengeStatus.CHALLENGE_CLOSED);
                 break;
-            case et.CHALLENGE_EXPIRED:
-                this._state.expiredChallenge = !0, i.reset(), i.status("hCaptcha window closed due to timeout.", !0), e.onChalExpire && $t(e.onChalExpire), e._promise && e._promise.reject(et.CHALLENGE_EXPIRED);
+            case challengeStatus.CHALLENGE_EXPIRED:
+                this._state.expiredChallenge = !0, i.reset(), i.status("hCaptcha window closed due to timeout.", !0), e.onChalExpire && $t(e.onChalExpire), e._promise && e._promise.reject(challengeStatus.CHALLENGE_EXPIRED);
                 break;
-            case it.CHALLENGE_ERROR:
-            case it.BUNDLE_ERROR:
-            case it.NETWORK_ERROR:
+            case captchaStatus.CHALLENGE_ERROR:
+            case captchaStatus.BUNDLE_ERROR:
+            case captchaStatus.NETWORK_ERROR:
                 var o = t.event;
-                i.reset(), t.event === it.NETWORK_ERROR ? (i.status(t.message), 429 === t.status ? o = it.RATE_LIMITED : "invalid-data" === t.message && (o = it.INVALID_DATA)) : t.event === it.BUNDLE_ERROR ? o = it.CHALLENGE_ERROR : t.event === it.CHALLENGE_ERROR && "Answers are incomplete" === t.message && (o = it.INCOMPLETE_ANSWER), this.onError && $t(this.onError, o), e._promise && e._promise.reject(o);
+                i.reset(), t.event === captchaStatus.NETWORK_ERROR ? (i.status(t.message), 429 === t.status ? o = captchaStatus.RATE_LIMITED : "invalid-data" === t.message && (o = captchaStatus.INVALID_DATA)) : t.event === captchaStatus.BUNDLE_ERROR ? o = captchaStatus.CHALLENGE_ERROR : t.event === captchaStatus.CHALLENGE_ERROR && "Answers are incomplete" === t.message && (o = captchaStatus.INCOMPLETE_ANSWER), this.onError && $t(this.onError, o), e._promise && e._promise.reject(o);
                 break;
-            case et.CHALLENGE_PASSED:
+            case challengeStatus.CHALLENGE_PASSED:
                 this._state.passed = !0, i.tick(), this.onPass && $t(this.onPass, s), e._promise && e._promise.resolve({
                     response: s,
                     key: ko(this.id)
@@ -8924,7 +7402,7 @@
                     try {
                         i.reset(), i.setResponse(""), i.status("hCaptcha security token has expired. Please complete the challenge again.", !0)
                     } catch (Po) {
-                        xt("global", Po)
+                        handleMissingErrorMessageRaven("global", Po)
                     }
                     e.onExpire && $t(e.onExpire), e._responseTimer = null, e._state.expiredResponse = !0
                 }), 1e3 * t.expiration))
@@ -8972,7 +7450,7 @@
         if (t) try {
             t.updateTranslation(e)
         } catch (Po) {
-            xt("translation", Po)
+            handleMissingErrorMessageRaven("translation", Po)
         }
     }
     var Oo = {
@@ -8996,12 +7474,12 @@
                             }(t, e),
                             a = Bo++ + Math.random().toString(36).substr(2),
                             l = Object.create(null);
-                        l.sentry = ut.sentry, l.reportapi = ut.reportapi, l.recaptchacompat = ut.recaptchacompat, l.custom = ut.custom, null !== ut.language && (l.hl = ae.getLocale()), ut.assethost && (l.assethost = ut.assethost), ut.imghost && (l.imghost = ut.imghost), ut.tplinks && (l.tplinks = ut.tplinks), ut.se && (l.se = ut.se), "off" === ut.pat && (l.pat = ut.pat), l.pstissuer = ut.pstIssuer, "landscape" === ut.orientation && (l.orientation = ut.orientation);
+                        l.sentry = config_options.sentry, l.reportapi = config_options.reportapi, l.recaptchacompat = config_options.recaptchacompat, l.custom = config_options.custom, null !== config_options.language && (l.hl = languageLib.getLocale()), config_options.assethost && (l.assethost = config_options.assethost), config_options.imghost && (l.imghost = config_options.imghost), config_options.tplinks && (l.tplinks = config_options.tplinks), config_options.se && (l.se = config_options.se), "off" === config_options.pat && (l.pat = config_options.pat), l.pstissuer = config_options.pstIssuer, "landscape" === config_options.orientation && (l.orientation = config_options.orientation);
                         for (var c = 0; c < Ho.length; c++) {
                             var h = Ho[c];
                             h in r && (l[h] = r[h])
                         }
-                        ut.endpoint !== nt ? l.endpoint = ut.endpoint : "78c843a4-f80d-4a14-b3e5-74b492762487" === l.sitekey && (l.endpoint = ot), l.theme = ut.theme;
+                        config_options.endpoint !== hDomain ? l.endpoint = config_options.endpoint : "78c843a4-f80d-4a14-b3e5-74b492762487" === l.sitekey && (l.endpoint = api2_hDomain), l.theme = config_options.theme;
                         var u = window.location,
                             d = u.origin || u.protocol + "//" + u.hostname + (u.port ? ":" + u.port : "");
                         if ("null" !== d && (l.origin = d), r.theme) try {
@@ -9025,7 +7503,7 @@
                             var v = new Lo(t, a, l)
                         } catch (Po) {
                             var b = "Your browser plugins or privacy policies are blocking the hCaptcha service. Please disable them for hCaptcha.com";
-                            return Po instanceof go && (b = "hCaptcha has failed to initialize. Please see the developer tools console for more information.", console.error(Po.message)), void mt(t, b)
+                            return Po instanceof go && (b = "hCaptcha has failed to initialize. Please see the developer tools console for more information.", console.error(Po.message)), void createDiv_(t, b)
                         }
                         return r.callback && (v.onPass = r.callback), r["expired-callback"] && (v.onExpire = r["expired-callback"]), r["chalexpired-callback"] && (v.onChalExpire = r["chalexpired-callback"]), r["open-callback"] && (v.onOpen = r["open-callback"]), r["close-callback"] && (v.onClose = r["close-callback"]), r["error-callback"] && (v.onError = r["error-callback"]), Ke.setData("inv", "invisible" === l.size),
                             function(t, e) {
@@ -9039,13 +7517,13 @@
                             function(t, e) {
                                 function i(e, i) {
                                     if (e.locale) {
-                                        var n = ae.resolveLocale(e.locale);
+                                        var n = languageLib.resolveLocale(e.locale);
                                         Is(n).then((function() {
-                                            i ? Mo(t, n) : (ae.setLocale(n), wo.each((function(t) {
+                                            i ? Mo(t, n) : (languageLib.setLocale(n), wo.each((function(t) {
                                                 Mo(t, n)
                                             })))
                                         }))["catch"]((function(t) {
-                                            xt("api", t, {
+                                            handleMissingErrorMessageRaven("api", t, {
                                                 locale: n
                                             })
                                         }))
@@ -9063,10 +7541,10 @@
                                 })), t.challenge.chat.answer("challenge-ready", (function(e, i) {
                                     t.displayChallenge(e).then(i.resolve)
                                 })), t.challenge.chat.listen("challenge-resize", (function() {
-                                    var e = tt.Browser.width(),
-                                        i = tt.Browser.height();
+                                    var e = browserData.Browser.width(),
+                                        i = browserData.Browser.height();
                                     t.resize(e, i)
-                                })), t.challenge.chat.listen(et.CHALLENGE_CLOSED, (function(e) {
+                                })), t.challenge.chat.listen(challengeStatus.CHALLENGE_CLOSED, (function(e) {
                                     Ke.setData("lpt", Date.now()), t.closeChallenge(e)
                                 })), t.challenge.chat.answer("get-url", (function(t) {
                                     t.resolve(window.location.href)
@@ -9078,16 +7556,16 @@
                                     wo.pushSession(e.key, t.id)
                                 })), t.challenge.onOverlayClick((function() {
                                     t.closeChallenge({
-                                        event: et.CHALLENGE_ESCAPED
+                                        event: challengeStatus.CHALLENGE_ESCAPED
                                     })
                                 })), t.challenge.chat.listen("challenge-language", i), i({
                                     locale: e.hl
                                 }, !0), t.challenge.chat.answer("get-ac", (function(t) {
-                                    t.resolve(Ct.hasCookie("hc_accessibility"))
+                                    t.resolve(browserApis.hasCookie("hc_accessibility"))
                                 }))
                             }(v, l), wo.add(v), a
                     }
-                    mt(t, "Your browser is missing or has disabled Cross-Window Messaging. Please <a style='color:inherit;text-decoration:underline; font: inherit' target='_blank' href='https://www.whatismybrowser.com/guides/how-to-update-your-browser/auto'>upgrade your browser</a> or enable it for hCaptcha.com")
+                    createDiv_(t, "Your browser is missing or has disabled Cross-Window Messaging. Please <a style='color:inherit;text-decoration:underline; font: inherit' target='_blank' href='https://www.whatismybrowser.com/guides/how-to-update-your-browser/auto'>upgrade your browser</a> or enable it for hCaptcha.com")
                 } else console.log("[hCaptcha] render: invalid challenge container '" + e["challenge-container"] + "'.");
             else console.log("[hCaptcha] render: invalid container '" + t + "'.")
         },
@@ -9117,7 +7595,7 @@
             var e = !1;
             if (!(e = t ? wo.getById(t) : wo.getByIndex(0))) throw t ? new mo(t) : new yo;
             e.closeChallenge({
-                event: et.CHALLENGE_ESCAPED
+                event: challengeStatus.CHALLENGE_ESCAPED
             })
         },
         setData: function(t, e) {
@@ -9131,18 +7609,18 @@
     };
 
     function To(t) {
-        ct.file = "hcaptcha";
+        hcaptchaDummyObj.file = "hcaptcha";
         var e = document.currentScript,
             i = !1,
             n = !1,
             s = "on",
-            o = tt.Browser.width() / tt.Browser.height(),
+            o = browserData.Browser.width() / browserData.Browser.height(),
             r = !(!window.hcaptcha || !window.hcaptcha.render);
 
         function a() {
-            var t = tt.Browser.width(),
-                e = tt.Browser.height(),
-                i = tt.System.mobile && o !== t / e;
+            var t = browserData.Browser.width(),
+                e = browserData.Browser.height(),
+                i = browserData.System.mobile && o !== t / e;
             o = t / e, h(), Oo.nodes.each((function(n) {
                 n.visible && n.resize(t, e, i)
             }))
@@ -9155,11 +7633,11 @@
         }
 
         function c() {
-            Ke.circBuffPush("xy", [tt.Browser.scrollX(), tt.Browser.scrollY(), document.documentElement.clientWidth / tt.Browser.width(), Date.now()])
+            Ke.circBuffPush("xy", [browserData.Browser.scrollX(), browserData.Browser.scrollY(), document.documentElement.clientWidth / browserData.Browser.width(), Date.now()])
         }
 
         function h() {
-            Ke.circBuffPush("wn", [tt.Browser.width(), tt.Browser.height(), tt.System.dpr(), Date.now()])
+            Ke.circBuffPush("wn", [browserData.Browser.width(), browserData.Browser.height(), browserData.System.dpr(), Date.now()])
         }
         window.hcaptcha = {
             render: Oo.render,
@@ -9181,36 +7659,36 @@
                 for (; ++r < o.length && !1 === a;) o[r] && o[r].src && (c = (l = o[r].src.split("?"))[0], /\/(hcaptcha|1\/api)\.js$/.test(c) && (a = o[r], c && -1 !== c.toLowerCase().indexOf("www.") && console.warn("[hCaptcha] JS API is being loaded from www.hcaptcha.com. Please use https://js.hcaptcha.com/1/api.js")));
                 if (!1 === a) return;
                 t = t || Mt(l[1]), i = t.onload || !1, n = t.render || !1, "off" === t.tplinks && (s = "off");
-                ut.tplinks = s, ut.language = t.hl || null, t.endpoint && (ut.endpoint = t.endpoint);
-                ut.reportapi = t.reportapi || ut.reportapi, ut.imghost = t.imghost || null, ut.custom = t.custom || ut.custom, ut.se = t.se || null, ut.pat = t.pat || ut.pat, ut.pstIssuer = t.pstissuer || ut.pstIssuer, ut.orientation = t.orientation || null, ut.assethost = t.assethost || null, ut.assethost && !jt.URL(ut.assethost) && (ut.assethost = null, console.error("Invalid assethost uri."));
-                ut.recaptchacompat = t.recaptchacompat || ut.recaptchacompat, ct.host = t.host || window.location.hostname, ut.sentry = !1 !== t.sentry, bt(!1), ut.language = ut.language || window.navigator.userLanguage || window.navigator.language, ae.setLocale(ut.language), "off" === ut.recaptchacompat ? console.log("recaptchacompat disabled") : window.grecaptcha = window.hcaptcha
+                config_options.tplinks = s, config_options.language = t.hl || null, t.endpoint && (config_options.endpoint = t.endpoint);
+                config_options.reportapi = t.reportapi || config_options.reportapi, config_options.imghost = t.imghost || null, config_options.custom = t.custom || config_options.custom, config_options.se = t.se || null, config_options.pat = t.pat || config_options.pat, config_options.pstIssuer = t.pstissuer || config_options.pstIssuer, config_options.orientation = t.orientation || null, config_options.assethost = t.assethost || null, config_options.assethost && !jt.URL(config_options.assethost) && (config_options.assethost = null, console.error("Invalid assethost uri."));
+                config_options.recaptchacompat = t.recaptchacompat || config_options.recaptchacompat, hcaptchaDummyObj.host = t.host || window.location.hostname, config_options.sentry = !1 !== t.sentry, ravenSetup(!1), config_options.language = config_options.language || window.navigator.userLanguage || window.navigator.language, languageLib.setLocale(config_options.language), "off" === config_options.recaptchacompat ? console.log("recaptchacompat disabled") : window.grecaptcha = window.hcaptcha
             }(), function() {
-                var t = ae.getLocale();
+                var t = languageLib.getLocale();
                 if ("en" === t) return;
                 Is(t).then((function() {
                     Oo.nodes.each((function(e) {
                         if (e) try {
                             e.updateTranslation(t)
                         } catch (Po) {
-                            xt("translation", Po)
+                            handleMissingErrorMessageRaven("translation", Po)
                         }
                     }))
                 }))["catch"]((function(e) {
-                    xt("api", e, {
+                    handleMissingErrorMessageRaven("api", e, {
                         locale: t
                     })
                 }))
             }(), !1 === n || "onload" === n ? function(t) {
                 for (var e = document.getElementsByClassName("h-captcha"), i = [], n = 0; n < e.length; n++) i.push(e[n]);
                 var s = [];
-                if ("off" !== ut.recaptchacompat)
+                if ("off" !== config_options.recaptchacompat)
                     for (var o = document.getElementsByClassName("g-recaptcha"), r = 0; r < o.length; r++) s.push(o[r]);
                 for (var a = [].concat(i, s), l = 0; l < a.length; l++) t(a[l])
             }(Oo.render) : "explicit" !== n && console.log("hcaptcha: invalid render parameter '" + n + "', using 'explicit' instead."), i && setTimeout((function() {
                 $t(i)
             }), 1), function() {
                 try {
-                    Ke.record(), Ke.setData("sc", tt.Browser.getScreenDimensions()), Ke.setData("nv", tt.Browser.interrogateNavigator()), Ke.setData("dr", document.referrer), h(), c()
+                    Ke.record(), Ke.setData("sc", browserData.Browser.getScreenDimensions()), Ke.setData("nv", browserData.Browser.interrogateNavigator()), Ke.setData("dr", document.referrer), h(), c()
                 } catch (Po) {}
             }(), Re.addEventListener("resize", a), Re.addEventListener("scroll", l))
         }))
@@ -9222,35 +7700,35 @@
             e = null,
             i = null,
             n = null,
-            s = [et.CHALLENGE_ALREADY_CLOSED, et.CHALLENGE_EXPIRED];
+            s = [challengeStatus.CHALLENGE_ALREADY_CLOSED, challengeStatus.CHALLENGE_EXPIRED];
         window._sharedLibs = {
             packages: {
                 config: {
-                    Options: ut,
-                    Color: ht
+                    Options: config_options,
+                    Color: ColorStyles
                 },
                 utils: {
-                    MathUtil: Ft,
-                    Query: Tt,
-                    Render: Ht,
-                    Color: Et,
-                    Shuffle: _t,
-                    JWT: Bt
+                    MathUtil: MathUtilLib,
+                    Query: queryLib,
+                    Render: RenderLib,
+                    Color: ColorLib,
+                    Shuffle: shuffleObjFunc,
+                    JWT: JWTLib
                 },
                 canvas: {
-                    Canvas: ni,
-                    Path: Je,
-                    Segment: Ge,
-                    Point: qe,
-                    PathSVG: Xe,
-                    ReticlePoint: ii
+                    Canvas: CanvasLib,
+                    Path: PathLib,
+                    Segment: SegmentLib,
+                    Point: PointLib,
+                    PathSVG: PathSVGLib,
+                    ReticlePoint: ReticlePointLib
                 },
-                constants: lt,
-                device: tt,
-                language: ae,
-                theme: Ei,
-                core: Pe,
-                ui: un
+                constants: constantsLib,
+                device: browserData,
+                language: languageLib,
+                theme: ThemeLib,
+                core: CoreLib,
+                ui: UI_Lib
             }
         };
         var o = window.location.hash.slice(1),
@@ -9259,7 +7737,7 @@
         function a(i, o) {
             null !== e && (clearTimeout(e), e = null), n.lockInterface(!0), bs && (bs.p = Date.now() - bs.s), ys().then((function(t) {
                 return function(t, e) {
-                    return e || "on" !== ut.pat || !tt.supportsPAT() ? Promise.resolve({
+                    return e || "on" !== config_options.pat || !browserData.supportsPAT() ? Promise.resolve({
                         proof: t,
                         pass: !1
                     }) : Ds.authenticate(t).then((function(t) {
@@ -9271,7 +7749,7 @@
                             }
                         }))
                     }))["catch"]((function(t) {
-                        vt(t), Ds.logAction(it.AUTHENTICATION_ERROR);
+                        reportError(t), Ds.logAction(captchaStatus.AUTHENTICATION_ERROR);
                         var e = t && t.response,
                             i = e && e.body;
                         return ms(i.c), ys().then((function(t) {
@@ -9302,8 +7780,8 @@
                 }), ms(e.c), i = e.challengeType, bs && (bs.l = Date.now() - bs.s, bs.t = i), Ds.loadBundle(e.challengeType).then((function(t) {
                     var i = Ds.getData();
                     return n.lockInterface(!1), bs && (bs.o = Date.now() - bs.s), n.show({
-                        width: ct.browserWidth,
-                        height: ct.browserHeight,
+                        width: hcaptchaDummyObj.browserWidth,
+                        height: hcaptchaDummyObj.browserHeight,
                         bundle: t,
                         bundleData: i,
                         expiration: 1e3 * (i.expiration || 120),
@@ -9334,36 +7812,36 @@
                 var e, i
             }))["catch"]((function(e) {
                 var i = e instanceof Error ? {
-                    event: it.CHALLENGE_ERROR,
+                    event: captchaStatus.CHALLENGE_ERROR,
                     message: e.message || ""
                 } : e;
                 Ds.logAction(i.event);
                 var n = 429 === e.status,
                     s = e.response && e.response["error-codes"],
                     o = s && -1 !== s.indexOf("invalid-data");
-                kt("challenge", "api", "debug", e), n || o || i.event !== it.NETWORK_ERROR && i.event !== it.CHALLENGE_ERROR && i.event !== it.BUNDLE_ERROR || !(t <= 2) ? (t > 2 && 0 !== e.status && 429 !== e.status && 403 !== e.status && 400 !== e.status && wt("api:getcaptcha failed", "error", "challenge", {
+                ravenCaptureBreadCrumb("challenge", "api", "debug", e), n || o || i.event !== captchaStatus.NETWORK_ERROR && i.event !== captchaStatus.CHALLENGE_ERROR && i.event !== captchaStatus.BUNDLE_ERROR || !(t <= 2) ? (t > 2 && 0 !== e.status && 429 !== e.status && 403 !== e.status && 400 !== e.status && captureMessageRaven("api:getcaptcha failed", "error", "challenge", {
                     error: e
                 }), t = 0, o && (i = {
-                    event: it.NETWORK_ERROR,
+                    event: captchaStatus.NETWORK_ERROR,
                     message: (s || [""]).join(", ")
-                }), ws(i.event), li.send(et.CHALLENGE_CLOSED, i)) : (t += 1, c())
+                }), ws(i.event), li.send(challengeStatus.CHALLENGE_CLOSED, i)) : (t += 1, c())
             }))
         }
 
         function l(t) {
-            if (ms(t.c), t.skip) ws(et.CHALLENGE_ESCAPED), li.send(et.CHALLENGE_CLOSED, {
-                event: et.CHALLENGE_ESCAPED
+            if (ms(t.c), t.skip) ws(challengeStatus.CHALLENGE_ESCAPED), li.send(challengeStatus.CHALLENGE_CLOSED, {
+                event: challengeStatus.CHALLENGE_ESCAPED
             });
-            else if (t.pass) ws(et.CHALLENGE_PASSED), li.send(et.CHALLENGE_CLOSED, {
-                event: et.CHALLENGE_PASSED,
+            else if (t.pass) ws(challengeStatus.CHALLENGE_PASSED), li.send(challengeStatus.CHALLENGE_CLOSED, {
+                event: challengeStatus.CHALLENGE_PASSED,
                 response: t.generated_pass_UUID,
                 expiration: t.expiration
             });
             else if (!1 === t.success) {
                 var e = t["error-codes"] || [];
                 if (-1 !== e.indexOf("expired-session") || -1 !== e.indexOf("client-fail")) return void c();
-                ws(it.NETWORK_ERROR), li.send(et.CHALLENGE_CLOSED, {
-                    event: it.NETWORK_ERROR,
+                ws(captchaStatus.NETWORK_ERROR), li.send(challengeStatus.CHALLENGE_CLOSED, {
+                    event: captchaStatus.NETWORK_ERROR,
                     message: (t["error-codes"] || [""]).join(", ")
                 })
             } else n.displayTryAgain(!0), Ds.logAction("challenge-failed"), c()
@@ -9373,9 +7851,9 @@
             if (bs && (bs = {
                     s: Date.now(),
                     n: bs.n + 1
-                }), Ds.isRqChl() && !ut.a11yChallenge) return n.lockInterface(!0), void(e = setTimeout((function() {
-                ws(it.CHALLENGE_ERROR), li.send(et.CHALLENGE_CLOSED, {
-                    event: it.CHALLENGE_ERROR
+                }), Ds.isRqChl() && !config_options.a11yChallenge) return n.lockInterface(!0), void(e = setTimeout((function() {
+                ws(captchaStatus.CHALLENGE_ERROR), li.send(challengeStatus.CHALLENGE_CLOSED, {
+                    event: captchaStatus.CHALLENGE_ERROR
                 })
             }), 2e3));
             li.contact("getcaptcha-manifest").then((function(t) {
@@ -9384,20 +7862,20 @@
         }
 
         function h(t, e) {
-            ct.browserWidth = t.width, ct.browserHeight = t.height, n.size(t.width, t.height).then((function(t) {
-                e.resolve(t), kt("challenge resized", "challenge", "info", t)
+            hcaptchaDummyObj.browserWidth = t.width, hcaptchaDummyObj.browserHeight = t.height, n.size(t.width, t.height).then((function(t) {
+                e.resolve(t), ravenCaptureBreadCrumb("challenge resized", "challenge", "info", t)
             }))
         }
 
         function u() {
-            kt("challenge refresh", "challenge", "info"), Ds.logAction("challenge-refresh"), c()
+            ravenCaptureBreadCrumb("challenge refresh", "challenge", "info"), Ds.logAction("challenge-refresh"), c()
         }
 
         function d() {
             ds(Fs.collect()), n.submit().then((function(t) {
                 Ds.logAction(t), "challenge-skip" !== t || c()
             }))["catch"]((function(t) {
-                vt(t), Ds.logAction(it.CHALLENGE_ERROR), c()
+                reportError(t), Ds.logAction(captchaStatus.CHALLENGE_ERROR), c()
             }))
         }
 
@@ -9413,27 +7891,27 @@
                     }), n.getModal().on("refresh", e)
                 }
             }))["catch"]((function(t) {
-                vt(t), u()
+                reportError(t), u()
             }))
         }! function(t) {
-            ct.host = t.host, ct.sitekey = t.sitekey, ct.file = "challenge", ut.sentry = !1 !== t.sentry, bt(!0), t.endpoint !== undefined && "undefined" !== t.endpoint && (ut.endpoint = t.endpoint), t.reportapi !== undefined && "undefined" !== t.reportapi && (ut.reportapi = t.reportapi), t.assethost !== undefined && "undefined" !== t.assethost && (jt.URL(t.assethost) ? ut.assethost = t.assethost : console.error("Invalid assethost uri.")), t.imghost !== undefined && "undefined" !== t.imghost && (ut.imghost = t.imghost), t.hl !== undefined && "undefined" !== t.hl && (ut.language = t.hl, ae.setLocale(ut.language)), t.se !== undefined && "undefined" !== t.se && (ut.se = t.se), t.pstissuer !== undefined && "undefined" !== t.pstissuer && (ut.pstIssuer = t.pstissuer), t.pat !== undefined && "undefined" !== t.pat && (ut.pat = t.pat), ut.theme = t.theme || ut.theme, t.themeConfig && (ut.themeConfig = t.themeConfig), t["confirm-nav"] && (ut.confirmNav = !0)
+            hcaptchaDummyObj.host = t.host, hcaptchaDummyObj.sitekey = t.sitekey, hcaptchaDummyObj.file = "challenge", config_options.sentry = !1 !== t.sentry, ravenSetup(!0), t.endpoint !== undefined && "undefined" !== t.endpoint && (config_options.endpoint = t.endpoint), t.reportapi !== undefined && "undefined" !== t.reportapi && (config_options.reportapi = t.reportapi), t.assethost !== undefined && "undefined" !== t.assethost && (jt.URL(t.assethost) ? config_options.assethost = t.assethost : console.error("Invalid assethost uri.")), t.imghost !== undefined && "undefined" !== t.imghost && (config_options.imghost = t.imghost), t.hl !== undefined && "undefined" !== t.hl && (config_options.language = t.hl, languageLib.setLocale(config_options.language)), t.se !== undefined && "undefined" !== t.se && (config_options.se = t.se), t.pstissuer !== undefined && "undefined" !== t.pstissuer && (config_options.pstIssuer = t.pstissuer), t.pat !== undefined && "undefined" !== t.pat && (config_options.pat = t.pat), config_options.theme = t.theme || config_options.theme, t.themeConfig && (config_options.themeConfig = t.themeConfig), t["confirm-nav"] && (config_options.confirmNav = !0)
         }(r), Fs.run(), n = new as(document.body, {
-            host: ct.host,
-            sitekey: ct.sitekey,
+            host: hcaptchaDummyObj.host,
+            sitekey: hcaptchaDummyObj.sitekey,
             orientation: r.orientation || "portrait"
-        }), ut.themeConfig && n.addTheme("custom", ut.themeConfig), li.init(r.id, r.origin), i = new Yt(document.body), li.answer("create-challenge", (function(t) {
+        }), config_options.themeConfig && n.addTheme("custom", config_options.themeConfig), li.init(r.id, r.origin), i = new Yt(document.body), li.answer("create-challenge", (function(t) {
             bs = {
                 s: Date.now(),
                 n: 0
             };
             var e, s = {};
-            t && (Ds.setRqData(t.rqdata || Ds.getRqData()), t.wdata && (e = t.wdata, window.__wdata = e), ds(t.errors), t.width && (ct.browserWidth = t.width, ct.browserHeight = t.height), t.manifest && (s = t.manifest), "enter" === t.action ? i.addClass("using-kb") : i.hasClass("using-kb") && i.removeClass("using-kb"), n.init(t)), n.setFocus("info"), a(s, !1)
+            t && (Ds.setRqData(t.rqdata || Ds.getRqData()), t.wdata && (e = t.wdata, window.__wdata = e), ds(t.errors), t.width && (hcaptchaDummyObj.browserWidth = t.width, hcaptchaDummyObj.browserHeight = t.height), t.manifest && (s = t.manifest), "enter" === t.action ? i.addClass("using-kb") : i.hasClass("using-kb") && i.removeClass("using-kb"), n.init(t)), n.setFocus("info"), a(s, !1)
         })), li.answer("close-challenge", (function(t) {
-            ws(t.event), null !== e && (clearTimeout(e), e = null), t && t.event === et.CHALLENGE_ESCAPED && Ds.logAction("challenge-abandon-retry"), Ds.setRqData(null), n.close()
+            ws(t.event), null !== e && (clearTimeout(e), e = null), t && t.event === challengeStatus.CHALLENGE_ESCAPED && Ds.logAction("challenge-abandon-retry"), Ds.setRqData(null), n.close()
         })), li.answer("resize-challenge", h), li.answer("challenge-translate", (function(t) {
             n.translateInterface(t), n.isVisible() && ("en" !== t.locale ? (Ds.logAction("challenge-language-change"), c()) : n.translateBundle())
         })), li.contact("get-url").then((function(t) {
-            ct.url = t
+            hcaptchaDummyObj.url = t
         })), li.answer("challenge-data", (function(t) {
             t.rqdata && Ds.setRqData(t.rqdata)
         })), n.events.on("refresh", u), n.events.on("submit", d), n.events.on("report", p), n.events.on("report-submission", (function(t) {
@@ -9445,8 +7923,8 @@
         })), i.addEventListener("down", (function(t) {
             n.isInterfaceLocked() || n.displayTryAgain(!1)
         })), i.addEventListener("keydown", (function(t) {
-            27 === t.keyNum && (n.getModal().isOpen() ? (n.getModal().close(), n.hideReport()) : (ws(et.CHALLENGE_ESCAPED), li.send(et.CHALLENGE_CLOSED, {
-                event: et.CHALLENGE_ESCAPED
+            27 === t.keyNum && (n.getModal().isOpen() ? (n.getModal().close(), n.hideReport()) : (ws(challengeStatus.CHALLENGE_ESCAPED), li.send(challengeStatus.CHALLENGE_CLOSED, {
+                event: challengeStatus.CHALLENGE_ESCAPED
             }), n.close()))
         })), i.addEventListener("down", (function() {
             "menu" !== n.getActiveElement() && i.hasClass("using-kb") && i.removeClass("using-kb")
@@ -9459,7 +7937,7 @@
             }
         })), Ns().then((function(t) {
             var e = t.features;
-            return "object" != typeof e && (e = {}), n.setWhiteLabel(!!t.custom), ms(t.c), ut.themeConfig && e.custom_theme ? n.useTheme("custom") : n.useTheme(ut.theme), e.a11y_challenge && (ut.a11yChallenge = !0, n.enableA11yChallenge(!0)), {
+            return "object" != typeof e && (e = {}), n.setWhiteLabel(!!t.custom), ms(t.c), config_options.themeConfig && e.custom_theme ? n.useTheme("custom") : n.useTheme(config_options.theme), e.a11y_challenge && (config_options.a11yChallenge = !0, n.enableA11yChallenge(!0)), {
                 ok: t
             }
         }), (function(t) {
@@ -9478,10 +7956,10 @@
             i = Mt(e),
             n = ai.createChat(window.parent, i.id, i.origin);
         ! function(t) {
-            ct.id = t.id, ct.host = t.host, ct.sitekey = t.sitekey, ct.file = "checkbox", ut.sentry = !1 !== t.sentry, bt(!0), ut.size = t.size || ut.compact, ut.custom = t.custom || ut.custom, ut.se = t.se || null, t.endpoint !== undefined && "undefined" !== t.endpoint && (ut.endpoint = t.endpoint), t.assethost !== undefined && "undefined" !== t.assethost && (jt.URL(t.assethost) ? ut.assethost = t.assethost : console.error("Invalid assethost uri.")), t.imghost !== undefined && "undefined" !== t.imghost && (ut.imghost = t.imghost), t.hl !== undefined && "undefined" !== t.hl && (ut.language = t.hl, ae.setLocale(t.hl)), t.tplinks !== undefined && "undefined" !== t.tplinks && (ut.tplinks = t.tplinks), t.pat !== undefined && "undefined" !== t.pat && (ut.pat = t.pat), t.pstissuer !== undefined && "undefined" !== t.pstissuer && (ut.pstIssuer = t.pstissuer), ut.theme = t.theme || ut.theme, ut.themeConfig = t.themeConfig, ut.themeConfig && (t.custom = !0)
+            hcaptchaDummyObj.id = t.id, hcaptchaDummyObj.host = t.host, hcaptchaDummyObj.sitekey = t.sitekey, hcaptchaDummyObj.file = "checkbox", config_options.sentry = !1 !== t.sentry, ravenSetup(!0), config_options.size = t.size || config_options.compact, config_options.custom = t.custom || config_options.custom, config_options.se = t.se || null, t.endpoint !== undefined && "undefined" !== t.endpoint && (config_options.endpoint = t.endpoint), t.assethost !== undefined && "undefined" !== t.assethost && (jt.URL(t.assethost) ? config_options.assethost = t.assethost : console.error("Invalid assethost uri.")), t.imghost !== undefined && "undefined" !== t.imghost && (config_options.imghost = t.imghost), t.hl !== undefined && "undefined" !== t.hl && (config_options.language = t.hl, languageLib.setLocale(t.hl)), t.tplinks !== undefined && "undefined" !== t.tplinks && (config_options.tplinks = t.tplinks), t.pat !== undefined && "undefined" !== t.pat && (config_options.pat = t.pat), t.pstissuer !== undefined && "undefined" !== t.pstissuer && (config_options.pstIssuer = t.pstissuer), config_options.theme = t.theme || config_options.theme, config_options.themeConfig = t.themeConfig, config_options.themeConfig && (t.custom = !0)
         }(i);
-        var s = js.sitekey(ct.sitekey),
-            o = js.dummykey(ct.sitekey);
+        var s = js.sitekey(hcaptchaDummyObj.sitekey),
+            o = js.dummykey(hcaptchaDummyObj.sitekey);
         Fs.run();
         var r = null,
             a = null,
@@ -9492,12 +7970,12 @@
 
         function h(e, i) {
             var n = {
-                    host: ct.host,
-                    sitekey: ct.sitekey,
-                    size: ut.size,
-                    theme: ut.theme,
-                    linksOff: "off" === ut.tplinks,
-                    displayLogo: "invisible" !== ut.size,
+                    host: hcaptchaDummyObj.host,
+                    sitekey: hcaptchaDummyObj.sitekey,
+                    size: config_options.size,
+                    theme: config_options.theme,
+                    linksOff: "off" === config_options.tplinks,
+                    displayLogo: "invisible" !== config_options.size,
                     logo: null,
                     logoUrl: null,
                     privacyUrl: null,
@@ -9516,7 +7994,7 @@
                         var u = a[h];
                         for (var d in u) {
                             var p = {};
-                            p[c[h]] = u[d], ae.addTable(d, p)
+                            p[c[h]] = u[d], languageLib.addTable(d, p)
                         }
                     }
                     l.then((function(t) {
@@ -9526,12 +8004,12 @@
             }
             var f = new po(document.body, n),
                 m = e && e.features && e.features.custom_theme;
-            return ut.themeConfig && m ? f.theme("custom", ut.themeConfig) : f.theme(ut.theme), f.setStatus(!1), s || o ? o && f.setWarning("This hCaptcha is for testing only. Please contact the site admin if you see this.") : f.setWarning("The sitekey for this hCaptcha is incorrect. Please contact the site admin if you see this."), f.on("select", (function(e) {
+            return config_options.themeConfig && m ? f.theme("custom", config_options.themeConfig) : f.theme(config_options.theme), f.setStatus(!1), s || o ? o && f.setWarning("This hCaptcha is for testing only. Please contact the site admin if you see this.") : f.setWarning("The sitekey for this hCaptcha is incorrect. Please contact the site admin if you see this."), f.on("select", (function(e) {
                 f.setStatus(!1), setTimeout((function() {
                     i.send("checkbox-selected", {
                         manifest: Ke.getData(),
                         charity: t,
-                        a11yChallenge: ut.a11yChallenge || !1,
+                        a11yChallenge: config_options.a11yChallenge || !1,
                         link: f.getLogoUrl(),
                         action: e,
                         errors: Fs.collect()
@@ -9547,7 +8025,7 @@
             })).then((function(e) {
                 r || (r = h(e, n), a(r));
                 var i = e.features || {};
-                ut.a11yChallenge = i.a11y_challenge || !1, t = e.charity || !1, e.status_message && s && !o && r.setWarning(e.status_message)
+                config_options.a11yChallenge = i.a11y_challenge || !1, t = e.charity || !1, e.status_message && s && !o && r.setWarning(e.status_message)
             }), (function(t) {
                 r || (r = h(null, n), a(r)), t.message && r.setStatus(t.message)
             })).then((function() {
@@ -9561,11 +8039,11 @@
                 })), i.listen("checkbox-translate", (function(e) {
                     try {
                         if (!e || !e.locale || !e.table) return;
-                        ae.setLocale(e.locale), ae.addTable(e.locale, e.table), t.then((function(t) {
+                        languageLib.setLocale(e.locale), languageLib.addTable(e.locale, e.table), t.then((function(t) {
                             t.translate()
-                        })), document.documentElement.setAttribute("lang", ae.getLocale())
+                        })), document.documentElement.setAttribute("lang", languageLib.getLocale())
                     } catch (Po) {
-                        xt("translation", Po)
+                        handleMissingErrorMessageRaven("translation", Po)
                     }
                 })), i.listen("checkbox-status", (function(e) {
                     t.then((function(t) {
