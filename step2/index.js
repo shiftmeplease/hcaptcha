@@ -56,42 +56,86 @@ const estraverse = require('estraverse');
             }
         },
     })
-    
+
+    // estraverse.replace(tree, {
+    //     enter: function (node, parent) {
+    //         if (node.type === "EmptyStatement")
+    //         this.remove()
+    //     }
+    // })
+
+
     estraverse.replace(tree, {
         enter: function (node, parent) {
-            if (node.type === "EmptyStatement")
-            this.remove()
-        }
 
+            if (node.type === "MemberExpression" && node.computed === true) {
+
+                const { property } = node;
+                if (property.type === "TemplateLiteral" && property.quasis.length === 1 && property.expressions.length === 0) {
+
+                    const propQuasis = property.quasis[0];
+                    if (propQuasis.type === "TemplateElement") {
+                        // console.log(node)
+                        console.log(propQuasis.value.cooked, propQuasis.value.raw)
+                        node.computed = false;
+                        node.property = {
+                            "type": "Identifier",
+                            "name": propQuasis.value.cooked
+                        }
+                        return node
+                    }
+                }
+            }
+
+        }
     })
+
+    estraverse.replace(tree, {
+        enter: function (node, parent) {
+            if (node.type === "TemplateLiteral" && node.quasis.length === 1 && node.expressions.length === 0) {
+                const propQuasis = node.quasis[0];
+                if (propQuasis.type === "TemplateElement") {
+                    if (!propQuasis.value.cooked.includes('\n'))
+
+                    return {
+                        "type": "Literal",
+                        "value": propQuasis.value.cooked
+                    }
+                }
+            }
+
+
+        }
+    })
+
 
     const codeString = generate(tree)
 
     fs.writeFile('./hsw.ast_mod.js', codeString)
 })()
 
-// {
-//     "type": "ExpressionStatement",
-//     "expression": {
-//       "type": "MemberExpression",
-//       "object": {
-//         "type": "Identifier",
-//         "name": "Object"
-//       },
-//       "computed": true,
-//       "property": {
-//         "type": "TemplateLiteral",
-//         "expressions": [],
-//         "quasis": [
-//           {
-//             "type": "TemplateElement",
-//             "value": {
-//               "cooked": "defineProperty",
-//               "raw": "defineProperty"
-//             },
-//             "tail": true
-//           }
-//         ]
-//       }
-//     }
-//   },
+var a = {
+    "type": "ExpressionStatement",
+    "expression": {
+        "type": "MemberExpression",
+        "object": {
+            "type": "Identifier",
+            "name": "Object"
+        },
+        "computed": true,
+        "property": {
+            "type": "TemplateLiteral",
+            "expressions": [],
+            "quasis": [
+                {
+                    "type": "TemplateElement",
+                    "value": {
+                        "cooked": "defineProperty",
+                        "raw": "defineProperty"
+                    },
+                    "tail": true
+                }
+            ]
+        }
+    }
+}
