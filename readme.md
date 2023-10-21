@@ -1,17 +1,17 @@
 Test Task for Javascript Reverse Engineer at ZennoLab
 
-#Abandoned 
+# Abandoned 
 Attempt to reverse engineer a wasm+js code of Hcaptcha's HSW.js
 Hcaptcha uses rust->wasm
 
-##Workflow in order>>
+## Workflow in order>>
 Steps[1,2,3] are attempts to static analysis.
 1: Manual rename of all calls to `Decode String` and replacing values with regexp
 2: Replacing of MemberExpressions and some other things, idk
 3: Manual investigating
 Abandoned
 
-##ChromeDevtoolsProtocol>>
+## ChromeDevtoolsProtocol>>
 Entry point is index.mjs with npm modules:
     "chrome-launcher",
     "chrome-remote-interface"
@@ -19,7 +19,7 @@ Starts browser, navigates to target website.
 Removes all integrity checks, decoding 'HSW.js' strings on the fly and some other deobfuscation techniques from ben-sb/obfuscator-io-deobfuscator
 Abandoned because main problem isn't JavaScript
 
-##Local Dynamic Analysis
+## Local Dynamic Analysis.
 Final **hsw.js** located here.
 
 Start a server: `live-server --no-browser --port=8081 local/.`
@@ -32,12 +32,12 @@ Attempts to make 'wasm' code more readable with binaryaen/wasm-opt(also wabt) an
  >>>>Nothing but suffer, **abandoned**
 
 
-###Hints:
- **file.b.*** is beautified
+### Hints:
+ **file.b.\*** is beautified
 
 
 
-Useful tools & links
+## Useful tools & links
 >https://gist.github.com/nilslice/41553dcb25537d68b0856b0a5d2faae3
 >https://rustwasm.github.io/wasm-bindgen/contributing/design/js-objects-in-rust.html
 
