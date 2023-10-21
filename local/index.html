@@ -4,14 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="./_hsw.js"></script>
-    <script src="./test.js"></script>
+    <title>hCaptcha</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; worker-src blob:;">
+        
+
 </head>
 
 <body>
 Hey
-    
+<!-- <script src="./_hsw.js"></script>
+<script src="./test.js"></script> -->
+<script src="./wasm.js"></script>
+<script src="./_hsw_wasm2js.js"></script>
+<script src="./test.js"></script>
 </body>
 
 </html>
